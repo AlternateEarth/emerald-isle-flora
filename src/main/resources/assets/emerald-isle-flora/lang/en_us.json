@@ -1,0 +1,8 @@
+{
+	"itemGroup.emerald-isle-flora.main": "Emerald Isle Flora",
+
+	"config.emerald-isle-flora.title": "Emerald Isle Flora Configuration",
+	"config.emerald-isle-flora.category.general": "General",
+	"config.emerald-isle-flora.logStartupMessage": "Log Startup Message",
+	"config.emerald-isle-flora.logStartupMessage.tooltip": "When enabled, prints a short message to the console/log when the mod finishes loading."
+}

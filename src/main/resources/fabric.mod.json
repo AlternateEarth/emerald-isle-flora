@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "emeraldisleflora",
+	"version": "${version}",
+	"name": "Emerald Isle Flora",
+	"description": "Adds flora inspired by Ireland",
+	"authors": ["kylelaverty"],
+	"contact": {
+		"repo": "https://github.com/AlternateEarth/emerald-isle-flora"
+	},
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.alternateearch.emeraldisleflora.EmeraldIsleFlora"
+		],
+		"client": [
+			"net.alternateearch.emeraldisleflora.EmeraldIsleFloraClient"
+		],
+		"modmenu": [
+			"net.alternateearch.emeraldisleflora.config.ModMenuIntegration"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.0",
+		"fabric-api": "*",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"cloth-config": "*"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}
