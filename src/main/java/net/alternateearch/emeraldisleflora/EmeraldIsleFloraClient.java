@@ -1,9 +1,12 @@
 package net.alternateearch.emeraldisleflora;
 
 import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearch.emeraldisleflora.registry.ModBlocks;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.minecraft.client.render.RenderLayer;
 
 /**
  * Client-only entrypoint. Runs only on the physical client, never on a dedicated server.
@@ -24,7 +27,7 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		// TODO: register renderers, key bindings, etc. here as you add client-only features.
-		EmeraldIsleFlora.LOGGER.debug("Emerald Isle Flora client initialized");
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BELLS_OF_IRELAND, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BELLS_OF_IRELAND, RenderLayer.getCutout());
 	}
 }

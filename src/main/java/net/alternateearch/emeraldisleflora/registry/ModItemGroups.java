@@ -24,21 +24,15 @@ public final class ModItemGroups {
 	public static final RegistryKey<ItemGroup> EMERALD_ISLE_FLORA_GROUP = RegistryKey.of(
 			RegistryKeys.ITEM_GROUP, new Identifier(EmeraldIsleFlora.MOD_ID, "emerald_isle_flora"));
 
-	private ModItemGroups() {
-	}
-
 	public static void register() {
 		Registry.register(
 				Registries.ITEM_GROUP,
 				EMERALD_ISLE_FLORA_GROUP,
 				FabricItemGroup.builder()
-						// TODO: swap this for one of your own items once you have one.
 						.icon(() -> new ItemStack(Items.OAK_SAPLING))
 						.displayName(Text.translatable("itemGroup." + EmeraldIsleFlora.MOD_ID + ".main"))
 						.entries((displayContext, entries) -> {
-							// TODO: add your items/blocks here, e.g.:
-							// entries.add(ModItems.SHAMROCK);
-							// entries.add(ModBlocks.PEAT_MOSS);
+							entries.add(ModBlocks.BELLS_OF_IRELAND);
 						})
 						.build());
 	}

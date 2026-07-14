@@ -1,0 +1,12 @@
+{
+	"emeraldisleflora.identifier": "Emerald Isle Flora",
+
+	"itemGroup.emeraldisleflora.main": "Emerald Isle Flora",
+	"block.emeraldisleflora.bells_of_ireland": "Bells of Ireland",
+	"block.emeraldisleflora.potted_bells_of_ireland": "Potted Bells of Ireland",
+
+	"config.emeraldisleflora.title": "Emerald Isle Flora Configuration",
+	"config.emeraldisleflora.category.general": "General",
+	"config.emeraldisleflora.logStartupMessage": "Log Startup Message",
+	"config.emeraldisleflora.logStartupMessage.tooltip": "When enabled, prints a short message to the console/log when the mod finishes loading."
+}
