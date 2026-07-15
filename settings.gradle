@@ -6,11 +6,6 @@ pluginManagement {
 		}
 		mavenCentral()
 		gradlePluginPortal()
-
-		maven {
-			name = "Modrinth"
-			url = "https://api.modrinth.com/maven"
-		}
 	}
 }
 
