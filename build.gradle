@@ -19,7 +19,7 @@ repositories {
 	// for more information about repositories.
 	maven {
 		name = "TerraformersMC" // Mod Menu
-		url = "https://maven.terraformersmc.com/releases/"
+		url = "https://maven.terraformersmc.com/"
 	}
 	maven {
 		name = "Shedaniel" // Cloth Config
