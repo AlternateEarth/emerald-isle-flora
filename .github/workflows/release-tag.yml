@@ -7,7 +7,6 @@ on:
 env:
   GAME_VERSION: 1.20.1
   JAVA_VERSION: 21
-  VERSION: mc1.20.1-0.5.7-release-fabric
   MODRINTH_TOKEN: ${{ secrets.PUBLISH_MODRINTH_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.PUBLISH_GITHUB_TOKEN }}
 
