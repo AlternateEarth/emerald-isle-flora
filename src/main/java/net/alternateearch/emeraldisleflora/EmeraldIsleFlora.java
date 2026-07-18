@@ -28,8 +28,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 		LOGGER.info("Setting up ModConfig");
 		config = ModConfig.load();
 
-		// TODO: register your blocks, items, block entities, etc. here (or in their own
-		// registry classes called from here, following the pattern of ModItemGroups).
+		LOGGER.info("Registering Blocks...");
 		ModItemGroups.register();
 		ModBlocks.register();
 
