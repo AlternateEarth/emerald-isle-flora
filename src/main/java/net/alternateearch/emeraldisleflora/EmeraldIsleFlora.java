@@ -3,6 +3,8 @@ package net.alternateearch.emeraldisleflora;
 import net.alternateearch.emeraldisleflora.config.ModConfig;
 import net.alternateearch.emeraldisleflora.registry.ModBlocks;
 import net.alternateearch.emeraldisleflora.registry.ModItemGroups;
+import net.alternateearch.emeraldisleflora.util.ModBoneMealInteraction;
+import net.alternateearch.emeraldisleflora.util.ModDispenserBehavior;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +27,12 @@ public class EmeraldIsleFlora implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Initializing Emerald Isle Flora...");
-		LOGGER.info("Setting up ModConfig");
 		config = ModConfig.load();
 
-		// TODO: register your blocks, items, block entities, etc. here (or in their own
-		// registry classes called from here, following the pattern of ModItemGroups).
 		ModItemGroups.register();
 		ModBlocks.register();
+		ModBoneMealInteraction.register();
+		ModDispenserBehavior.register();
 
 		if (config.logStartupMessage) {
 			LOGGER.info("Emerald Isle Flora has loaded!");

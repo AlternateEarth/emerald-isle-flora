@@ -1,6 +1,5 @@
 package net.alternateearch.emeraldisleflora;
 
-import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
 import net.alternateearch.emeraldisleflora.registry.ModBlocks;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -27,7 +26,12 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		//---------------------------Flowers---------------------------
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BELLS_OF_IRELAND, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BELLS_OF_IRELAND, RenderLayer.getCutout());
+
+		//-----------------------Potted Flowers------------------------
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BELLS_OF_IRELAND, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND, RenderLayer.getCutout());
 	}
 }
