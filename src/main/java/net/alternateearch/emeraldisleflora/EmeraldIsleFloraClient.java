@@ -1,6 +1,5 @@
 package net.alternateearch.emeraldisleflora;
 
-import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
 import net.alternateearch.emeraldisleflora.registry.ModBlocks;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
