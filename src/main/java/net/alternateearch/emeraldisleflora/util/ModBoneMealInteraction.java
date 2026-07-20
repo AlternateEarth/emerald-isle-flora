@@ -31,7 +31,10 @@ public final class ModBoneMealInteraction {
             BlockState state = world.getBlockState(pos);
 
             // Don't do anything if the block isn't one of our custom blocks.
-            if (!state.isOf(ModBlocks.BELLS_OF_IRELAND) && !state.isOf(ModBlocks.GROWN_BELLS_OF_IRELAND)) {
+            if (!state.isOf(ModBlocks.BELLS_OF_IRELAND) && 
+                !state.isOf(ModBlocks.GROWN_BELLS_OF_IRELAND) && 
+                !state.isOf(ModBlocks.POTTED_BELLS_OF_IRELAND) && 
+                !state.isOf(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND)) {
                 return ActionResult.PASS;
             }
 

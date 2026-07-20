@@ -1,5 +1,5 @@
 {
-  "parent": "emeraldisleflora:item/base_item_model",
+  "parent": "emeraldisleflora:block/base/base_4",
   "textures": {
     "0": "emeraldisleflora:block/bells_of_ireland",
     "particle": "emeraldisleflora:block/bells_of_ireland"

@@ -20,6 +20,11 @@ public final class ModCommonLogic {
         } else if (state.isOf(ModBlocks.GROWN_BELLS_OF_IRELAND)) {
             Block.dropStack(world, pos, new ItemStack(ModBlocks.BELLS_OF_IRELAND.asItem()));
             world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
+        } else if (state.isOf(ModBlocks.POTTED_BELLS_OF_IRELAND)) {
+            world.setBlockState(pos, ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND.getDefaultState());
+        } else if (state.isOf(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND)) {
+            Block.dropStack(world, pos, new ItemStack(ModBlocks.BELLS_OF_IRELAND.asItem()));
+            world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
         } else {
             return false;
         }

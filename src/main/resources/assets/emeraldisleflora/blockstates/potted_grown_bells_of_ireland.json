@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "emeraldisleflora:block/potted_bells_of_ireland"
+      "model": "emeraldisleflora:block/bells_of_ireland/potted_grown_bells_of_ireland"
     }
   }
 }

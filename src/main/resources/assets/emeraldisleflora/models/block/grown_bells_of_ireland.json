@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "emeraldisleflora:block/grown_bells_of_ireland"
-  }
-}

@@ -1,7 +1,21 @@
 {
   "variants": {
-    "": {
-      "model": "emeraldisleflora:block/grown_bells_of_ireland"
-    }
+    "": [
+      {
+        "model": "emeraldisleflora:block/bells_of_ireland/grown_bells_of_ireland_1"
+      },
+      {
+        "model": "emeraldisleflora:block/bells_of_ireland/grown_bells_of_ireland_2"
+      },
+      {
+        "model": "emeraldisleflora:block/bells_of_ireland/grown_bells_of_ireland_3"
+      },
+      {
+        "model": "emeraldisleflora:block/bells_of_ireland/grown_bells_of_ireland_4"
+      },
+      {
+        "model": "emeraldisleflora:block/bells_of_ireland/grown_bells_of_ireland_5"
+      }
+    ]
   }
 }
