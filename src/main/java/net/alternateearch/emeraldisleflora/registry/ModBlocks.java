@@ -26,6 +26,8 @@ public final class ModBlocks {
     public static final Block POTTED_GROWN_BELLS_OF_IRELAND = new FlowerPotBlock(GROWN_BELLS_OF_IRELAND, FabricBlockSettings.copyOf(POTTED_BELLS_OF_IRELAND));
 
     public static void register() {
+        EmeraldIsleFlora.LOGGER.info("Registering Blocks for " + EmeraldIsleFlora.MOD_ID);
+
         register("bells_of_ireland", BELLS_OF_IRELAND, true);
         register("grown_bells_of_ireland", GROWN_BELLS_OF_IRELAND, true);
         register("potted_bells_of_ireland", POTTED_BELLS_OF_IRELAND, false);
@@ -34,6 +36,8 @@ public final class ModBlocks {
         // Register this block to be compostable.
         CompostingChanceRegistry.INSTANCE.add(BELLS_OF_IRELAND, 0.65f);
         CompostingChanceRegistry.INSTANCE.add(GROWN_BELLS_OF_IRELAND, 0.95f);
+
+        EmeraldIsleFlora.LOGGER.info("Finished registering Blocks for " + EmeraldIsleFlora.MOD_ID);
     }
 
     private static void register(String name, Block block, boolean includeItem) {
