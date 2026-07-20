@@ -4,6 +4,7 @@ import net.alternateearch.emeraldisleflora.config.ModConfig;
 import net.alternateearch.emeraldisleflora.registry.ModBlocks;
 import net.alternateearch.emeraldisleflora.registry.ModItemGroups;
 import net.alternateearch.emeraldisleflora.util.ModBoneMealInteraction;
+import net.alternateearch.emeraldisleflora.util.ModDispenserBehavior;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 		ModItemGroups.register();
 		ModBlocks.register();
 		ModBoneMealInteraction.register();
+		ModDispenserBehavior.register();
 
 		if (config.logStartupMessage) {
 			LOGGER.info("Emerald Isle Flora has loaded!");
