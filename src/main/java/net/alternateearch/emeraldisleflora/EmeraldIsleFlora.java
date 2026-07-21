@@ -34,9 +34,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 		ModBoneMealInteraction.register();
 		ModDispenserBehavior.register();
 
-		if (config.logStartupMessage) {
-			LOGGER.info("Emerald Isle Flora has loaded!");
-		}
+		LOGGER.info("Emerald Isle Flora has loaded!");
 	}
 
 	/**

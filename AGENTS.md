@@ -1,24 +1,26 @@
 # AGENTS.md
 
-Guidance for AI coding agents (and humans) making changes in this repository. Read this
+Guidance for AI coding agents making changes in this repository. Read this
 before making changes; it's shorter than re-deriving these conventions from scratch each
-session.
+session. For the "how do I build/run/open a PR" side of things, see
+[CONTRIBUTING.md](CONTRIBUTING.md) instead — this doc stays focused on code structure
+and conventions.
 
 ## What this project is
 
 A Fabric mod for Minecraft **1.20.1**, adding flora inspired by Ireland. Mod ID is
-`emeraldisleflora` (no hyphens — matches the Java package root exactly); the Java
-package root is `net.alternateearch.emeraldisleflora`. Currently ships one piece of
-content, the Bells of Ireland flower (see README.md's "Current content" section for
-specifics) — this is a young, actively-growing project, not a finished content pack.
+`emeraldisleflora`; the Java package root is `net.alternateearch.emeraldisleflora`. 
+Currently ships Bells of Ireland (a decorative flower) and its bone-meal-grown "bushier" 
+variant, with a repeatable harvest mechanic on the grown stage — see README.md's 
+"Current content" for the full current feature list. Still a young, actively-growing 
+project, not a finished content pack.
 
 Building requires JDK 21 (Fabric Loom 1.17-SNAPSHOT needs it to run), but the compiled
 mod still targets Java 17 / Minecraft 1.20.1 at runtime — don't confuse the two when
-troubleshooting a build issue. See `README.md` for the full pinned-version table and two
-known rough edges (a SNAPSHOT Loom version, and a likely-wrong Cloth Config version
-string) — don't assume newer versions than what `gradle.properties` pins without
-checking whether they still support 1.20.1 first (several of these libraries stopped
-publishing 1.20.1 builds once the Fabric ecosystem moved to newer Minecraft versions).
+troubleshooting a build issue. See `README.md` for the full pinned-version table — don't 
+assume newer versions than what `gradle.properties` pins without checking whether they 
+still support 1.20.1 first (several of these libraries stopped publishing 1.20.1 builds 
+once the Fabric ecosystem moved to newer Minecraft versions).
 
 ## Repository layout
 
@@ -28,11 +30,10 @@ src/main/resources/     fabric.mod.json, lang files, textures, models, data.
 ```
 
 This project uses a **single, unsplit source set** (no
-`loom.splitEnvironmentSourceSets()` in `build.gradle`), and — unlike an earlier version
-of this project — client-only code is **not** grouped into its own package either.
-There is no `.client` package to look for. Client-only classes are identified purely by
-the `@Environment(EnvType.CLIENT)` annotation and by convention, wherever they happen to
-live:
+`loom.splitEnvironmentSourceSets()` in `build.gradle`), and client-only code is **not**
+grouped into its own package either. There is no `.client` package to look for.
+Client-only classes are identified purely by the `@Environment(EnvType.CLIENT)`
+annotation and by convention, wherever they happen to live:
 
 - `EmeraldIsleFloraClient` (client-only) lives directly in the root package,
   `net.alternateearch.emeraldisleflora`, alongside the common `EmeraldIsleFlora` class.
@@ -60,17 +61,26 @@ enforcement — check git history for the last version of this project that did 
 Current package contents:
 
 - `net.alternateearch.emeraldisleflora` — `EmeraldIsleFlora` (main `ModInitializer`;
-  loads config, registers item groups and blocks, exposes the loaded `ModConfig` via a
-  static getter) and `EmeraldIsleFloraClient` (client-only; registers
-  `BlockRenderLayerMap` cutout render layers for cross-shaped blocks like flowers).
+  loads config, registers item groups/blocks/bone-meal interaction/dispenser behavior,
+  exposes the loaded `ModConfig` via a static getter) and `EmeraldIsleFloraClient`
+  (client-only; registers `BlockRenderLayerMap` cutout render layers for cross-shaped
+  blocks like flowers).
 - `net.alternateearch.emeraldisleflora.config` — `ModConfig` (common, a plain
   Gson-backed POJO — add new config fields here) and `ModMenuIntegration` (client-only,
   see above — builds the Cloth Config screen).
-- `net.alternateearch.emeraldisleflora.registry` — `ModBlocks` (currently
-  `BELLS_OF_IRELAND` and `POTTED_BELLS_OF_IRELAND`, plus composting registration) and
-  `ModItemGroups` (the creative tab). Add `ModItems`, `ModBlockEntities`, etc. here as
-  they're needed, one class per registry type, each with a `register()` method called
-  from `EmeraldIsleFlora#onInitialize`.
+- `net.alternateearch.emeraldisleflora.registry` — `ModBlocks` (block instances +
+  registration + composting registration), `ModItemGroups` (the creative tab), and
+  `GrowableFlower` (a `FlowerBlock` subclass used for the grown variant — currently just
+  overrides `canMobSpawnInside` to always return `true`; this is a **deliberate**
+  behavior choice, not an oversight — mobs can spawn on/in a grown flower. If you didn't
+  intend that when reusing this class for a different flower, override it back).
+- `net.alternateearch.emeraldisleflora.util` — the bone-meal grow/harvest mechanic,
+  split into `ModCommonLogic` (the shared, config-aware grow-or-harvest logic — the
+  single source of truth both entry points below call into), `ModBoneMealInteraction`
+  (the by-hand `UseBlockCallback` entry point), and `ModDispenserBehavior` (the
+  dispenser entry point, which also reimplements vanilla's bone-meal-dispenser fallback
+  — see the convention note below on why that's not optional). All three are common
+  code (server-authoritative), not client-only.
 
 Data-driven content lives under two roots, following vanilla's own layout:
 
@@ -104,20 +114,33 @@ Data-driven content lives under two roots, following vanilla's own layout:
   doc-comment), then add a matching `general.addEntry(...)` block to
   `ModMenuIntegration`, then add its translation keys. All three steps together, please
   — a config field with no GUI entry (or vice versa) is an easy thing to leave half-done.
+- **Config-gating a mechanic**: put the check in one shared place, not once per entry
+  point. `ModCommonLogic.growOrHarvest` checking `enableGrownFlowerHarvesting` once,
+  rather than `ModBoneMealInteraction` and `ModDispenserBehavior` each checking it
+  separately, is the reference example — both entry points can't drift out of sync with
+  each other if there's only one place the check lives.
+- **Registering a behavior for an item/event vanilla already uses** (bone meal is the
+  current example, via `DispenserBlock.registerBehavior`): check whether you're
+  *replacing* existing behavior rather than adding to it. `DispenserBlock.registerBehavior`
+  replaces outright — it is not additive. If so, you must reimplement the vanilla
+  fallback for cases that aren't yours (see `ModDispenserBehavior`), or you'll silently
+  break that interaction for every other block in the game, not just yours.
 - **Recipes/advancements/loot tables**: follow the `green_dye_from_bells_of_ireland`
   files as the reference pattern (a shapeless recipe + a matching advancement that
   unlocks it). When starting a new one from a copy of an existing file (whether from
   this project or another mod entirely), double-check every mod-ID reference inside it
   actually got updated — it's easy to leave a stray reference to whatever project the
   template came from, and JSON data files fail silently (no compile error) rather than
-  loudly when an ID is wrong.
+  loudly when an ID is wrong. (This exact mistake has happened in this repo before.)
 - **Mixins**: none exist yet. If you need one, create
   `src/main/resources/emeraldisleflora.mixins.json` (and/or a `.client.mixins.json` for
   client-only mixins), reference it from `fabric.mod.json` under a `"mixins"` array, and
   put mixin classes in a `mixin` (or `mixin.client`) subpackage. Prefer Fabric API
-  events over mixins whenever an event exists for what you need. (The one known gap
-  that *would* need a mixin here — wiring an empty flower pot to auto-convert to
-  `POTTED_BELLS_OF_IRELAND` — hasn't been done; see README.md's "Known limitation".)
+  events over mixins whenever an event exists for what you need — the bone-meal
+  mechanic uses `UseBlockCallback` and `DispenserBlock.registerBehavior` specifically to
+  avoid needing one. (The one known gap that *would* need a mixin here — wiring an
+  empty flower pot to auto-convert to `POTTED_BELLS_OF_IRELAND` on right-click — hasn't
+  been done; see README.md's "Known limitation".)
 
 ## Build & verification commands
 
@@ -131,11 +154,12 @@ Requires JDK 21 on `JAVA_HOME` (or configured via `org.gradle.java.home`) — se
 README.md's "Requirements" section for why.
 
 There is no automated test suite yet. `./gradlew build` is the minimum bar before
-considering a change done. For anything touching registration, rendering, or the
-config screen, prefer also actually launching `./gradlew runClient` and checking
+considering a change done. For anything touching registration, rendering, or
+interaction logic, prefer also actually launching `./gradlew runClient` and checking
 in-game — Minecraft mod bugs are frequently the kind that only show up at runtime
 (missing texture, wrong registry order, client code leaking into common code, an opaque
-background on a block that should be transparent, etc.), not at compile time.
+background on a block that should be transparent, a dispenser behavior that silently
+broke a vanilla interaction for unrelated blocks, etc.), not at compile time.
 
 ## Things that are easy to get wrong here
 
@@ -156,8 +180,12 @@ background on a block that should be transparent, etc.), not at compile time.
   version string format matches what's actually published (e.g. Cloth Config's Fabric
   builds are versioned `X.Y.Z+fabric`, with the suffix as part of the version string,
   not a separate qualifier) — `gradle.properties` currently has this one wrong; see
-  README.md.
+  README.md. This has been flagged more than once now and is still unfixed.
 - Copying a recipe/advancement/loot table JSON from elsewhere as a starting point
   without checking every embedded mod-ID reference got updated to this project's ID.
   These files fail silently at runtime (a criterion that never triggers, an advancement
   that never grants) rather than at build time, so a leftover wrong ID is easy to miss.
+- Registering a behavior for a vanilla item/event (like `DispenserBlock.registerBehavior`
+  for bone meal) without reimplementing the vanilla fallback for cases that aren't
+  yours — this silently regresses that interaction for every other block, not just the
+  one you're adding.
