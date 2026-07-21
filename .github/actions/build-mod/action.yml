@@ -17,10 +17,6 @@ runs:
         distribution: "temurin"
         java-version: ${{ inputs.java-version }}
 
-    - name: Make Gradle wrapper executable
-      shell: bash
-      run: chmod +x ./gradlew
-
     - name: Make Gradle Wrapper Executable
       shell: bash
       run: chmod +x ./gradlew
