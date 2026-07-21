@@ -28,8 +28,22 @@ public class ModConfig {
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve(EmeraldIsleFlora.MOD_ID + ".json");
 
-	/** Sample option: when true, prints a short message to the console/log on startup. */
-	public boolean logStartupMessage = true;
+	/**
+	 * When true (default), using bone meal on an already-grown flower (Grown Bells of
+	 * Ireland or its potted variant) drops an extra flower item without reverting the
+	 * block - a small renewable flower source. When false, that specific interaction
+	 * does nothing. Growing a base Bells of Ireland into its grown variant is
+	 * unaffected either way - this only gates the repeatable-harvest half of the
+	 * mechanic, not the initial grow transition. See util.ModCommonLogic.
+	 */
+	public boolean enableGrownFlowerHarvesting = true;
+
+	/**
+	 * When true (default), using bone meal on a flower (Bells of Ireland or its potted 
+	 * variant) will cause it to grow into its grown variant. When false, that specific 
+	 * interaction does nothing. See util.ModCommonLogic.
+	 */
+	public boolean enableGrownFlowering = true;
 
 	public static ModConfig load() {
 		if (Files.exists(CONFIG_PATH)) {

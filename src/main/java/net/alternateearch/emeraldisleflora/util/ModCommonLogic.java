@@ -1,5 +1,6 @@
 package net.alternateearch.emeraldisleflora.util;
 
+import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
 import net.alternateearch.emeraldisleflora.registry.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,15 +15,23 @@ import net.minecraft.world.event.GameEvent;
 public final class ModCommonLogic {
     public static boolean growOrHarvest(ServerWorld world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
+        boolean harvestingEnabled = EmeraldIsleFlora.getConfig().enableGrownFlowerHarvesting;
+        boolean growingEnabled = EmeraldIsleFlora.getConfig().enableGrownFlowering;
 
         if (state.isOf(ModBlocks.BELLS_OF_IRELAND)) {
+            if (!growingEnabled) {
+                return false;
+            }
             world.setBlockState(pos, ModBlocks.GROWN_BELLS_OF_IRELAND.getDefaultState());
-        } else if (state.isOf(ModBlocks.GROWN_BELLS_OF_IRELAND)) {
-            Block.dropStack(world, pos, new ItemStack(ModBlocks.BELLS_OF_IRELAND.asItem()));
-            world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
         } else if (state.isOf(ModBlocks.POTTED_BELLS_OF_IRELAND)) {
+            if (!growingEnabled) {
+                return false;
+            }
             world.setBlockState(pos, ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND.getDefaultState());
-        } else if (state.isOf(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND)) {
+        } else if (state.isOf(ModBlocks.GROWN_BELLS_OF_IRELAND) || state.isOf(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND)) {
+            if (!harvestingEnabled) {
+                return false;
+            }
             Block.dropStack(world, pos, new ItemStack(ModBlocks.BELLS_OF_IRELAND.asItem()));
             world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
         } else {

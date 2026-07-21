@@ -42,13 +42,21 @@ public class ModMenuIntegration implements ModMenuApi {
 
 			general.addEntry(entryBuilder
 					.startBooleanToggle(
-							Text.translatable(TRANSLATION_PREFIX + "logStartupMessage"), config.logStartupMessage)
+							Text.translatable(TRANSLATION_PREFIX + "enableGrownFlowering"),
+							config.enableGrownFlowering)
 					.setDefaultValue(true)
-					.setTooltip(Text.translatable(TRANSLATION_PREFIX + "logStartupMessage.tooltip"))
-					.setSaveConsumer(value -> config.logStartupMessage = value)
+					.setTooltip(Text.translatable(TRANSLATION_PREFIX + "enableGrownFlowering.tooltip"))
+					.setSaveConsumer(value -> config.enableGrownFlowering = value)
 					.build());
 
-			// TODO: add one addEntry(...) block per new ModConfig field.
+			general.addEntry(entryBuilder
+					.startBooleanToggle(
+							Text.translatable(TRANSLATION_PREFIX + "enableGrownFlowerHarvesting"),
+							config.enableGrownFlowerHarvesting)
+					.setDefaultValue(true)
+					.setTooltip(Text.translatable(TRANSLATION_PREFIX + "enableGrownFlowerHarvesting.tooltip"))
+					.setSaveConsumer(value -> config.enableGrownFlowerHarvesting = value)
+					.build());
 
 			return builder.build();
 		};

@@ -9,6 +9,8 @@
 
 	"config.emeraldisleflora.title": "Emerald Isle Flora Configuration",
 	"config.emeraldisleflora.category.general": "General",
-	"config.emeraldisleflora.logStartupMessage": "Log Startup Message",
-	"config.emeraldisleflora.logStartupMessage.tooltip": "When enabled, prints a short message to the console/log when the mod finishes loading."
+	"config.emeraldisleflora.enableGrownFlowering": "Enable Flowers Growing",
+	"config.emeraldisleflora.enableGrownFlowering.tooltip": "When enabled, allows flowers to grow into grown variant.",
+	"config.emeraldisleflora.enableGrownFlowerHarvesting": "Enable Grown Flower Harvesting",
+	"config.emeraldisleflora.enableGrownFlowerHarvesting.tooltip": "When enabled, allows grown flowers to be bone mealed and create new flowers."
 }
