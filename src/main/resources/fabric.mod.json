@@ -6,7 +6,10 @@
 	"description": "Adds flora inspired by Ireland",
 	"authors": ["kylelaverty"],
 	"contact": {
-		"repo": "https://github.com/AlternateEarth/emerald-isle-flora"
+		"repo": "https://github.com/AlternateEarth/emerald-isle-flora",
+		"sources": "https://github.com/AlternateEarth/emerald-isle-flora",
+		"issues": "https://github.com/AlternateEarth/emerald-isle-flora/issues",
+		"homepage": "https://modrinth.com/mod/emerald-isle-flora"
 	},
 	"license": "MIT",
 	"environment": "*",
