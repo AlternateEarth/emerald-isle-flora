@@ -1,6 +1,6 @@
-package net.alternateearch.emeraldisleflora.registry;
+package net.alternateearth.emeraldisleflora.registry;
 
-import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;

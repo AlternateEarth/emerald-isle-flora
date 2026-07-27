@@ -1,11 +1,11 @@
-package net.alternateearch.emeraldisleflora.config;
+package net.alternateearth.emeraldisleflora.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;

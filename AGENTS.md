@@ -9,7 +9,7 @@ and conventions.
 ## What this project is
 
 A Fabric mod for Minecraft **1.20.1**, adding flora inspired by Ireland. Mod ID is
-`emeraldisleflora`; the Java package root is `net.alternateearch.emeraldisleflora`. 
+`emeraldisleflora`; the Java package root is `net.alternateearth.emeraldisleflora`. 
 Currently ships Bells of Ireland (a decorative flower) and its bone-meal-grown "bushier" 
 variant, with a repeatable harvest mechanic on the grown stage — see README.md's 
 "Current content" for the full current feature list. Still a young, actively-growing 
@@ -36,7 +36,7 @@ Client-only classes are identified purely by the `@Environment(EnvType.CLIENT)`
 annotation and by convention, wherever they happen to live:
 
 - `EmeraldIsleFloraClient` (client-only) lives directly in the root package,
-  `net.alternateearch.emeraldisleflora`, alongside the common `EmeraldIsleFlora` class.
+  `net.alternateearth.emeraldisleflora`, alongside the common `EmeraldIsleFlora` class.
 - `ModMenuIntegration` (client-only) lives in the `config` package, alongside the
   common `ModConfig` class.
 
@@ -60,21 +60,21 @@ enforcement — check git history for the last version of this project that did 
 
 Current package contents:
 
-- `net.alternateearch.emeraldisleflora` — `EmeraldIsleFlora` (main `ModInitializer`;
+- `net.alternateearth.emeraldisleflora` — `EmeraldIsleFlora` (main `ModInitializer`;
   loads config, registers item groups/blocks/bone-meal interaction/dispenser behavior,
   exposes the loaded `ModConfig` via a static getter) and `EmeraldIsleFloraClient`
   (client-only; registers `BlockRenderLayerMap` cutout render layers for cross-shaped
   blocks like flowers).
-- `net.alternateearch.emeraldisleflora.config` — `ModConfig` (common, a plain
+- `net.alternateearth.emeraldisleflora.config` — `ModConfig` (common, a plain
   Gson-backed POJO — add new config fields here) and `ModMenuIntegration` (client-only,
   see above — builds the Cloth Config screen).
-- `net.alternateearch.emeraldisleflora.registry` — `ModBlocks` (block instances +
+- `net.alternateearth.emeraldisleflora.registry` — `ModBlocks` (block instances +
   registration + composting registration), `ModItemGroups` (the creative tab), and
   `GrowableFlower` (a `FlowerBlock` subclass used for the grown variant — currently just
   overrides `canMobSpawnInside` to always return `true`; this is a **deliberate**
   behavior choice, not an oversight — mobs can spawn on/in a grown flower. If you didn't
   intend that when reusing this class for a different flower, override it back).
-- `net.alternateearch.emeraldisleflora.util` — the bone-meal grow/harvest mechanic,
+- `net.alternateearth.emeraldisleflora.util` — the bone-meal grow/harvest mechanic,
   split into `ModCommonLogic` (the shared, config-aware grow-or-harvest logic — the
   single source of truth both entry points below call into), `ModBoneMealInteraction`
   (the by-hand `UseBlockCallback` entry point), and `ModDispenserBehavior` (the

@@ -1,6 +1,6 @@
-package net.alternateearch.emeraldisleflora.util;
+package net.alternateearth.emeraldisleflora.util;
 
-import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.FallibleItemDispenserBehavior;
 import net.minecraft.item.BoneMealItem;

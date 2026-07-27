@@ -1,4 +1,4 @@
-package net.alternateearch.emeraldisleflora.registry;
+package net.alternateearth.emeraldisleflora.registry;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowerBlock;

@@ -91,3 +91,25 @@ publishing {
 		// for information on how to set up publishing.
 	}
 }
+
+loom {
+    runs {
+        // existing runs stay as-is; add this one
+        datagenClient {
+            inherit client
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.modid=emeraldisleflora"
+            runDir "build/datagen"
+        }
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs += ['src/main/generated']
+        }
+    }
+}

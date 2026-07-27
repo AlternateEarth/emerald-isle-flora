@@ -1,8 +1,8 @@
-package net.alternateearch.emeraldisleflora.config;
+package net.alternateearth.emeraldisleflora.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;

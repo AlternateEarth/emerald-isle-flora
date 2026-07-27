@@ -15,13 +15,16 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.alternateearch.emeraldisleflora.EmeraldIsleFlora"
+			"net.alternateearth.emeraldisleflora.EmeraldIsleFlora"
 		],
 		"client": [
-			"net.alternateearch.emeraldisleflora.EmeraldIsleFloraClient"
+			"net.alternateearth.emeraldisleflora.EmeraldIsleFloraClient"
 		],
 		"modmenu": [
-			"net.alternateearch.emeraldisleflora.config.ModMenuIntegration"
+			"net.alternateearth.emeraldisleflora.config.ModMenuIntegration"
+		],
+		"fabric-datagen": [
+			"net.alternateearth.emeraldisleflora.EmeraldIsleFloraDataGenerator"
 		]
 	},
 	"depends": {
