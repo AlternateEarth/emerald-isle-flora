@@ -1,7 +1,7 @@
-package net.alternateearch.emeraldisleflora.util;
+package net.alternateearth.emeraldisleflora.util;
 
-import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
-import net.alternateearch.emeraldisleflora.registry.ModBlocks;
+import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearth.emeraldisleflora.registry.ModBlocks;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;

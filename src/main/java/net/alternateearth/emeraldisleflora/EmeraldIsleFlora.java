@@ -1,10 +1,11 @@
-package net.alternateearch.emeraldisleflora;
+package net.alternateearth.emeraldisleflora;
 
-import net.alternateearch.emeraldisleflora.config.ModConfig;
-import net.alternateearch.emeraldisleflora.registry.ModBlocks;
-import net.alternateearch.emeraldisleflora.registry.ModItemGroups;
-import net.alternateearch.emeraldisleflora.util.ModBoneMealInteraction;
-import net.alternateearch.emeraldisleflora.util.ModDispenserBehavior;
+import net.alternateearth.emeraldisleflora.config.ModConfig;
+import net.alternateearth.emeraldisleflora.registry.ModBlocks;
+import net.alternateearth.emeraldisleflora.registry.ModItemGroups;
+import net.alternateearth.emeraldisleflora.registry.ModWorldGen;
+import net.alternateearth.emeraldisleflora.util.ModBoneMealInteraction;
+import net.alternateearth.emeraldisleflora.util.ModDispenserBehavior;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 		ModBlocks.register();
 		ModBoneMealInteraction.register();
 		ModDispenserBehavior.register();
+		ModWorldGen.register();
 
 		LOGGER.info("Emerald Isle Flora has loaded!");
 	}

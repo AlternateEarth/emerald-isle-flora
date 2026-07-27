@@ -1,6 +1,6 @@
-package net.alternateearch.emeraldisleflora.registry;
+package net.alternateearth.emeraldisleflora.registry;
 
-import net.alternateearch.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.Blocks;
