@@ -34,7 +34,11 @@ public final class ModBoneMealInteraction {
             if (!state.isOf(ModBlocks.BELLS_OF_IRELAND) && 
                 !state.isOf(ModBlocks.GROWN_BELLS_OF_IRELAND) && 
                 !state.isOf(ModBlocks.POTTED_BELLS_OF_IRELAND) && 
-                !state.isOf(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND)) {
+                !state.isOf(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND) &&
+                !state.isOf(ModBlocks.BOG_ROSEMARY) &&
+                !state.isOf(ModBlocks.GROWN_BOG_ROSEMARY) &&
+                !state.isOf(ModBlocks.POTTED_BOG_ROSEMARY) &&
+                !state.isOf(ModBlocks.POTTED_GROWN_BOG_ROSEMARY)) {
                 return ActionResult.PASS;
             }
 
