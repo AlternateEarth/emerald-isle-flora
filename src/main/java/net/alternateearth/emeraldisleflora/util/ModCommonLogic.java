@@ -34,6 +34,22 @@ public final class ModCommonLogic {
             }
             Block.dropStack(world, pos, new ItemStack(ModBlocks.BELLS_OF_IRELAND.asItem()));
             world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
+        } else if (state.isOf(ModBlocks.BOG_ROSEMARY)) {
+            if (!growingEnabled) {
+                return false;
+            }
+            world.setBlockState(pos, ModBlocks.GROWN_BOG_ROSEMARY.getDefaultState());
+        } else if (state.isOf(ModBlocks.POTTED_BOG_ROSEMARY)) {
+            if (!growingEnabled) {
+                return false;
+            }
+            world.setBlockState(pos, ModBlocks.POTTED_GROWN_BOG_ROSEMARY.getDefaultState());
+        } else if (state.isOf(ModBlocks.GROWN_BOG_ROSEMARY) || state.isOf(ModBlocks.POTTED_GROWN_BOG_ROSEMARY)) {
+            if (!harvestingEnabled) {
+                return false;
+            }
+            Block.dropStack(world, pos, new ItemStack(ModBlocks.BOG_ROSEMARY.asItem()));
+            world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
         } else {
             return false;
         }

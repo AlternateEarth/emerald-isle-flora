@@ -20,6 +20,9 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_MEADOW_KEY = registerKey("patch_bells_of_ireland_meadow");
     public static final RegistryKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_PLAINS_KEY = registerKey("patch_bells_of_ireland_plains");
 
+    public static final RegistryKey<PlacedFeature> PATCH_BOG_ROSEMARY_SWAMP_KEY = registerKey("patch_bog_rosemary_swamp");
+    public static final RegistryKey<PlacedFeature> PATCH_BOG_ROSEMARY_MANGROVE_SWAMP_KEY = registerKey("patch_bog_rosemary_mangrove_swamp");
+
     //--------------------------------------------------------------------------------------------------------------------------------------------------
 
     public static void bootstrap(Registerable<PlacedFeature> context) {
@@ -43,6 +46,30 @@ public class ModPlacedFeatures {
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BELLS_OF_IRELAND_KEY), 
             List.of(
                 RarityFilterPlacementModifier.of(32),
+                SquarePlacementModifier.of(),
+                PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
+                BiomePlacementModifier.of()
+            )
+        );
+
+        register(
+            context,
+            PATCH_BOG_ROSEMARY_SWAMP_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLENDED_BOG_ROSEMARY_KEY),
+            List.of(
+                RarityFilterPlacementModifier.of(40),
+                SquarePlacementModifier.of(),
+                PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
+                BiomePlacementModifier.of()
+            )
+        );
+
+        register(
+            context,
+            PATCH_BOG_ROSEMARY_MANGROVE_SWAMP_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BOG_ROSEMARY_KEY),
+            List.of(
+                RarityFilterPlacementModifier.of(8),
                 SquarePlacementModifier.of(),
                 PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of()

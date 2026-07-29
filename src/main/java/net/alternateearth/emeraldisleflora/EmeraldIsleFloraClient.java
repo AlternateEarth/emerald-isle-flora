@@ -29,9 +29,13 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 		//---------------------------Flowers---------------------------
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BELLS_OF_IRELAND, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BELLS_OF_IRELAND, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BOG_ROSEMARY, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BOG_ROSEMARY, RenderLayer.getCutout());
 
 		//-----------------------Potted Flowers------------------------
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BELLS_OF_IRELAND, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BOG_ROSEMARY, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BOG_ROSEMARY, RenderLayer.getCutout());
 	}
 }

@@ -33,6 +33,7 @@ jobs:
         uses: ./.github/actions/build-mod
         with:
           java-version: ${{ env.JAVA_VERSION }}
+          verify-datagen: true
 
       - name: Publish Build Artifacts to GitHub Release and Modrinth
         uses: Kir-Antipov/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
