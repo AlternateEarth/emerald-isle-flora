@@ -55,9 +55,9 @@ public class ModPlacedFeatures {
         register(
             context,
             PATCH_BOG_ROSEMARY_SWAMP_KEY,
-            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BOG_ROSEMARY_KEY),
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLENDED_BOG_ROSEMARY_KEY),
             List.of(
-                RarityFilterPlacementModifier.of(10),
+                RarityFilterPlacementModifier.of(40),
                 SquarePlacementModifier.of(),
                 PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of()
@@ -69,7 +69,7 @@ public class ModPlacedFeatures {
             PATCH_BOG_ROSEMARY_MANGROVE_SWAMP_KEY,
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BOG_ROSEMARY_KEY),
             List.of(
-                RarityFilterPlacementModifier.of(10),
+                RarityFilterPlacementModifier.of(8),
                 SquarePlacementModifier.of(),
                 PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of()

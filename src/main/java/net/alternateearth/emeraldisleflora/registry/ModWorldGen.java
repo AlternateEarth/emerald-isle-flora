@@ -30,6 +30,22 @@ public final class ModWorldGen {
                 Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bells_of_ireland_meadow"))
         );
 
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(BiomeKeys.SWAMP), 
+            GenerationStep.Feature.VEGETAL_DECORATION, 
+            RegistryKey.of(
+                RegistryKeys.PLACED_FEATURE, 
+                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bog_rosemary_swamp"))
+        );
+
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(BiomeKeys.MANGROVE_SWAMP), 
+            GenerationStep.Feature.VEGETAL_DECORATION, 
+            RegistryKey.of(
+                RegistryKeys.PLACED_FEATURE, 
+                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bog_rosemary_mangrove_swamp"))
+        );
+
         EmeraldIsleFlora.LOGGER.info("Finished registering World Generation for " + EmeraldIsleFlora.MOD_ID);
     }
 }

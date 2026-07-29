@@ -1,9 +1,9 @@
 {
-  "feature": "emeraldisleflora:path_bog_rosemary",
+  "feature": "emeraldisleflora:patch_bog_rosemary",
   "placement": [
     {
       "type": "minecraft:rarity_filter",
-      "chance": 10
+      "chance": 8
     },
     {
       "type": "minecraft:in_square"
