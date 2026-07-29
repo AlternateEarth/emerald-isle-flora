@@ -58,7 +58,7 @@ public final class ModItemGroups {
 	private static void registerToNaturalBlocks() {
 		EmeraldIsleFlora.LOGGER.info("Registering Items in Natural Blocks Item Group for " + EmeraldIsleFlora.MOD_ID);
 
-		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(content -> {
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(content -> {
 			content.addAfter(Blocks.WITHER_ROSE, ModBlocks.BELLS_OF_IRELAND);
 			content.addAfter(ModBlocks.BELLS_OF_IRELAND, ModBlocks.BOG_ROSEMARY);
 			content.addAfter(ModBlocks.BOG_ROSEMARY, ModBlocks.GROWN_BELLS_OF_IRELAND);

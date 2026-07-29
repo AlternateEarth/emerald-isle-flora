@@ -1,3 +1,6 @@
 {
-  "parent": "emeraldisleflora:block/bog_rosemary"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "emeraldisleflora:block/bog_rosemary"
+  }
 }
