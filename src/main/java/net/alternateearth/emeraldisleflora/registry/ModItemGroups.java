@@ -39,18 +39,18 @@ public final class ModItemGroups {
 		EmeraldIsleFlora.LOGGER.info("Registering Items in Custom Group for " + EmeraldIsleFlora.MOD_ID);
 
 		Registry.register(
-				Registries.ITEM_GROUP,
-				EMERALD_ISLE_FLORA_GROUP,
-				FabricItemGroup.builder()
-						.icon(() -> new ItemStack(ModBlocks.BELLS_OF_IRELAND))
-						.displayName(Text.translatable("itemGroup." + EmeraldIsleFlora.MOD_ID + ".main"))
-						.entries((displayContext, entries) -> {
-							entries.add(ModBlocks.BELLS_OF_IRELAND);
-							entries.add(ModBlocks.BOG_ROSEMARY);
-							entries.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
-							entries.add(ModBlocks.GROWN_BOG_ROSEMARY);
-						})
-						.build());
+			Registries.ITEM_GROUP,
+			EMERALD_ISLE_FLORA_GROUP,
+			FabricItemGroup.builder()
+				.icon(() -> new ItemStack(ModBlocks.BELLS_OF_IRELAND))
+				.displayName(Text.translatable("itemGroup." + EmeraldIsleFlora.MOD_ID + ".main"))
+				.entries((displayContext, entries) -> {
+					entries.add(ModBlocks.BELLS_OF_IRELAND);
+					entries.add(ModBlocks.BOG_ROSEMARY);
+					entries.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
+					entries.add(ModBlocks.GROWN_BOG_ROSEMARY);
+				})
+				.build());
 		
 		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Custom Group for " + EmeraldIsleFlora.MOD_ID);	
 	}

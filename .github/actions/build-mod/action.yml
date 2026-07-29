@@ -5,6 +5,10 @@ inputs:
     description: 'JDK version to build with'
     required: false
     default: '17'
+  verify-datagen:
+    description: 'Also run datagen and fail if it differs from what is committed'
+    required: false
+    default: 'false'
 runs:
   using: 'composite'
   steps:
@@ -23,6 +27,15 @@ runs:
 
     - name: Setup Gradle For Optimal Use
       uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+
+    - name: Verify generated worldgen data is up to date
+      if: inputs.verify-datagen == 'true'
+      shell: bash
+      run: |
+        ./gradlew runDatagenClient
+        git diff --exit-code -- src/main/generated || (
+          echo "::error::Generated worldgen data doesn't match what's committed. Run './gradlew runDatagenClient' locally and commit the result." && exit 1
+        )
 
     - name: Build With Gradle
       shell: bash

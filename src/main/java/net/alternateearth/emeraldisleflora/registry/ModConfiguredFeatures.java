@@ -15,6 +15,7 @@ import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
 public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BELLS_OF_IRELAND_KEY = registerKey("patch_bells_of_ireland");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BOG_ROSEMARY_KEY = registerKey("path_bog_rosemary");
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -31,6 +32,22 @@ public class ModConfiguredFeatures {
                     Feature.SIMPLE_BLOCK, 
                     new SimpleBlockFeatureConfig(
                         BlockStateProvider.of(ModBlocks.BELLS_OF_IRELAND)
+                    )
+                ))
+        );
+
+        register(
+            context,
+            PATCH_BOG_ROSEMARY_KEY,
+            Feature.FLOWER,
+            new RandomPatchFeatureConfig(
+                64,
+                6,
+                4,
+                PlacedFeatures.createEntry(
+                    Feature.SIMPLE_BLOCK,
+                    new SimpleBlockFeatureConfig(
+                        BlockStateProvider.of(ModBlocks.BOG_ROSEMARY)
                     )
                 ))
         );

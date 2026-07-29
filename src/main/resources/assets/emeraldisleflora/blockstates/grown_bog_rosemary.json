@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "emeraldisleflora:block/bog_rosemary/grown_bog_rosemary_1"
+      },
+      {
+        "model": "emeraldisleflora:block/bog_rosemary/grown_bog_rosemary_2"
+      },
+      {
+        "model": "emeraldisleflora:block/bog_rosemary/grown_bog_rosemary_3"
+      },
+      {
+        "model": "emeraldisleflora:block/bog_rosemary/grown_bog_rosemary_4"
+      },
+      {
+        "model": "emeraldisleflora:block/bog_rosemary/grown_bog_rosemary_5"
+      }
+    ]
+  }
+}
