@@ -20,6 +20,7 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BELLS_OF_IRELAND_KEY = registerKey("patch_bells_of_ireland");
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BOG_ROSEMARY_KEY = registerKey("patch_bog_rosemary");
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BOG_ROSEMARY_KEY = registerKey("patch_blended_bog_rosemary");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -75,6 +76,26 @@ public class ModConfiguredFeatures {
                     )
                 )
             )
+        );
+
+        register(
+            context,
+            PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY,
+            Feature.FLOWER,
+            new RandomPatchFeatureConfig(
+                64,
+                6,
+                4,
+                PlacedFeatures.createEntry(
+                    Feature.SIMPLE_BLOCK,
+                    new SimpleBlockFeatureConfig(
+                        new WeightedBlockStateProvider(
+                            DataPool.<BlockState>builder()
+                                .add(ModBlocks.BULBOUS_BUTTERCUP.getDefaultState(), 1)
+                                .add(ModBlocks.GROWN_BULBOUS_BUTTERCUP.getDefaultState(), 2)
+                        )
+                    )
+                ))
         );
     }
 

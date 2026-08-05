@@ -38,7 +38,11 @@ public final class ModBoneMealInteraction {
                 !state.isOf(ModBlocks.BOG_ROSEMARY) &&
                 !state.isOf(ModBlocks.GROWN_BOG_ROSEMARY) &&
                 !state.isOf(ModBlocks.POTTED_BOG_ROSEMARY) &&
-                !state.isOf(ModBlocks.POTTED_GROWN_BOG_ROSEMARY)) {
+                !state.isOf(ModBlocks.POTTED_GROWN_BOG_ROSEMARY) &&
+                !state.isOf(ModBlocks.BULBOUS_BUTTERCUP) &&
+                !state.isOf(ModBlocks.GROWN_BULBOUS_BUTTERCUP) &&
+                !state.isOf(ModBlocks.POTTED_BULBOUS_BUTTERCUP) &&
+                !state.isOf(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP)) {
                 return ActionResult.PASS;
             }
 

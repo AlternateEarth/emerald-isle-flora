@@ -24,12 +24,18 @@ public final class ModBlocks {
     public static final Block BOG_ROSEMARY = new FlowerBlock(StatusEffects.NAUSEA, 150, FabricBlockSettings.copyOf(DANDELION));
     public static final Block GROWN_BOG_ROSEMARY = new GrowableFlower(StatusEffects.NAUSEA, 150, FabricBlockSettings.copyOf(BOG_ROSEMARY));
 
+    public static final Block BULBOUS_BUTTERCUP = new FlowerBlock(StatusEffects.NAUSEA, 100, FabricBlockSettings.copyOf(DANDELION));
+    public static final Block GROWN_BULBOUS_BUTTERCUP = new GrowableFlower(StatusEffects.NAUSEA, 100, FabricBlockSettings.copyOf(BULBOUS_BUTTERCUP));
+
     //-----------------------Potted Flowers------------------------
     public static final Block POTTED_BELLS_OF_IRELAND = new FlowerPotBlock(BELLS_OF_IRELAND, FabricBlockSettings.copyOf(POTTED_DANDELION));
     public static final Block POTTED_GROWN_BELLS_OF_IRELAND = new FlowerPotBlock(GROWN_BELLS_OF_IRELAND, FabricBlockSettings.copyOf(POTTED_BELLS_OF_IRELAND));
 
     public static final Block POTTED_BOG_ROSEMARY = new FlowerPotBlock(BOG_ROSEMARY, FabricBlockSettings.copyOf(POTTED_DANDELION));
     public static final Block POTTED_GROWN_BOG_ROSEMARY = new FlowerPotBlock(GROWN_BOG_ROSEMARY, FabricBlockSettings.copyOf(POTTED_BOG_ROSEMARY));
+
+    public static final Block POTTED_BULBOUS_BUTTERCUP = new FlowerPotBlock(BULBOUS_BUTTERCUP, FabricBlockSettings.copyOf(POTTED_DANDELION));
+    public static final Block POTTED_GROWN_BULBOUS_BUTTERCUP = new FlowerPotBlock(GROWN_BULBOUS_BUTTERCUP, FabricBlockSettings.copyOf(POTTED_BULBOUS_BUTTERCUP));
 
     public static void register() {
         EmeraldIsleFlora.LOGGER.info("Registering Blocks for " + EmeraldIsleFlora.MOD_ID);
@@ -44,11 +50,18 @@ public final class ModBlocks {
         register("potted_bog_rosemary", POTTED_BOG_ROSEMARY, false);
         register("potted_grown_bog_rosemary", POTTED_GROWN_BOG_ROSEMARY, false);
 
+        register("bulbous_buttercup", BULBOUS_BUTTERCUP, true);
+        register("grown_bulbous_buttercup", GROWN_BULBOUS_BUTTERCUP, true);
+        register("potted_bulbous_buttercup", POTTED_BULBOUS_BUTTERCUP, false);
+        register("potted_grown_bulbous_buttercup", POTTED_GROWN_BULBOUS_BUTTERCUP, false);
+
         // Register this block to be compostable.
         CompostingChanceRegistry.INSTANCE.add(BELLS_OF_IRELAND, 0.65f);
         CompostingChanceRegistry.INSTANCE.add(GROWN_BELLS_OF_IRELAND, 0.95f);
         CompostingChanceRegistry.INSTANCE.add(BOG_ROSEMARY, 0.65f);
         CompostingChanceRegistry.INSTANCE.add(GROWN_BOG_ROSEMARY, 0.95f);
+        CompostingChanceRegistry.INSTANCE.add(BULBOUS_BUTTERCUP, 0.65f);
+        CompostingChanceRegistry.INSTANCE.add(GROWN_BULBOUS_BUTTERCUP, 0.95f);
 
         EmeraldIsleFlora.LOGGER.info("Finished registering Blocks for " + EmeraldIsleFlora.MOD_ID);
     }

@@ -13,6 +13,11 @@
 	"block.emeraldisleflora.potted_bog_rosemary": "Potted Bog Rosemary",
 	"block.emeraldisleflora.potted_grown_bog_rosemary": "Potted Bog Rosemaries",
 
+	"block.emeraldisleflora.bulbous_buttercup": "Bulbous Buttercup",
+	"block.emeraldisleflora.grown_bulbous_buttercup": "Bulbous Buttercups",
+	"block.emeraldisleflora.potted_bulbous_buttercup": "Potted Bulbous Buttercup",
+	"block.emeraldisleflora.potted_grown_bulbous_buttercup": "Potted Bulbous Buttercups",
+
 	"config.emeraldisleflora.title": "Emerald Isle Flora Configuration",
 	"config.emeraldisleflora.category.general": "General",
 	"config.emeraldisleflora.enableGrownFlowering": "Enable Flowers Growing",

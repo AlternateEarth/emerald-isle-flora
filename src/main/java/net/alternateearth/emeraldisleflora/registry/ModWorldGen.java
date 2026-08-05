@@ -46,6 +46,30 @@ public final class ModWorldGen {
                 Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bog_rosemary_mangrove_swamp"))
         );
 
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(BiomeKeys.PLAINS),
+            GenerationStep.Feature.VEGETAL_DECORATION,
+            RegistryKey.of(
+                RegistryKeys.PLACED_FEATURE,
+                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_plains"))
+        );
+
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(BiomeKeys.SUNFLOWER_PLAINS),
+            GenerationStep.Feature.VEGETAL_DECORATION,
+            RegistryKey.of(
+                RegistryKeys.PLACED_FEATURE,
+                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_sunflower_plains"))
+        );
+
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(BiomeKeys.MEADOW),
+            GenerationStep.Feature.VEGETAL_DECORATION,
+            RegistryKey.of(
+                RegistryKeys.PLACED_FEATURE,
+                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_meadow"))
+        );
+
         EmeraldIsleFlora.LOGGER.info("Finished registering World Generation for " + EmeraldIsleFlora.MOD_ID);
     }
 }

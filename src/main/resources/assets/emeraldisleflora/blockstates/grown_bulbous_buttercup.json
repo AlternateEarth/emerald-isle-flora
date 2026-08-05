@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "emeraldisleflora:block/bulbous_buttercup/grown_bulbous_buttercup_1"
+      },
+      {
+        "model": "emeraldisleflora:block/bulbous_buttercup/grown_bulbous_buttercup_2"
+      },
+      {
+        "model": "emeraldisleflora:block/bulbous_buttercup/grown_bulbous_buttercup_3"
+      },
+      {
+        "model": "emeraldisleflora:block/bulbous_buttercup/grown_bulbous_buttercup_4"
+      },
+      {
+        "model": "emeraldisleflora:block/bulbous_buttercup/grown_bulbous_buttercup_5"
+      }
+    ]
+  }
+}
