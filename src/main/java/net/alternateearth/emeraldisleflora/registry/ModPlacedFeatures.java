@@ -23,6 +23,10 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> PATCH_BOG_ROSEMARY_SWAMP_KEY = registerKey("patch_bog_rosemary_swamp");
     public static final RegistryKey<PlacedFeature> PATCH_BOG_ROSEMARY_MANGROVE_SWAMP_KEY = registerKey("patch_bog_rosemary_mangrove_swamp");
 
+    public static final RegistryKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_PLAINS_KEY = registerKey("patch_bulbous_buttercup_plains");
+    public static final RegistryKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_SUNFLOWER_PLAINS_KEY = registerKey("patch_bulbous_buttercup_sunflower_plains");
+    public static final RegistryKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_MEADOW_KEY = registerKey("patch_bulbous_buttercup_meadow");
+
     //--------------------------------------------------------------------------------------------------------------------------------------------------
 
     public static void bootstrap(Registerable<PlacedFeature> context) {
@@ -70,6 +74,42 @@ public class ModPlacedFeatures {
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BOG_ROSEMARY_KEY),
             List.of(
                 RarityFilterPlacementModifier.of(8),
+                SquarePlacementModifier.of(),
+                PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
+                BiomePlacementModifier.of()
+            )
+        );
+
+        register(
+            context,
+            PATCH_BULBOUS_BUTTERCUP_PLAINS_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY),
+            List.of(
+                RarityFilterPlacementModifier.of(16),
+                SquarePlacementModifier.of(),
+                PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
+                BiomePlacementModifier.of()
+            )
+        );
+
+        register(
+            context,
+            PATCH_BULBOUS_BUTTERCUP_SUNFLOWER_PLAINS_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY),
+            List.of(
+                RarityFilterPlacementModifier.of(16),
+                SquarePlacementModifier.of(),
+                PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
+                BiomePlacementModifier.of()
+            )
+        );
+
+        register(
+            context,
+            PATCH_BULBOUS_BUTTERCUP_MEADOW_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY),
+            List.of(
+                RarityFilterPlacementModifier.of(24),
                 SquarePlacementModifier.of(),
                 PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of()
