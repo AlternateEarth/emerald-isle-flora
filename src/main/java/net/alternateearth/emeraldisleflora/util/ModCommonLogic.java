@@ -50,6 +50,22 @@ public final class ModCommonLogic {
             }
             Block.dropStack(world, pos, new ItemStack(ModBlocks.BOG_ROSEMARY.asItem()));
             world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
+        } else if (state.isOf(ModBlocks.BULBOUS_BUTTERCUP)) {
+            if (!growingEnabled) {
+                return false;
+            }
+            world.setBlockState(pos, ModBlocks.GROWN_BULBOUS_BUTTERCUP.getDefaultState());
+        } else if (state.isOf(ModBlocks.POTTED_BULBOUS_BUTTERCUP)) {
+            if (!growingEnabled) {
+                return false;
+            }
+            world.setBlockState(pos, ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP.getDefaultState());
+        } else if (state.isOf(ModBlocks.GROWN_BULBOUS_BUTTERCUP) || state.isOf(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP)) {
+            if (!harvestingEnabled) {
+                return false;
+            }
+            Block.dropStack(world, pos, new ItemStack(ModBlocks.BULBOUS_BUTTERCUP.asItem()));
+            world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
         } else {
             return false;
         }

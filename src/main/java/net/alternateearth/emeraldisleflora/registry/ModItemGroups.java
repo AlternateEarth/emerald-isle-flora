@@ -47,8 +47,10 @@ public final class ModItemGroups {
 				.entries((displayContext, entries) -> {
 					entries.add(ModBlocks.BELLS_OF_IRELAND);
 					entries.add(ModBlocks.BOG_ROSEMARY);
+					entries.add(ModBlocks.BULBOUS_BUTTERCUP);
 					entries.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
 					entries.add(ModBlocks.GROWN_BOG_ROSEMARY);
+					entries.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 				})
 				.build());
 		
@@ -61,8 +63,10 @@ public final class ModItemGroups {
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(content -> {
 			content.addAfter(Blocks.WITHER_ROSE, ModBlocks.BELLS_OF_IRELAND);
 			content.addAfter(ModBlocks.BELLS_OF_IRELAND, ModBlocks.BOG_ROSEMARY);
-			content.addAfter(ModBlocks.BOG_ROSEMARY, ModBlocks.GROWN_BELLS_OF_IRELAND);
+			content.addAfter(ModBlocks.BOG_ROSEMARY, ModBlocks.BULBOUS_BUTTERCUP);
+			content.addAfter(ModBlocks.BULBOUS_BUTTERCUP, ModBlocks.GROWN_BELLS_OF_IRELAND);
 			content.addAfter(ModBlocks.GROWN_BELLS_OF_IRELAND, ModBlocks.GROWN_BOG_ROSEMARY);
+			content.addAfter(ModBlocks.GROWN_BOG_ROSEMARY, ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 		});
 
 		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Natural Blocks Item Group for " + EmeraldIsleFlora.MOD_ID);
