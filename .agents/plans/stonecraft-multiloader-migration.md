@@ -14,23 +14,32 @@ commit, already pushed to no remote (local only so far — nothing has been push
   dropped from the jar (chiseled subproject's `projectDir` isn't root), and generated
   world-gen JSON silently dropped from the jar (Stonecraft's default
   `generatedResources` dir is per-chiseled-subproject, not root `src/main/generated`).
-- **Stage 2 — done** (`d5d8e3a`). Forge added for 1.20.1. Turned out much bigger than
-  the original plan assumed — see the rewritten Stage 2 section below and its "Actual
-  outcome" note. `1.20.1-fabric` reverified in-game with no regressions.
-  `./gradlew :1.20.1-forge:runClient` (Architectury Loom's dev-launch task) is still
-  blocked by the upstream Loom bug noted in that section, but the actual mod jar was
-  since manually verified in a **real** Forge 1.20.1 (build 47.4.10) install via Prism
-  Launcher: Forge fully discovered, parsed `mods.toml`, and loaded both
-  `emeraldisleflora-forge` and `cloth-config-forge` with no errors (`[✔]` in the mod
-  list) - the exact step that crashes under Loom's dev environment. That's strong
-  confirmation the Loom failure really is a dev-environment quirk, not a defect in this
-  mod's `mods.toml` or registration code. The in-game render/rendering/bone-meal smoke
-  test itself is still unconfirmed - that specific attempt hit an unrelated local
-  problem (a Flatpak NVIDIA GL driver version mismatch on the tester's machine: host
-  driver 580.173.02 vs. installed Flatpak extension 580-126-18, causing a
-  "GLX: Failed to find a suitable GLXFBConfig" crash before any game window opens) -
-  not something in this repo to fix. Retry the visual smoke test whenever that's
-  resolved locally, or on a different machine/launcher.
+- **Stage 2 — done and fully verified** (`d5d8e3a`, `2113b9d`). Forge added for 1.20.1.
+  Turned out much bigger than the original plan assumed — see the rewritten Stage 2
+  section below and its "Actual outcome" note. `1.20.1-fabric` reverified in-game with
+  no regressions.
+
+  `./gradlew :1.20.1-forge:runClient` (Architectury Loom's dev-launch task) remains
+  broken - still worth fixing eventually for developer convenience, but no longer
+  blocking, since the mod itself has now been fully verified through a **real** Forge
+  1.20.1 (build 47.4.10) install via Prism Launcher instead: flowers spawned, rendered,
+  and the game ran cleanly with zero errors. Getting there took two real, now-fixed
+  bugs, both discovered only by testing outside Loom's dev environment:
+  1. `mods.toml`'s `[[dependencies.X]]` blocks were missing a `mandatory = true` field -
+     Forge 47.4.10 rejects any dependency block without it
+     (`InvalidModFileException: Missing required field mandatory in dependency (...)`).
+     `type = "required"` alone (the older schema, and what Stonecraft's own e2e testmod
+     example uses) is no longer sufficient on this Forge patch line. Fixed in `2113b9d`.
+  2. A Flatpak NVIDIA GL driver version mismatch on the tester's machine (unrelated to
+     this repo, fixed with `flatpak update`) was blocking the graphics window entirely
+     before mod code even ran.
+
+  In hindsight, bug 1 almost certainly *also* explains the original
+  `:1.20.1-forge:runClient` crash under Loom (`"Missing required field mandatory in
+  dependency (main)"` - Forge's own synthetic system-mod descriptor hitting the same
+  validation rule) - so that Loom failure may not be a pure dev-environment bug after
+  all. Worth re-testing `runClient` if picking up the Loom dev-launch investigation
+  again; low priority since the real-install path is now a proven working alternative.
 - **Matrix corrected**: NeoForge dropped from 1.20.1 entirely (confirmed infeasible —
   see the matrix section). 9 targets → 8.
 - **Next up: Stage 3** (1.21.1, Fabric + NeoForge) — not started. First new Minecraft
@@ -39,9 +48,9 @@ commit, already pushed to no remote (local only so far — nothing has been push
   `yarn-mappings-patch-neoforge` actually exists for 1.21.1 early, before writing code).
 
 Known open items, not blockers, revisit later:
-- `1.20.1-forge`'s in-game render/interaction smoke test (transparent cutout rendering,
-  bone-meal, world-gen) is still unconfirmed - mod *loading* is confirmed via a real
-  Forge install (see above), just not a launched, rendered game session yet.
+- `./gradlew :1.20.1-forge:runClient` (Loom dev-launch) still doesn't work - see the
+  Stage 2 note above. Not blocking since a real Forge install is a proven alternative,
+  but worth fixing eventually for developer convenience/CI.
 - Config-GUI gap on Forge/NeoForge (no Mod Menu equivalent) — still just the acceptable
   v1 gap the plan always anticipated, not newly discovered.
 - CI workflows (`.github/workflows/*`) still reference the pre-migration
