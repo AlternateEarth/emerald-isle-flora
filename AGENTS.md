@@ -53,10 +53,9 @@ Rule of thumb: only Fabric Loader's `"client"` entrypoint
 (`EmeraldIsleFlora#onInitialize`, registry classes, block/item classes) must never
 import them.
 
-If this project grows enough client-only code that tracking this by convention alone
-gets error-prone, reintroducing `loom.splitEnvironmentSourceSets()` (and moving
-client-only classes into their own `src/client` source set) would restore compile-time
-enforcement — check git history for the last version of this project that did that.
+If client-only code grows enough that tracking this by convention gets error-prone,
+consider reintroducing `loom.splitEnvironmentSourceSets()` (moving client-only classes
+into their own `src/client` source set) to restore compile-time enforcement.
 
 Current package contents:
 
@@ -115,23 +114,20 @@ Data-driven content lives under two roots, following vanilla's own layout:
   `ModMenuIntegration`, then add its translation keys. All three steps together, please
   — a config field with no GUI entry (or vice versa) is an easy thing to leave half-done.
 - **Config-gating a mechanic**: put the check in one shared place, not once per entry
-  point. `ModCommonLogic.growOrHarvest` checking `enableGrownFlowerHarvesting` once,
-  rather than `ModBoneMealInteraction` and `ModDispenserBehavior` each checking it
-  separately, is the reference example — both entry points can't drift out of sync with
-  each other if there's only one place the check lives.
+  point, so entry points can't drift out of sync. `ModCommonLogic.growOrHarvest`
+  checking `enableGrownFlowerHarvesting` once, rather than `ModBoneMealInteraction` and
+  `ModDispenserBehavior` each checking it separately, is the reference example.
 - **Registering a behavior for an item/event vanilla already uses** (bone meal is the
-  current example, via `DispenserBlock.registerBehavior`): check whether you're
-  *replacing* existing behavior rather than adding to it. `DispenserBlock.registerBehavior`
-  replaces outright — it is not additive. If so, you must reimplement the vanilla
-  fallback for cases that aren't yours (see `ModDispenserBehavior`), or you'll silently
-  break that interaction for every other block in the game, not just yours.
+  current example, via `DispenserBlock.registerBehavior`, which replaces outright rather
+  than adding to existing behavior): reimplement the vanilla fallback for cases that
+  aren't yours (see `ModDispenserBehavior`), or you'll silently break that interaction
+  for every other block in the game, not just yours.
 - **Recipes/advancements/loot tables**: follow the `green_dye_from_bells_of_ireland`
   files as the reference pattern (a shapeless recipe + a matching advancement that
-  unlocks it). When starting a new one from a copy of an existing file (whether from
-  this project or another mod entirely), double-check every mod-ID reference inside it
-  actually got updated — it's easy to leave a stray reference to whatever project the
-  template came from, and JSON data files fail silently (no compile error) rather than
-  loudly when an ID is wrong. (This exact mistake has happened in this repo before.)
+  unlocks it). When copying an existing file as a starting point, double-check every
+  mod-ID reference got updated — JSON data files fail silently (no compile error) rather
+  than loudly when an ID is wrong, and this exact mistake has happened in this repo
+  before.
 - **Mixins**: none exist yet. If you need one, create
   `src/main/resources/emeraldisleflora.mixins.json` (and/or a `.client.mixins.json` for
   client-only mixins), reference it from `fabric.mod.json` under a `"mixins"` array, and
@@ -161,13 +157,8 @@ in-game — Minecraft mod bugs are frequently the kind that only show up at runt
 background on a block that should be transparent, a dispenser behavior that silently
 broke a vanilla interaction for unrelated blocks, etc.), not at compile time.
 
-## Things that are easy to get wrong here
+## Other gotchas
 
-- Assuming a class is common code just because it's in a package that doesn't sound
-  client-specific. `config/ModMenuIntegration.java` is client-only despite sitting next
-  to the common `ModConfig`. Check `@Environment`, not the folder.
-- Adding a cross-shaped block without the matching `BlockRenderLayerMap` registration in
-  `EmeraldIsleFloraClient` — it'll compile fine and render with a solid background.
 - Forgetting to declare a Minecraft-version-appropriate mapping when referencing vanilla
   classes — this project uses **Yarn** mappings (`net.minecraft.*` names), not Mojang's
   official names.
@@ -179,13 +170,4 @@ broke a vanilla interaction for unrelated blocks, etc.), not at compile time.
   version actually lists `1.20.1` support before bumping. Also double-check the *exact*
   version string format matches what's actually published (e.g. Cloth Config's Fabric
   builds are versioned `X.Y.Z+fabric`, with the suffix as part of the version string,
-  not a separate qualifier) — `gradle.properties` currently has this one wrong; see
-  README.md. This has been flagged more than once now and is still unfixed.
-- Copying a recipe/advancement/loot table JSON from elsewhere as a starting point
-  without checking every embedded mod-ID reference got updated to this project's ID.
-  These files fail silently at runtime (a criterion that never triggers, an advancement
-  that never grants) rather than at build time, so a leftover wrong ID is easy to miss.
-- Registering a behavior for a vanilla item/event (like `DispenserBlock.registerBehavior`
-  for bone meal) without reimplementing the vanilla fallback for cases that aren't
-  yours — this silently regresses that interaction for every other block, not just the
-  one you're adding.
+  not a separate qualifier).
