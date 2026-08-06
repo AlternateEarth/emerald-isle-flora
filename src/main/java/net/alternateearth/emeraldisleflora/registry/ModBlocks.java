@@ -144,7 +144,13 @@ public final class ModBlocks {
         if(includeItem) {
             Registry.register(Registries.ITEM, identifier, new BlockItem(block, new Item.Settings()
                     /*? if >=1.21.11 {*/
-                    /*.registryKey(itemId(name))*/
+                    /*.registryKey(itemId(name))
+                    // 1.21.11 changed the item translation key default from block-prefixed
+                    // (delegating to the block's own lang entry, which is all this mod's
+                    // lang file has) to item-prefixed - BlockItem no longer overrides this
+                    // itself, so it has to be requested explicitly or item names show as
+                    // raw untranslated keys.
+                    .useBlockPrefixedTranslationKey()*/
                     /*?}*/
             ));
         }
@@ -227,6 +233,7 @@ public final class ModBlocks {
         });
 
         registerComposting();
+        registerFlowerPotPlants();
     }
     */
     /*?}*/
@@ -251,15 +258,16 @@ public final class ModBlocks {
         });
 
         event.register(RegistryKeys.ITEM, helper -> {
-            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bells_of_ireland"), new BlockItem(BELLS_OF_IRELAND, new Item.Settings().registryKey(itemId("bells_of_ireland"))));
-            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bells_of_ireland"), new BlockItem(GROWN_BELLS_OF_IRELAND, new Item.Settings().registryKey(itemId("grown_bells_of_ireland"))));
-            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bog_rosemary"), new BlockItem(BOG_ROSEMARY, new Item.Settings().registryKey(itemId("bog_rosemary"))));
-            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), new BlockItem(GROWN_BOG_ROSEMARY, new Item.Settings().registryKey(itemId("grown_bog_rosemary"))));
-            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), new BlockItem(BULBOUS_BUTTERCUP, new Item.Settings().registryKey(itemId("bulbous_buttercup"))));
-            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings().registryKey(itemId("grown_bulbous_buttercup"))));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bells_of_ireland"), new BlockItem(BELLS_OF_IRELAND, new Item.Settings().registryKey(itemId("bells_of_ireland")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bells_of_ireland"), new BlockItem(GROWN_BELLS_OF_IRELAND, new Item.Settings().registryKey(itemId("grown_bells_of_ireland")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bog_rosemary"), new BlockItem(BOG_ROSEMARY, new Item.Settings().registryKey(itemId("bog_rosemary")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), new BlockItem(GROWN_BOG_ROSEMARY, new Item.Settings().registryKey(itemId("grown_bog_rosemary")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), new BlockItem(BULBOUS_BUTTERCUP, new Item.Settings().registryKey(itemId("bulbous_buttercup")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings().registryKey(itemId("grown_bulbous_buttercup")).useBlockPrefixedTranslationKey()));
         });
 
         registerComposting();
+        registerFlowerPotPlants();
     }
     */
     /*?}*/
@@ -272,4 +280,32 @@ public final class ModBlocks {
         ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BULBOUS_BUTTERCUP, 0.65f);
         ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BULBOUS_BUTTERCUP, 0.95f);
     }
+
+    // NeoForge-only: NeoForge patches FlowerPotBlock away from vanilla's simple
+    // construct-time "CONTENT_TO_POTTED.put(content, this)" toward a registry-key-keyed
+    // per-instance "fullPots" map, exposed via addPlant(Identifier, Supplier<Block>) on
+    // the canonical empty pot (Blocks.FLOWER_POT). The plain FlowerPotBlock(Block,
+    // Settings) constructor we use above for POTTED_* *does* try to auto-register into
+    // this map, but it does so by looking up the content block's registry key at
+    // *construction* time (BuiltInRegistries.BLOCK.getKey(content)) - since our blocks
+    // are constructed as eager static fields before ModBlocks.onRegister ever runs,
+    // that lookup finds nothing and the auto-registration silently captures the wrong
+    // key. Registering explicitly here, after we already know the real ids, fixes it.
+    // Confirmed via decompiling NeoForge's actual (Mojmap) shipped FlowerPotBlock class -
+    // this method does not exist on vanilla/Fabric's FlowerPotBlock at all.
+    /*? if neoforge {*/
+    /*private static void registerFlowerPotPlants() {
+        // Key is the registry id of the HELD ITEM's block (the plain flower); the
+        // supplier is the resulting block placed in the world, which must be the
+        // *potted* variant, not the plain flower again.
+        if (FLOWER_POT instanceof FlowerPotBlock emptyPot) {
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "bells_of_ireland"), () -> POTTED_BELLS_OF_IRELAND);
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bells_of_ireland"), () -> POTTED_GROWN_BELLS_OF_IRELAND);
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "bog_rosemary"), () -> POTTED_BOG_ROSEMARY);
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), () -> POTTED_GROWN_BOG_ROSEMARY);
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), () -> POTTED_BULBOUS_BUTTERCUP);
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), () -> POTTED_GROWN_BULBOUS_BUTTERCUP);
+        }
+    }*/
+    /*?}*/
 }
