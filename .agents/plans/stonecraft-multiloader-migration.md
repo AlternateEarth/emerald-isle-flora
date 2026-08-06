@@ -190,6 +190,27 @@ commit, already pushed to no remote (local only so far — nothing has been push
   artifact (the same diagnostic on a real install threw `NoSuchFieldException`, since
   real installs run Mojang-mapped classes, not Yarn-mapped ones - a good reminder to
   distrust dev-launch state for anything version/loader-sensitive).
+- **Post-Stage-4 real-install fix, round 2** (`3b6f613`). Real-install testing on
+  `1.21.11-fabric` (the one Fabric target Loom's dev-launch could never reach at all,
+  since it always crashed earlier on the pre-existing unrelated Fabric API Mixin bug -
+  see the Stage 3/4 notes) surfaced two more real bugs, found one after the other:
+  1. `NoClassDefFoundError` crash at mod init on
+     `net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap` - Fabric API
+     dropped the whole `fabric-blockrenderlayer-v1` module for 1.21.11, part of the same
+     rendering pipeline rework that moved `RenderLayer.getCutout()` (Stage 4).
+  2. After removing that call outright (wrongly assuming Forge/NeoForge's
+     `"render_type"` model JSON key would cover Fabric too - it doesn't; confirmed via
+     decompilation that vanilla's own 1.21.11 classes never reference `"render_type"` at
+     all, it's a pure Forge/NeoForge model-loader extension), cutout transparency
+     silently broke (flowers rendered as opaque solid blocks, color bleeding into what
+     should've been transparent). Fabric always needs a Java-side call, period.
+
+  Fixed by finding Fabric API's actual, different replacement:
+  `net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap` (in the general
+  `fabric-rendering-v1` module), a static API taking a `BlockRenderLayer` enum constant
+  instead of a `RenderLayer`/`RenderLayers` object. `1.21.11-fabric` confirmed fully
+  working on a real install (loads, renders cutout correctly) after this fix - the whole
+  6-target matrix has now been confirmed working on a real install at least once.
 - **Next up: Stage 5** (26.2, Fabric + NeoForge, Mojmap-only) — not started. The
   `.registryKey(...)` requirement discovered in Stage 4 should be re-checked immediately
   (very likely still applies); this is also the stage where Yarn naming stops applying
