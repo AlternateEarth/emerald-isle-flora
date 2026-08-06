@@ -147,6 +147,49 @@ commit, already pushed to no remote (local only so far — nothing has been push
   API module's mixins still target) - confirms it's a real, standing Fabric API gap across
   the whole 1.21.x line on this system, not something introduced by this migration.
   Accepted at the build-verified level per the same call made in Stage 3.
+- **Post-Stage-4 real-install fixes** (`534990d`). Real-install testing (via the new
+  `deployToPrism` Gradle task, see below) caught two bugs that Loom's dev-launch never
+  would have surfaced:
+  1. **1.21.11 item names showed raw untranslated keys** (e.g.
+     `block.emeraldisleflora.bells_of_ireland` literally on-screen). `Item.Settings`'
+     default translation-key prefix changed from block-prefixed (delegating to the
+     block's own lang entry - all this mod's lang file has) to item-prefixed in 1.21.11,
+     and `BlockItem` no longer overrides this itself. Fixed with
+     `.useBlockPrefixedTranslationKey()` on every `Item.Settings()` for `>=1.21.11`.
+  2. **NeoForge couldn't pot this mod's flowers at all** - first silently did nothing,
+     then (after an initial wrong fix) replaced the empty pot with the bare flower
+     instead of the potted variant. Root cause, found only by decompiling NeoForge's
+     actual *shipped* (Mojmap) `FlowerPotBlock` class rather than trusting Yarn/vanilla:
+     NeoForge patches `FlowerPotBlock` away from vanilla's simple construct-time
+     `CONTENT_TO_POTTED.put(content, this)` toward a registry-key-keyed `fullPots` map,
+     exposed via `addPlant(Identifier, Supplier<Block>)` on the canonical empty pot. The
+     plain constructor we use *does* try to auto-populate this via
+     `BuiltInRegistries.BLOCK.getKey(content)`, but that resolves the content block's
+     registry key at *construction* time - before our blocks (built as eager static
+     fields) are actually registered - so it silently captures nothing useful. Fixed by
+     calling `addPlant()` explicitly in `ModBlocks` (NeoForge-only) once real
+     registration completes, with the ids we already know. Also added the
+     `minecraft:flower_pots` block tag for the potted variants (found via a reference
+     mod, [Wilder Flowers](https://github.com/cassiancc/Wilder-Flowers)) - not required
+     by 1.21.1's own interaction code as far as could be confirmed, but matches the
+     convention other 1.21+ flower mods use and costs nothing.
+
+  Both targets (`1.21.1-neoforge`, `1.21.11-neoforge`) confirmed fixed by you on real
+  installs. `1.20.1-fabric`/`1.20.1-forge`/`1.21.1-fabric` also reconfirmed working
+  during this same testing pass.
+
+  Also added: a `deployToPrism` Gradle task (`build.gradle.kts`) that copies each
+  target's built jar straight into its matching Prism Launcher instance's mods folder
+  (instance folder name = chiseled subproject name, e.g. `1.21.11-neoforge`). Run it for
+  one target (`./gradlew :1.21.1-neoforge:deployToPrism`) or the whole matrix at once
+  (`./gradlew deployToPrism` - skips, doesn't fail, targets with no matching instance).
+  This is now the standard way to get a real-install-testable jar in hand, given how much
+  Loom's dev-launch has proven to miss or actively mislead on - a reflection-based
+  diagnostic added mid-investigation of bug 2 above returned an empty map when run under
+  `runClient`, which looked damning but turned out to be a dev-launch-only classloading
+  artifact (the same diagnostic on a real install threw `NoSuchFieldException`, since
+  real installs run Mojang-mapped classes, not Yarn-mapped ones - a good reminder to
+  distrust dev-launch state for anything version/loader-sensitive).
 - **Next up: Stage 5** (26.2, Fabric + NeoForge, Mojmap-only) — not started. The
   `.registryKey(...)` requirement discovered in Stage 4 should be re-checked immediately
   (very likely still applies); this is also the stage where Yarn naming stops applying
