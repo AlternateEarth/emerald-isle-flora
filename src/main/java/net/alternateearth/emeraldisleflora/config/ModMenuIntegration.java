@@ -1,5 +1,6 @@
 package net.alternateearth.emeraldisleflora.config;
 
+/*? if fabric {*/
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -62,3 +63,4 @@ public class ModMenuIntegration implements ModMenuApi {
 		};
 	}
 }
+/*?}*/

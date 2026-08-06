@@ -38,10 +38,13 @@ modSettings {
 }
 
 // Stonecraft only auto-adds generatedResources to the resources source set for
-// ForgeLike targets; Fabric needs it added explicitly or datagen output silently
-// drops out of the built jar.
-sourceSets.main {
-    resources.srcDir(modSettings.generatedResources)
+// ForgeLike targets (see Java.kt); Fabric needs it added explicitly or datagen output
+// silently drops out of the built jar. Doing this unconditionally for ForgeLike too
+// double-registers the same srcDir and breaks sourcesJar with a duplicate-entry error.
+if (mod.isFabric) {
+    sourceSets.main {
+        resources.srcDir(modSettings.generatedResources)
+    }
 }
 
 tasks.named<Jar>("jar") {

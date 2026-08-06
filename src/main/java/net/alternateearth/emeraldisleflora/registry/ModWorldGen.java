@@ -1,6 +1,7 @@
 package net.alternateearth.emeraldisleflora.registry;
 
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
+/*? if fabric {*/
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.registry.RegistryKey;
@@ -8,10 +9,19 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
+/*?}*/
 
 public final class ModWorldGen {
 
+    /**
+     * Fabric-only body: Forge has no equivalent Java API for this - it adds features to
+     * biomes via data-driven JSON instead (see
+     * data/emeraldisleflora/forge/biome_modifier/*.json), which needs no registration
+     * call at all. Still called uniformly from both loaders' entrypoints; it's just a
+     * no-op on Forge.
+     */
     public static void register() {
+        /*? if fabric {*/
         EmeraldIsleFlora.LOGGER.info("Registering World Generation for " + EmeraldIsleFlora.MOD_ID);
 
         BiomeModifications.addFeature(
@@ -71,5 +81,6 @@ public final class ModWorldGen {
         );
 
         EmeraldIsleFlora.LOGGER.info("Finished registering World Generation for " + EmeraldIsleFlora.MOD_ID);
+        /*?}*/
     }
 }

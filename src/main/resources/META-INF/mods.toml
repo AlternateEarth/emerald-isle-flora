@@ -1,0 +1,27 @@
+modLoader = "javafml"
+loaderVersion = "*"
+issueTrackerURL = "https://github.com/AlternateEarth/emerald-isle-flora/issues"
+license = "MIT"
+
+[[mods]]
+modId = "${id}"
+version = "${version}"
+displayName = "${name}"
+authors = "kylelaverty"
+description = '''
+${description}
+'''
+
+[[dependencies.${id}]]
+modId = "forge"
+type = "required"
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraftVersion},)"
+ordering = "NONE"
+side = "BOTH"

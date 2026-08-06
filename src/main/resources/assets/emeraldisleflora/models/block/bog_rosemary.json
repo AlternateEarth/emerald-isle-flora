@@ -2,5 +2,6 @@
   "parent": "minecraft:block/cross",
   "textures": {
     "cross": "emeraldisleflora:block/bog_rosemary"
-  }
+  },
+  "render_type": "cutout"
 }

@@ -2,5 +2,6 @@
   "parent": "minecraft:block/cross",
   "textures": {
     "cross": "emeraldisleflora:block/bells_of_ireland"
-  }
+  },
+  "render_type": "cutout"
 }

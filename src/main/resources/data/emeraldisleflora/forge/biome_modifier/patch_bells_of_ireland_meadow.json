@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:meadow",
+  "features": "emeraldisleflora:patch_bells_of_ireland_meadow",
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:mangrove_swamp",
+  "features": "emeraldisleflora:patch_bog_rosemary_mangrove_swamp",
+  "step": "vegetal_decoration"
+}

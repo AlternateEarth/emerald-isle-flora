@@ -3,7 +3,12 @@ package net.alternateearth.emeraldisleflora.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
+/*? if fabric {*/
 import net.fabricmc.loader.api.FabricLoader;
+/*?}*/
+/*? if forge {*/
+/*import net.minecraftforge.fml.loading.FMLPaths;*/
+/*?}*/
 
 import java.io.IOException;
 import java.io.Reader;
@@ -25,8 +30,14 @@ import java.nio.file.Path;
 public class ModConfig {
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	/*? if fabric {*/
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve(EmeraldIsleFlora.MOD_ID + ".json");
+	/*?}*/
+	/*? if forge {*/
+	/*private static final Path CONFIG_PATH =
+			FMLPaths.CONFIGDIR.get().resolve(EmeraldIsleFlora.MOD_ID + ".json");*/
+	/*?}*/
 
 	/**
 	 * When true (default), using bone meal on an already-grown flower (Grown Bells of
