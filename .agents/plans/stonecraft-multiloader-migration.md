@@ -1,5 +1,40 @@
 # Migrating emeraldisleflora to Stonecraft (multi-version, multi-loader)
 
+## Progress (updated 2026-08-06 — read this first when resuming)
+
+Branch: `feat/multi-version`. Working tree clean; every stage below lands as its own
+commit, already pushed to no remote (local only so far — nothing has been pushed).
+
+- **Stage 0 — done** (`eb29876`). Toolchain was already on JDK 21 / Gradle 9.6.1 /
+  Loom 1.17-SNAPSHOT before this branch started; only fix needed was a stale comment in
+  `gradle.properties`.
+- **Stage 1 — done** (`aaefde3`). Stonecraft/Stonecutter scaffolding, single target
+  `1.20.1-fabric`. Verified in-game (registration, rendering, bone-meal, world-gen all
+  confirmed working by the user). Two real bugs found and fixed: LICENSE silently
+  dropped from the jar (chiseled subproject's `projectDir` isn't root), and generated
+  world-gen JSON silently dropped from the jar (Stonecraft's default
+  `generatedResources` dir is per-chiseled-subproject, not root `src/main/generated`).
+- **Stage 2 — done** (`d5d8e3a`). Forge added for 1.20.1. Turned out much bigger than
+  the original plan assumed — see the rewritten Stage 2 section below and its "Actual
+  outcome" note. `1.20.1-fabric` reverified in-game with no regressions.
+  `1.20.1-forge` verified at build/jar level only; `runClient` is blocked by an
+  upstream Architectury Loom bug (see that section) — **not yet verified in-game**,
+  revisit before a real Forge release.
+- **Matrix corrected**: NeoForge dropped from 1.20.1 entirely (confirmed infeasible —
+  see the matrix section). 9 targets → 8.
+- **Next up: Stage 3** (1.21.1, Fabric + NeoForge) — not started. First new Minecraft
+  version (real vanilla API deltas expected) and NeoForge's first appearance in the
+  matrix (first time since the 1.20.1-neoforge failure, so worth re-confirming
+  `yarn-mappings-patch-neoforge` actually exists for 1.21.1 early, before writing code).
+
+Known open items, not blockers, revisit later:
+- `1.20.1-forge` never confirmed working in an actual launched game client (see above).
+- Config-GUI gap on Forge/NeoForge (no Mod Menu equivalent) — still just the acceptable
+  v1 gap the plan always anticipated, not newly discovered.
+- CI workflows (`.github/workflows/*`) still reference the pre-migration
+  `mod_version` property and `runDatagenClient` task name — untouched so far, this is
+  Stage 6's job, expected to stay red/irrelevant until then.
+
 Goal: convert this repo from a single Fabric/1.20.1 project into one Gradle workspace
 that builds Fabric/Forge/NeoForge across 1.20.1, 1.21.1, 1.21.11, and 26.2, using
 [Stonecraft](https://stonecraft.meza.gg) (which wires [Stonecutter](https://stonecutter.kikugie.dev/)
