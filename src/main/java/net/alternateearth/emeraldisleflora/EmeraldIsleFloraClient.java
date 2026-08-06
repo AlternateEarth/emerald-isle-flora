@@ -5,10 +5,14 @@ import net.alternateearth.emeraldisleflora.registry.ModBlocks;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
+/*? if <1.21.11 {*/
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.client.render.RenderLayer;
-/*? if >=1.21.11 {*/
-/*import net.minecraft.client.render.RenderLayers;*/
+/*?} else {*/
+/*import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
+import net.minecraft.client.render.BlockRenderLayer;
+*/
 /*?}*/
 /*?}*/
 
@@ -20,10 +24,21 @@ import net.minecraft.client.render.RenderLayer;
  * a separate "modmenu" entrypoint.)
  * <p>
  * Fabric-only: the cross-shaped-block cutout render layer needs an explicit
- * {@code BlockRenderLayerMap} call on Fabric, but Forge reads render layer from a
- * {@code "render_type"} key in the block model JSON instead (see the block model files
- * under assets/emeraldisleflora/models/block/), so Forge needs no Java for this at all
- * and has no client entrypoint class.
+ * {@code BlockRenderLayerMap} call on Fabric (Forge/NeoForge read a
+ * {@code "render_type"} key from the block model JSON instead - see the block model
+ * files under assets/emeraldisleflora/models/block/ - and never need Java for this).
+ * {@code net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap} (its own
+ * dedicated module, "fabric-blockrenderlayer-v1") was removed from Fabric API entirely
+ * for 1.21.11 as part of the same rendering pipeline rework that moved
+ * {@code RenderLayer.getCutout()} - confirmed via a real {@code NoClassDefFoundError}
+ * crash on a real 1.21.11-fabric install, not just a guess. Its replacement,
+ * {@code net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap} (living in the
+ * general "fabric-rendering-v1" module instead), is a different class with a different,
+ * simpler static API taking a {@code BlockRenderLayer} enum constant instead of a
+ * {@code RenderLayer}/{@code RenderLayers} object - vanilla's own model JSON
+ * {@code "render_type"} key is Forge/NeoForge-only and was never read by Fabric at all
+ * (confirmed: not referenced anywhere in vanilla's own 1.21.11 classes), so Fabric always
+ * needs one of these two Java-side calls, never the JSON key alone.
  * <p>
  * This project uses a single (unsplit) source set, so this class is NOT compile-time
  * guaranteed to be client-only the way it would be with
@@ -39,31 +54,34 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		//---------------------------Flowers---------------------------
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BELLS_OF_IRELAND, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BELLS_OF_IRELAND, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BOG_ROSEMARY, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BOG_ROSEMARY, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BULBOUS_BUTTERCUP, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BULBOUS_BUTTERCUP, cutout());
+		putCutout(ModBlocks.BELLS_OF_IRELAND);
+		putCutout(ModBlocks.GROWN_BELLS_OF_IRELAND);
+		putCutout(ModBlocks.BOG_ROSEMARY);
+		putCutout(ModBlocks.GROWN_BOG_ROSEMARY);
+		putCutout(ModBlocks.BULBOUS_BUTTERCUP);
+		putCutout(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 
 		//-----------------------Potted Flowers------------------------
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BELLS_OF_IRELAND, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BOG_ROSEMARY, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BOG_ROSEMARY, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BULBOUS_BUTTERCUP, cutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP, cutout());
+		putCutout(ModBlocks.POTTED_BELLS_OF_IRELAND);
+		putCutout(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND);
+		putCutout(ModBlocks.POTTED_BOG_ROSEMARY);
+		putCutout(ModBlocks.POTTED_GROWN_BOG_ROSEMARY);
+		putCutout(ModBlocks.POTTED_BULBOUS_BUTTERCUP);
+		putCutout(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP);
 	}
 
-	// RenderLayer.getCutout() moved to RenderLayers.cutout() (a new, separate class)
-	// between 1.21.1 and 1.21.11 as part of the rendering pipeline rework.
+	// <1.21.11: net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap, an
+	// instance singleton taking a RenderLayer. >=1.21.11: a different class
+	// (net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap, living in the
+	// general fabric-rendering-v1 module since fabric-blockrenderlayer-v1 was dropped),
+	// with a static API taking a simpler BlockRenderLayer enum constant instead.
 	/*? if <1.21.11 {*/
-	private static RenderLayer cutout() {
-		return RenderLayer.getCutout();
+	private static void putCutout(Block block) {
+		BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
 	}
 	/*?} else {*/
-	/*private static RenderLayer cutout() {
-		return RenderLayers.cutout();
+	/*private static void putCutout(Block block) {
+		BlockRenderLayerMap.putBlock(block, BlockRenderLayer.CUTOUT);
 	}*/
 	/*?}*/
 }
