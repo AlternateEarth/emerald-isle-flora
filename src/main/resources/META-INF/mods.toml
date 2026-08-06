@@ -15,6 +15,7 @@ ${description}
 [[dependencies.${id}]]
 modId = "forge"
 type = "required"
+mandatory = true
 versionRange = "[47,)"
 ordering = "NONE"
 side = "BOTH"
@@ -22,6 +23,7 @@ side = "BOTH"
 [[dependencies.${id}]]
 modId = "minecraft"
 type = "required"
+mandatory = true
 versionRange = "[${minecraftVersion},)"
 ordering = "NONE"
 side = "BOTH"
