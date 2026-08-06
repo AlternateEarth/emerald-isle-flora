@@ -17,9 +17,20 @@ commit, already pushed to no remote (local only so far — nothing has been push
 - **Stage 2 — done** (`d5d8e3a`). Forge added for 1.20.1. Turned out much bigger than
   the original plan assumed — see the rewritten Stage 2 section below and its "Actual
   outcome" note. `1.20.1-fabric` reverified in-game with no regressions.
-  `1.20.1-forge` verified at build/jar level only; `runClient` is blocked by an
-  upstream Architectury Loom bug (see that section) — **not yet verified in-game**,
-  revisit before a real Forge release.
+  `./gradlew :1.20.1-forge:runClient` (Architectury Loom's dev-launch task) is still
+  blocked by the upstream Loom bug noted in that section, but the actual mod jar was
+  since manually verified in a **real** Forge 1.20.1 (build 47.4.10) install via Prism
+  Launcher: Forge fully discovered, parsed `mods.toml`, and loaded both
+  `emeraldisleflora-forge` and `cloth-config-forge` with no errors (`[✔]` in the mod
+  list) - the exact step that crashes under Loom's dev environment. That's strong
+  confirmation the Loom failure really is a dev-environment quirk, not a defect in this
+  mod's `mods.toml` or registration code. The in-game render/rendering/bone-meal smoke
+  test itself is still unconfirmed - that specific attempt hit an unrelated local
+  problem (a Flatpak NVIDIA GL driver version mismatch on the tester's machine: host
+  driver 580.173.02 vs. installed Flatpak extension 580-126-18, causing a
+  "GLX: Failed to find a suitable GLXFBConfig" crash before any game window opens) -
+  not something in this repo to fix. Retry the visual smoke test whenever that's
+  resolved locally, or on a different machine/launcher.
 - **Matrix corrected**: NeoForge dropped from 1.20.1 entirely (confirmed infeasible —
   see the matrix section). 9 targets → 8.
 - **Next up: Stage 3** (1.21.1, Fabric + NeoForge) — not started. First new Minecraft
@@ -28,7 +39,9 @@ commit, already pushed to no remote (local only so far — nothing has been push
   `yarn-mappings-patch-neoforge` actually exists for 1.21.1 early, before writing code).
 
 Known open items, not blockers, revisit later:
-- `1.20.1-forge` never confirmed working in an actual launched game client (see above).
+- `1.20.1-forge`'s in-game render/interaction smoke test (transparent cutout rendering,
+  bone-meal, world-gen) is still unconfirmed - mod *loading* is confirmed via a real
+  Forge install (see above), just not a launched, rendered game session yet.
 - Config-GUI gap on Forge/NeoForge (no Mod Menu equivalent) — still just the acceptable
   v1 gap the plan always anticipated, not newly discovered.
 - CI workflows (`.github/workflows/*`) still reference the pre-migration
