@@ -18,8 +18,13 @@ public class ModWorldGenerator extends FabricDynamicRegistryProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup registries, Entries entries) {
+        /*? if <1.21.11 {*/
         entries.addAll(registries.getWrapperOrThrow(RegistryKeys.CONFIGURED_FEATURE));
         entries.addAll(registries.getWrapperOrThrow(RegistryKeys.PLACED_FEATURE));
+        /*?} else {*/
+        /*entries.addAll(registries.getOrThrow(RegistryKeys.CONFIGURED_FEATURE));
+        entries.addAll(registries.getOrThrow(RegistryKeys.PLACED_FEATURE));*/
+        /*?}*/
     }
 
     @Override

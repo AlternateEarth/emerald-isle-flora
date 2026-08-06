@@ -7,6 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.minecraft.client.render.RenderLayer;
+/*? if >=1.21.11 {*/
+/*import net.minecraft.client.render.RenderLayers;*/
+/*?}*/
 /*?}*/
 
 /**
@@ -36,20 +39,32 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		//---------------------------Flowers---------------------------
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BELLS_OF_IRELAND, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BELLS_OF_IRELAND, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BOG_ROSEMARY, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BOG_ROSEMARY, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BULBOUS_BUTTERCUP, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BULBOUS_BUTTERCUP, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BELLS_OF_IRELAND, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BELLS_OF_IRELAND, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BOG_ROSEMARY, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BOG_ROSEMARY, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BULBOUS_BUTTERCUP, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.GROWN_BULBOUS_BUTTERCUP, cutout());
 
 		//-----------------------Potted Flowers------------------------
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BELLS_OF_IRELAND, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BOG_ROSEMARY, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BOG_ROSEMARY, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BULBOUS_BUTTERCUP, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BELLS_OF_IRELAND, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BOG_ROSEMARY, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BOG_ROSEMARY, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_BULBOUS_BUTTERCUP, cutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP, cutout());
 	}
+
+	// RenderLayer.getCutout() moved to RenderLayers.cutout() (a new, separate class)
+	// between 1.21.1 and 1.21.11 as part of the rendering pipeline rework.
+	/*? if <1.21.11 {*/
+	private static RenderLayer cutout() {
+		return RenderLayer.getCutout();
+	}
+	/*?} else {*/
+	/*private static RenderLayer cutout() {
+		return RenderLayers.cutout();
+	}*/
+	/*?}*/
 }
 /*?}*/

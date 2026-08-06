@@ -110,15 +110,55 @@ commit, already pushed to no remote (local only so far — nothing has been push
   build-verified level rather than chased further; `1.20.1-fabric`/`1.20.1-forge` were
   not re-verified in-game this stage (no shared code changed in a way that should affect
   them, and both were already fully verified in Stage 1/2).
-- **Next up: Stage 4** (1.21.11, Fabric + NeoForge) — not started. Same shape as Stage 3,
-  smaller expected delta (same 1.21.x line); also the last version with Yarn mappings at
-  all, so confirm the final Yarn build number resolves before relying on it.
+- **Stage 4 — done and fully verified** (1.21.11, Fabric + NeoForge). Smaller API delta
+  than Stage 3 as expected, but one genuinely new and important change: Minecraft 1.21.11
+  added a hard requirement that `AbstractBlock.Settings`/`Item.Settings` carry a
+  `.registryKey(...)` *before* the Block/Item is constructed at all
+  (`NullPointerException: Block id not set` / `Item id not set` otherwise) - this is new
+  since 1.21.1 and will very likely still apply at 26.2 (Stage 5), worth checking early
+  there too. Other deltas, each verified via `javap` against the real 1.21.11 jar:
+  - `DataPool` renamed to `WeightedPool` (same shape) - isolated behind a tiny
+    `statePool()` helper so call sites didn't need per-site conditionals.
+  - `RegistryWrapper.WrapperLookup.getWrapperOrThrow(...)` renamed to `.getOrThrow(...)`.
+  - `RenderLayer.getCutout()` moved to a new `RenderLayers.cutout()` class as part of a
+    rendering pipeline rework (Yarn's own mapping for `RenderLayer` itself is now mostly
+    unmapped `field_XXXXX`/`method_XXXXX` names, a sign this class churned significantly).
+  - Minecraft 1.21.11+ also requires an `assets/<modid>/items/<name>.json` "item model
+    definition" file per item (pointing at the existing `models/item/<name>.json`) -
+    without it, items load fine but render with no icon
+    (`No model loaded for default item model ID ...`). Added for all 6 items; harmless
+    on older versions, which ignore the unrecognized file.
+
+  Learned the hard way that Stonecutter's own comment-scanner treats the *content* of an
+  already-disabled `/* ... */` block as opaque - a `/*? if X {*/` marker nested inside one
+  (e.g. inside the existing single-block-comment `if neoforge {*/ /* ... */ /*?}*/`
+  pattern used for the whole `onRegister` method body) is never seen/processed. Nesting
+  works fine when the *outer* scope is active, uncommented code (confirmed in
+  `EmeraldIsleFloraClient`'s imports) - just not inside an already-commented region. Where
+  that came up, used two sibling `if X && <1.21.11 {*/.../*?}*/` /
+  `if X && >=1.21.11 {*/.../*?}*/` blocks instead of nesting.
+
+  `./gradlew build` green for all 6 targets, no regressions. `1.21.11-neoforge:runClient`
+  ran fully in-game (registration, world-gen, a real play session, clean shutdown, no
+  warnings). `1.21.11-fabric:runClient` hits the same *pre-existing, version-independent*
+  Fabric API `fabric-mining-level-api-v1` Mixin bug as `1.21.1-fabric` did in Stage 3
+  (this time targeting `ShearsItem` instead of `SwordItem`, but the identical root cause -
+  a vanilla tool-suitability method removed by the data-component rework that this Fabric
+  API module's mixins still target) - confirms it's a real, standing Fabric API gap across
+  the whole 1.21.x line on this system, not something introduced by this migration.
+  Accepted at the build-verified level per the same call made in Stage 3.
+- **Next up: Stage 5** (26.2, Fabric + NeoForge, Mojmap-only) — not started. The
+  `.registryKey(...)` requirement discovered in Stage 4 should be re-checked immediately
+  (very likely still applies); this is also the stage where Yarn naming stops applying
+  entirely (Mojmap-only), so expect the biggest single chunk of source-level rework in the
+  migration - see the Stage 5 section below.
 
 Known open items, not blockers, revisit later:
-- `./gradlew :1.20.1-forge:runClient` and `./gradlew :1.21.1-fabric:runClient` (Loom
-  dev-launch) don't work - see the Stage 2 and Stage 3 notes above for each. Not blocking
-  since build-level verification (and for Forge, a real install) are proven alternatives,
-  but worth root-causing eventually for developer convenience/CI.
+- `./gradlew :1.20.1-forge:runClient`, `:1.21.1-fabric:runClient`, and
+  `:1.21.11-fabric:runClient` (Loom dev-launch) don't work - see the Stage 2/3/4 notes
+  above for each. Not blocking since build-level verification (and for Forge, a real
+  install) are proven alternatives, but worth root-causing eventually for developer
+  convenience/CI. The two Fabric ones share one root cause (a Fabric API bug, not ours).
 - Config-GUI gap on Forge/NeoForge (no Mod Menu equivalent) — still just the acceptable
   v1 gap the plan always anticipated, not newly discovered.
 - CI workflows (`.github/workflows/*`) still reference the pre-migration
@@ -403,6 +443,14 @@ final Yarn build number resolves before relying on it.
 
 **Verify:** full matrix through 1.21.11 (6 targets) green, in-game smoke test on the
 two new targets.
+
+**Actual outcome:** see the Progress section at the top for the full delta breakdown -
+the standout was a new Minecraft-side requirement that Block/Item Settings carry a
+`.registryKey(...)` before construction, plus a new per-item `items/<name>.json` model
+definition file, neither of which existed as of Stage 3. All 6 targets build green.
+`1.21.11-neoforge` verified fully in-game. `1.21.11-fabric:runClient` hits the same
+pre-existing Fabric API bug as `1.21.1-fabric` (Stage 3) - accepted at the build-verified
+level, same call as last stage.
 
 ## Stage 5 — Add 26.2 (Fabric + NeoForge), the Mojmap-only version
 

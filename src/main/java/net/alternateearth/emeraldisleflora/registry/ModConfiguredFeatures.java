@@ -6,7 +6,11 @@ import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+/*? if <1.21.11 {*/
 import net.minecraft.util.collection.DataPool;
+/*?} else {*/
+/*import net.minecraft.util.collection.WeightedPool;*/
+/*?}*/
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.FeatureConfig;
@@ -69,7 +73,7 @@ public class ModConfiguredFeatures {
                     Feature.SIMPLE_BLOCK,
                     new SimpleBlockFeatureConfig(
                         new WeightedBlockStateProvider(
-                            DataPool.<BlockState>builder()
+                            statePool()
                                 .add(ModBlocks.BOG_ROSEMARY.getDefaultState(), 4)
                                 .add(ModBlocks.GROWN_BOG_ROSEMARY.getDefaultState(), 1)
                         )
@@ -90,7 +94,7 @@ public class ModConfiguredFeatures {
                     Feature.SIMPLE_BLOCK,
                     new SimpleBlockFeatureConfig(
                         new WeightedBlockStateProvider(
-                            DataPool.<BlockState>builder()
+                            statePool()
                                 .add(ModBlocks.BULBOUS_BUTTERCUP.getDefaultState(), 1)
                                 .add(ModBlocks.GROWN_BULBOUS_BUTTERCUP.getDefaultState(), 2)
                         )
@@ -98,6 +102,21 @@ public class ModConfiguredFeatures {
                 ))
         );
     }
+
+    //--------------------------------------------------------------------------------------------------------------------------------------------------
+
+    // DataPool was renamed to WeightedPool between 1.21.1 and 1.21.11 (same shape
+    // otherwise) - isolated into its own helper so the call sites above don't need a
+    // version conditional each.
+    /*? if <1.21.11 {*/
+    private static DataPool.Builder<BlockState> statePool() {
+        return DataPool.builder();
+    }
+    /*?} else {*/
+    /*private static WeightedPool.Builder<BlockState> statePool() {
+        return WeightedPool.builder();
+    }*/
+    /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
 
