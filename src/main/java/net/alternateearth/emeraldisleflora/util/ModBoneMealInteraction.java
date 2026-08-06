@@ -14,8 +14,13 @@ import net.minecraft.util.math.BlockPos;
 /*? if forge {*/
 /*import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+*/
+/*?}*/
+/*? if neoforge {*/
+/*import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 */
 /*?}*/
 
@@ -57,11 +62,11 @@ public final class ModBoneMealInteraction {
         EmeraldIsleFlora.LOGGER.info("Finished registering Bone Meal Interaction for " + EmeraldIsleFlora.MOD_ID);
     }
 
-    /*? if forge {*/
+    /*? if forgeLike {*/
     /*
-    // Forge equivalent of the Fabric UseBlockCallback registered above, subscribed on
-    // the global Forge event bus (not the mod bus - this is a gameplay event, not a
-    // startup/lifecycle event).
+    // Forge/NeoForge equivalent of the Fabric UseBlockCallback registered above,
+    // subscribed on the global event bus (not the mod bus - this is a gameplay event,
+    // not a startup/lifecycle event).
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity player = event.getEntity();
 

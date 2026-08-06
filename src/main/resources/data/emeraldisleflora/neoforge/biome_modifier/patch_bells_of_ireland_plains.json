@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "minecraft:plains",
+  "features": "emeraldisleflora:patch_bells_of_ireland_plains",
+  "step": "vegetal_decoration"
+}

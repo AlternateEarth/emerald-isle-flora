@@ -42,15 +42,83 @@ commit, already pushed to no remote (local only so far — nothing has been push
   again; low priority since the real-install path is now a proven working alternative.
 - **Matrix corrected**: NeoForge dropped from 1.20.1 entirely (confirmed infeasible —
   see the matrix section). 9 targets → 8.
-- **Next up: Stage 3** (1.21.1, Fabric + NeoForge) — not started. First new Minecraft
-  version (real vanilla API deltas expected) and NeoForge's first appearance in the
-  matrix (first time since the 1.20.1-neoforge failure, so worth re-confirming
-  `yarn-mappings-patch-neoforge` actually exists for 1.21.1 early, before writing code).
+- **Stage 3 — done** (1.21.1, Fabric + NeoForge). `yarn-mappings-patch-neoforge`
+  confirmed to exist for the 1.21 line before writing any code (Architectury only
+  publishes `1.21+build.6`, no separate `1.21.1` build - confirmed this covers 1.21.1
+  too since the patch tracks the Yarn intermediary namespace, not the exact MC patch
+  version). Real vanilla API deltas between 1.20.1 and 1.21.1 handled with version-scoped
+  Stonecutter conditionals (`/*? if <1.21 {*/`), each verified against the actual
+  Yarn-remapped jar via `javap`, not guessed:
+  - `FlowerBlock`'s constructor changed from `(StatusEffect, int, Settings)` to
+    `(RegistryEntry<StatusEffect>, float, Settings)` (`GrowableFlower`, `ModBlocks`).
+  - `Identifier`'s 2-arg constructor went private; `Identifier.of(String, String)` is the
+    replacement - and it already existed back on 1.20.1 too, so this one didn't need a
+    Stonecutter conditional at all, just an unconditional method-call swap.
+  - `BlockPointer` changed from an interface with `getWorld()`/`getPos()`/
+    `getBlockState()` to a record with `world()`/`pos()`/`state()` (`ModDispenserBehavior`).
+
+  NeoForge added alongside Forge's existing loader-conditional code, using the same
+  hand-written-per-loader approach as Stage 2 (not a shared Architectury API). Verified
+  via `javap` against the real NeoForge 21.1.248 jars (not docs/guesses):
+  - `@Mod` is `net.neoforged.fml.common.Mod` (same annotation shape as Forge's). The mod
+    constructor takes the mod event bus as a parameter directly
+    (`EmeraldIsleFlora(IEventBus modEventBus)`) instead of Forge's
+    `FMLJavaModLoadingContext.get().getModEventBus()` static call - this is the
+    "newer/different constructor shape" the original plan flagged as needing
+    verification, confirmed via the `FMLModContainer` constructor-injection bytecode.
+  - `RegisterEvent`/`RegisterEvent.RegisterHelper` work identically to Forge's shape, but
+    key off plain vanilla `RegistryKeys.BLOCK`/`RegistryKeys.ITEM` instead of a
+    Forge-specific keys holder - NeoForge doesn't have its own block/item registry key
+    class the way `ForgeRegistries.Keys` does.
+  - `BuildCreativeModeTabContentsEvent` does *not* have Forge's `accept(Supplier)`
+    convenience method - NeoForge's implements vanilla `ItemGroup.Entries` directly, so
+    it uses the same `add(ItemConvertible)` vanilla default method as the Fabric/Forge
+    `entries.add(...)` calls already in the codebase.
+  - `PlayerInteractEvent.RightClickBlock` is method-for-method identical to Forge's
+    (`getEntity()`/`getItemStack()`/`getPos()`/`getLevel()`/`setCancellationResult()`/
+    `setCanceled()`), just a different package root - shared verbatim via `forgeLike`.
+  - Config path: `net.neoforged.fml.loading.FMLPaths.CONFIGDIR` - same shape as Forge's,
+    different package root - also shared via `forgeLike`.
+  - Mod descriptor file is `META-INF/neoforge.mods.toml`, **not** `mods.toml` (confirmed
+    via the FML loader's own bytecode) - and its dependency schema does **not** have
+    Forge 47.4.10's `mandatory` field requirement (`IModInfo.DependencyType` only has
+    REQUIRED/OPTIONAL/INCOMPATIBLE/DISCOURAGED, no boolean flag) - so the Stage 2
+    `mandatory` bug was Forge-1.20.1-specific, not something NeoForge inherited.
+  - Biome-placement data files need their own `neoforge:add_features` type and
+    `data/<modid>/neoforge/biome_modifier/` folder (mirrors Forge's `forge:add_features`
+    / `data/<modid>/forge/biome_modifier/` exactly otherwise).
+
+  **Real bug found and fixed** (would have broken every future Minecraft-version target,
+  not just this stage): `fabric.mod.json`'s `depends.minecraft` was hardcoded to
+  `"~1.20.1"` instead of using Stonecraft's `${minecraftVersion}` token like the rest of
+  the file already did. `1.21.1-fabric` refused to even load with a "requires 1.20.1,
+  found 1.21.1" mod-resolution error until this was fixed.
+
+  **Verification:** `./gradlew build` green for all 4 targets (`1.20.1-fabric`,
+  `1.20.1-forge`, `1.21.1-fabric`, `1.21.1-neoforge`), no regressions.
+  `1.21.1-neoforge`'s `runClient` **worked end-to-end** in Loom's dev environment: mod
+  loaded, blocks/items/dispenser/bone-meal registered, world generated, player joined and
+  played, clean save/shutdown. `1.21.1-fabric`'s `runClient` crashes during vanilla
+  bootstrap *before* any of our mod's code runs - confirmed via `javap` that this is
+  Fabric API's own `fabric-mining-level-api-v1` module failing to Mixin into
+  `SwordItem.isSuitableFor(BlockState)`, a method that no longer exists on `SwordItem` in
+  1.21.1 vanilla (mining-tool logic moved to the newer data-component `ToolComponent`
+  system). Reproduced identically on two different Fabric API builds (0.116.15 and
+  0.116.13), so not a version-pin fix. This is a Loom dev-launch environment issue, not
+  our mod's code (`./gradlew build` is green, jar contents inspected and correct) - same
+  category as the Stage 2 Forge `runClient` bug. Per your call, accepted at the
+  build-verified level rather than chased further; `1.20.1-fabric`/`1.20.1-forge` were
+  not re-verified in-game this stage (no shared code changed in a way that should affect
+  them, and both were already fully verified in Stage 1/2).
+- **Next up: Stage 4** (1.21.11, Fabric + NeoForge) — not started. Same shape as Stage 3,
+  smaller expected delta (same 1.21.x line); also the last version with Yarn mappings at
+  all, so confirm the final Yarn build number resolves before relying on it.
 
 Known open items, not blockers, revisit later:
-- `./gradlew :1.20.1-forge:runClient` (Loom dev-launch) still doesn't work - see the
-  Stage 2 note above. Not blocking since a real Forge install is a proven alternative,
-  but worth fixing eventually for developer convenience/CI.
+- `./gradlew :1.20.1-forge:runClient` and `./gradlew :1.21.1-fabric:runClient` (Loom
+  dev-launch) don't work - see the Stage 2 and Stage 3 notes above for each. Not blocking
+  since build-level verification (and for Forge, a real install) are proven alternatives,
+  but worth root-causing eventually for developer convenience/CI.
 - Config-GUI gap on Forge/NeoForge (no Mod Menu equivalent) — still just the acceptable
   v1 gap the plan always anticipated, not newly discovered.
 - CI workflows (`.github/workflows/*`) still reference the pre-migration
@@ -313,6 +381,15 @@ specifically, since that's the one with a world-gen option per AGENTS.md).
 **Verify:** all of Stage 2's targets stay green, plus `1.21.1-fabric` and
 `1.21.1-neoforge` build and run in-game (registration, rendering, bone-meal/harvest,
 world-gen).
+
+**Actual outcome:** the plan's original step 3 undersold this stage the same way Stage
+2's original plan undersold Forge — see the Progress section at the top for the full
+breakdown of API deltas and NeoForge-specific per-loader code needed. All 4 targets
+(`1.20.1-fabric`, `1.20.1-forge`, `1.21.1-fabric`, `1.21.1-neoforge`) build green with no
+regressions. `1.21.1-neoforge:runClient` ran fully in-game successfully (registration,
+world-gen, a real play session, clean shutdown). `1.21.1-fabric:runClient` hits a Fabric
+API internal Mixin bug unrelated to this mod (see Progress section) — accepted at the
+build-verified level per your call, not chased further.
 
 ## Stage 4 — Add 1.21.11 (Fabric + NeoForge)
 

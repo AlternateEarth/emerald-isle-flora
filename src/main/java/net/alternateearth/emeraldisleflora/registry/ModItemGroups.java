@@ -20,6 +20,11 @@ import net.minecraft.util.Identifier;
 import net.minecraftforge.registries.RegisterEvent;
 */
 /*?}*/
+/*? if neoforge {*/
+/*import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
+*/
+/*?}*/
 
 /**
  * A single, currently-empty creative inventory tab for this mod's future items and
@@ -31,7 +36,7 @@ import net.minecraftforge.registries.RegisterEvent;
 public final class ModItemGroups {
 
 	public static final RegistryKey<ItemGroup> EMERALD_ISLE_FLORA_GROUP = RegistryKey.of(
-			RegistryKeys.ITEM_GROUP, new Identifier(EmeraldIsleFlora.MOD_ID, "emerald_isle_flora"));
+			RegistryKeys.ITEM_GROUP, Identifier.of(EmeraldIsleFlora.MOD_ID, "emerald_isle_flora"));
 
 	/** Fabric-only: registers directly. Forge instead uses {@link #onRegisterCreativeTab} / {@link #onBuildCreativeTabContents}. */
 	public static void register() {
@@ -84,7 +89,7 @@ public final class ModItemGroups {
 	}
 	/*?}*/
 
-	/*? if forge {*/
+	/*? if forgeLike {*/
 	/*
 	public static void onRegisterCreativeTab(RegisterEvent event) {
 		event.register(RegistryKeys.ITEM_GROUP, helper -> {
@@ -103,9 +108,16 @@ public final class ModItemGroups {
 			helper.register(EMERALD_ISLE_FLORA_GROUP.getValue(), group);
 		});
 	}
+	*/
+	/*?}*/
 
+	/*? if forge {*/
+	/*
 	// Adds this mod's flowers into vanilla's existing "Natural Blocks" tab, the Forge
 	// equivalent of Fabric's ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).
+	// Forge's BuildCreativeModeTabContentsEvent adds its own accept(Supplier) helper on
+	// top of vanilla's ItemGroup.Entries - NeoForge's equivalent event doesn't have it,
+	// see the neoforge branch below for the vanilla ItemGroup.Entries#add() equivalent.
 	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
 		if (event.getTabKey() != ItemGroups.NATURAL) {
 			return;
@@ -117,6 +129,27 @@ public final class ModItemGroups {
 		event.accept(() -> ModBlocks.GROWN_BELLS_OF_IRELAND);
 		event.accept(() -> ModBlocks.GROWN_BOG_ROSEMARY);
 		event.accept(() -> ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+	}
+	*/
+	/*?}*/
+
+	/*? if neoforge {*/
+	/*
+	// NeoForge's BuildCreativeModeTabContentsEvent implements vanilla's
+	// ItemGroup.Entries directly (no Forge-style accept(Supplier) helper), so this uses
+	// the same add(ItemConvertible) vanilla default method as the Fabric/Forge
+	// entries.add(...) calls above.
+	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
+		if (event.getTabKey() != ItemGroups.NATURAL) {
+			return;
+		}
+
+		event.add(ModBlocks.BELLS_OF_IRELAND);
+		event.add(ModBlocks.BOG_ROSEMARY);
+		event.add(ModBlocks.BULBOUS_BUTTERCUP);
+		event.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
+		event.add(ModBlocks.GROWN_BOG_ROSEMARY);
+		event.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 	}
 	*/
 	/*?}*/

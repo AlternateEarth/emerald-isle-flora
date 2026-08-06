@@ -19,8 +19,15 @@ public final class ModDispenserBehavior {
         DispenserBlock.registerBehavior(Items.BONE_MEAL, new FallibleItemDispenserBehavior() {
             @Override
             protected ItemStack dispenseSilently(BlockPointer pointer, ItemStack stack) {
+                /*? if <1.21 {*/
                 World world = pointer.getWorld();
                 BlockPos targetPos = pointer.getPos().offset(pointer.getBlockState().get(DispenserBlock.FACING));
+                /*?} else {*/
+                /*
+                World world = pointer.world();
+                BlockPos targetPos = pointer.pos().offset(pointer.state().get(DispenserBlock.FACING));
+                */
+                /*?}*/
 
                 // If we're on the server, try to grow or harvest the block at the target position. If successful, decrement the stack and return it.
                 if (!world.isClient() && world instanceof ServerWorld serverWorld && ModCommonLogic.growOrHarvest(serverWorld, targetPos)) {

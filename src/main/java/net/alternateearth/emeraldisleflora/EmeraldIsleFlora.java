@@ -15,6 +15,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 */
 /*?}*/
+/*? if neoforge {*/
+/*import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+*/
+/*?}*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,13 +36,13 @@ import org.slf4j.LoggerFactory;
  * don't share a single "commonInit" helper - the two loaders genuinely don't call the
  * same registration methods at the same point in startup.
  */
-/*? if forge {*/
+/*? if forgeLike {*/
 /*@Mod(EmeraldIsleFlora.MOD_ID)*/
 /*?}*/
 /*? if fabric {*/
 public class EmeraldIsleFlora implements ModInitializer {
 /*?}*/
-/*? if forge {*/
+/*? if forgeLike {*/
 /*public class EmeraldIsleFlora {*/
 /*?}*/
 
@@ -56,6 +62,24 @@ public class EmeraldIsleFlora implements ModInitializer {
 		modEventBus.addListener(ModItemGroups::onRegisterCreativeTab);
 		modEventBus.addListener(ModItemGroups::onBuildCreativeTabContents);
 		MinecraftForge.EVENT_BUS.addListener(ModBoneMealInteraction::onRightClickBlock);
+
+		ModBoneMealInteraction.register();
+		ModDispenserBehavior.register();
+		ModWorldGen.register();
+
+		LOGGER.info("Emerald Isle Flora has loaded!");
+	}*/
+	/*?}*/
+
+	/*? if neoforge {*/
+	/*public EmeraldIsleFlora(IEventBus modEventBus) {
+		LOGGER.info("Initializing Emerald Isle Flora...");
+		config = ModConfig.load();
+
+		modEventBus.addListener(ModBlocks::onRegister);
+		modEventBus.addListener(ModItemGroups::onRegisterCreativeTab);
+		modEventBus.addListener(ModItemGroups::onBuildCreativeTabContents);
+		NeoForge.EVENT_BUS.addListener(ModBoneMealInteraction::onRightClickBlock);
 
 		ModBoneMealInteraction.register();
 		ModDispenserBehavior.register();

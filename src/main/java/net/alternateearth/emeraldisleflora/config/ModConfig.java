@@ -9,6 +9,9 @@ import net.fabricmc.loader.api.FabricLoader;
 /*? if forge {*/
 /*import net.minecraftforge.fml.loading.FMLPaths;*/
 /*?}*/
+/*? if neoforge {*/
+/*import net.neoforged.fml.loading.FMLPaths;*/
+/*?}*/
 
 import java.io.IOException;
 import java.io.Reader;
@@ -34,7 +37,7 @@ public class ModConfig {
 	private static final Path CONFIG_PATH =
 			FabricLoader.getInstance().getConfigDir().resolve(EmeraldIsleFlora.MOD_ID + ".json");
 	/*?}*/
-	/*? if forge {*/
+	/*? if forgeLike {*/
 	/*private static final Path CONFIG_PATH =
 			FMLPaths.CONFIGDIR.get().resolve(EmeraldIsleFlora.MOD_ID + ".json");*/
 	/*?}*/

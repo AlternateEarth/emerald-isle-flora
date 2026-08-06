@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "minecraft:plains",
+  "features": "emeraldisleflora:patch_bulbous_buttercup_plains",
+  "step": "vegetal_decoration"
+}
