@@ -22,11 +22,16 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Upload built JAR
+      - name: Upload built JARs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: emerald-isle-flora-${{ github.sha }}
-          path: build/libs/*.jar
+          # One build/libs per chiseled Stonecutter subproject now (versions/<target>/),
+          # not a single root build/libs - excludes -sources.jar, keeping just the
+          # loadable mod jar per target/loader/version combination.
+          path: |
+            versions/*/build/libs/*.jar
+            !versions/*/build/libs/*-sources.jar
           if-no-files-found: error
 
   dependency-submission:

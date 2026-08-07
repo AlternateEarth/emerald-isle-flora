@@ -4,7 +4,7 @@ inputs:
   java-version:
     description: 'JDK version to build with'
     required: false
-    default: '17'
+    default: '21'
   verify-datagen:
     description: 'Also run datagen and fail if it differs from what is committed'
     required: false
@@ -29,12 +29,24 @@ runs:
       uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
 
     - name: Verify generated worldgen data is up to date
+      # Regenerates each checked-in worldgen-JSON tree from one representative Fabric
+      # target on its own side of the Yarn/Mojmap split (see build.gradle.kts'
+      # modSettings.generatedResources comment) - src/main/generated from a Yarn target,
+      # src/main/generated-mojmap from a Mojmap-only (26.2+) one. Deliberately NOT
+      # `chiseledDatagen` (every target at once): that runs multiple same-schema Fabric
+      # targets' datagen in parallel against the *same* shared output directory, and their
+      # independent Fabric-side stale-file-cleanup passes race on the same tracking cache
+      # - confirmed locally to wrongly delete the just-regenerated, correct committed
+      # files. Two targets on *different* sides of the split, one command each below, is
+      # both sufficient (the JSON only depends on which side of the Stonecutter `<26.2`/
+      # `>=26.2` split ran, not the exact game version within a side) and race-free.
       if: inputs.verify-datagen == 'true'
       shell: bash
       run: |
-        ./gradlew runDatagenClient
-        git diff --exit-code -- src/main/generated || (
-          echo "::error::Generated worldgen data doesn't match what's committed. Run './gradlew runDatagenClient' locally and commit the result." && exit 1
+        ./gradlew :1.20.1-fabric:runDatagen
+        ./gradlew :26.2-fabric:runDatagen
+        git diff --exit-code -- src/main/generated src/main/generated-mojmap || (
+          echo "::error::Generated worldgen data doesn't match what's committed. Run './gradlew :1.20.1-fabric:runDatagen :26.2-fabric:runDatagen' locally and commit the result." && exit 1
         )
 
     - name: Build With Gradle

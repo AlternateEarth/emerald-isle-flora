@@ -314,7 +314,53 @@ commit, already pushed to no remote (local only so far — nothing has been push
   silently regress - both specifically re-tested and working), after the real-install
   worldgen-JSON crash above was found and fixed. The whole 8-target matrix has now been
   confirmed working on a real install at least once.
-- **Next up: Stage 6** (CI, publishing, and docs rewrite) — not started.
+- **Stage 6 — done, scoped to CI + docs only** (publishing deliberately deferred — per
+  your instruction, wiring `publishMods`/actual release publishing is postponed until
+  after the next content update, "add a flower and then publish so there is value for
+  the user"). `release-tag.yml` deliberately left untouched: it already fails safely as
+  a side effect of being stale (`mod_version` isn't a real property anymore, it's
+  `mod.version` - the version-check step errors out cleanly rather than silently
+  publishing something wrong), so touching it now would itself be premature publishing
+  work; it's Stage 6a's job once you're ready.
+  - `.github/actions/build-mod/action.yml`: JDK default bumped 17→21 (stale; the actual
+    workflows already override it, but the default itself hadn't been fixed since the
+    Stage 0 toolchain bump). `verify-datagen` rewritten - the old `./gradlew
+    runDatagenClient` task doesn't exist anymore (pre-migration name), and blanket
+    `chiseledDatagen` is actively unsafe now (see below), so it runs exactly
+    `:1.20.1-fabric:runDatagen` then `:26.2-fabric:runDatagen` (one target per side of
+    the Yarn/Mojmap datagen split from Stage 5) and diffs both checked-in trees.
+  - **Real bug found while wiring this up, not just a stale-reference fix**: running
+    datagen across multiple *same-mapping-scheme* Fabric targets at once
+    (`chiseledDatagen`, or two Yarn-side targets together) writes to the same shared
+    output directory and races on Fabric's own stale-file-cleanup tracking cache -
+    confirmed locally that this actually **deletes** the correct, already-committed
+    files (this repo has `org.gradle.parallel=true` on, so `chiseledDatagen`'s
+    same-directory targets genuinely raced). Restored via `git checkout`, then verified
+    the safe sequential two-command form (one Yarn target, one Mojmap target - different
+    output directories, so order/concurrency between just those two is fine) reproduces
+    the committed trees byte-for-byte with zero diff, twice.
+  - `build-push-main.yml`'s artifact-upload path fixed:
+    `versions/*/build/libs/*.jar` (excluding `-sources.jar`), not the pre-migration
+    single-project `build/libs/*.jar`, which no longer exists at all post-Stonecutter.
+  - `build-pull-request-main.yml` needed no changes (already delegates entirely to the
+    now-fixed composite action).
+  - `AGENTS.md`/`CONTRIBUTING.md`/`README.md` fully rewritten for the Stonecraft/
+    Stonecutter reality: the chiseled-subproject model, the Stonecutter comment syntax
+    (including both hard-won gotchas from Stages 4-5 - raw numeric version comparison
+    silently over-matching, and nesting a marker inside an already-disabled comment
+    block), the Yarn-vs-Mojmap split and why it exists, the accepted `runClient`
+    dev-launch failures per target (all pre-existing/upstream, not this mod's bugs),
+    `deployToPrism` as the actual verification bar, and the datagen-regeneration
+    procedure/gotcha above. `README.md` also now lists all three current flowers (it
+    previously only described Bells of Ireland) and carries an explicit "not published
+    yet" notice per your instruction.
+
+  `./gradlew build` reconfirmed green for the full matrix after these changes (no code
+  changed, only CI/docs), and the exact CI `verify-datagen` command sequence run locally
+  end-to-end with a clean diff both times.
+- **Next up: add a new flower, then Stage 6a** (wire `publishMods`, fix/finish
+  `release-tag.yml` for the full matrix) once there's new content worth publishing - see
+  your instruction above. Not started.
 
 Known open items, not blockers, revisit later:
 - `./gradlew :1.20.1-forge:runClient`, `:1.21.1-fabric:runClient`, and
@@ -324,9 +370,12 @@ Known open items, not blockers, revisit later:
   convenience/CI. The two Fabric ones share one root cause (a Fabric API bug, not ours).
 - Config-GUI gap on Forge/NeoForge (no Mod Menu equivalent) — still just the acceptable
   v1 gap the plan always anticipated, not newly discovered.
-- CI workflows (`.github/workflows/*`) still reference the pre-migration
-  `mod_version` property and `runDatagenClient` task name — untouched so far, this is
-  Stage 6's job, expected to stay red/irrelevant until then.
+- `release-tag.yml` still references the pre-migration `mod_version` property and is
+  scoped to a single game version/loader (`GAME_VERSION: 1.20.1`, `loaders: fabric`) —
+  deliberately left alone in Stage 6 (build/test CI and docs only; publishing wiring is
+  Stage 6a, deferred until after the next content update per your instruction). Fails
+  safely as-is (errors at the version-check step rather than publishing something wrong)
+  if triggered before then.
 
 Goal: convert this repo from a single Fabric/1.20.1 project into one Gradle workspace
 that builds Fabric/Forge/NeoForge across 1.20.1, 1.21.1, 1.21.11, and 26.2, using
