@@ -18,6 +18,11 @@
 	"block.emeraldisleflora.potted_bulbous_buttercup": "Potted Bulbous Buttercup",
 	"block.emeraldisleflora.potted_grown_bulbous_buttercup": "Potted Bulbous Buttercups",
 
+	"block.emeraldisleflora.bluebell": "Bluebell",
+	"block.emeraldisleflora.grown_bluebell": "Bluebells",
+	"block.emeraldisleflora.potted_bluebell": "Potted Bluebell",
+	"block.emeraldisleflora.potted_grown_bluebell": "Potted Bluebells",
+
 	"config.emeraldisleflora.title": "Emerald Isle Flora Configuration",
 	"config.emeraldisleflora.category.general": "General",
 	"config.emeraldisleflora.enableGrownFlowering": "Enable Flowers Growing",

@@ -1,0 +1,8 @@
+{
+  "parent": "emeraldisleflora:item/base_item_model",
+  "textures": {
+    "0": "emeraldisleflora:block/bluebell",
+    "particle": "emeraldisleflora:block/bluebell"
+  },
+  "render_type": "cutout"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:forest",
+  "features": "emeraldisleflora:patch_bluebell_forest",
+  "step": "vegetal_decoration"
+}

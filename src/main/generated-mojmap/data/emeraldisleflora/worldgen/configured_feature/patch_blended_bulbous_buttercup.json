@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "emeraldisleflora:bulbous_buttercup"
+          },
+          "weight": 1
+        },
+        {
+          "data": {
+            "Name": "emeraldisleflora:grown_bulbous_buttercup"
+          },
+          "weight": 2
+        }
+      ]
+    }
+  }
+}

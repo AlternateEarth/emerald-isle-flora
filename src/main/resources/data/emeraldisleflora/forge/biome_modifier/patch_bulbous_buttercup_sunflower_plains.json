@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:sunflower_plains",
+  "features": "emeraldisleflora:patch_bulbous_buttercup_sunflower_plains",
+  "step": "vegetal_decoration"
+}

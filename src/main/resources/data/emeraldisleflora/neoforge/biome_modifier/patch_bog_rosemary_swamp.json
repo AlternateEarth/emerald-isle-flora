@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "minecraft:swamp",
+  "features": "emeraldisleflora:patch_bog_rosemary_swamp",
+  "step": "vegetal_decoration"
+}

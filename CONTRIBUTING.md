@@ -3,7 +3,10 @@
 Thanks for looking at contributing. This doc covers the "how do I actually do things"
 side of working on this project. For "why is the code organized this way" and coding
 conventions/pitfalls, see [AGENTS.md](AGENTS.md) — this doc will point you there rather
-than duplicate it.
+than duplicate it. **Read AGENTS.md's "How this repo is actually structured" section
+first** if this is your first time in this codebase — it's a Stonecutter-chiseled,
+multi-version/multi-loader project from one source tree, not a normal single-target mod,
+and that changes how almost everything below works.
 
 ## Setting up
 
@@ -14,54 +17,76 @@ not repeated here so the two docs can't drift out of sync with each other.
 
 If you open this project in **IntelliJ IDEA** (recommended — this is what Fabric's
 tooling is best tested against) or VS Code with the Java + Gradle extensions, importing
-the project via Gradle will automatically create `Minecraft Client` and `Minecraft
-Server` run configurations. Use those to run with breakpoints, hot-swap, etc. Make sure
-your IDE's project SDK is JDK 21.
+the project via Gradle will create one `Minecraft Client`/`Minecraft Server` run
+configuration pair **per target** (e.g. `1.21.11-fabric runClient`), not just one. Make
+sure your IDE's project SDK is JDK 21.
 
-Useful Gradle tasks beyond `runClient` (see README):
+Your IDE's code-completion/navigation for `src/main/java` follows whichever version is
+currently **active** — set via `stonecutter active "<target>"` in
+`stonecutter.gradle.kts` (the line is marked `DO NOT EDIT` — change it through the
+Stonecutter Gradle tasks instead: `./gradlew "Set active project to <target>"`, or your
+IDE's Stonecutter plugin if it has one). This only affects what your editor resolves
+symbols against for editing convenience; it has no effect on what actually gets built —
+every `./gradlew build`/`:<target>:build` invocation chisels and compiles fresh
+regardless of which project is "active."
+
+Useful Gradle tasks beyond `:<target>:runClient` (see README):
 
 ```bash
-# A dedicated server, in the same git-ignored run/ folder as runClient
-./gradlew runServer
+# A dedicated server, in the same git-ignored run/ folder as runClient, for one target
+./gradlew :<target>:runServer
 
-# Re-generate readable (deobfuscated) Minecraft source, useful for
+# Re-generate readable (deobfuscated) Minecraft source for one target, useful for
 # "Go to definition" / "Find usages" on vanilla code in your IDE
-./gradlew genSources
+./gradlew :<target>:genSources
 ```
 
 ## Adding your first block or item
 
 1. Register it in `registry/ModBlocks.java` (or a new registry class, e.g.
    `ModItems.java`, if you're adding an item that isn't a `BlockItem`), following the
-   pattern already there.
-2. Call your new registration method from `EmeraldIsleFlora#onInitialize`.
-3. Add it to the creative tab inside the `entries()` callback in
-   `registry/ModItemGroups.java`.
+   pattern already there — including its Stonecutter version/loader conditionals if the
+   registration API differs across the matrix (see AGENTS.md's Stonecutter section; most
+   new content follows an existing flower's shape closely enough that you can copy its
+   conditionals verbatim and just swap identifiers).
+2. Call your new registration method from every loader's entrypoint in
+   `EmeraldIsleFlora` (Fabric's `onInitialize`, Forge/NeoForge's `onRegister` event
+   handlers).
+3. Add it to the creative tab inside `registry/ModItemGroups.java`'s existing
+   entries-callback.
 4. Add a translation key to
    `src/main/resources/assets/emeraldisleflora/lang/en_us.json`, and any textures/models
    under `src/main/resources/assets/emeraldisleflora/`.
-5. If it's a cross-shaped block (a flower, sapling, etc.), register it with
-   `BlockRenderLayerMap` in `EmeraldIsleFloraClient` — see `BELLS_OF_IRELAND` there for
-   the pattern. Skipping this renders the block with an opaque background instead of a
-   transparent one.
-6. If it should be craftable, compostable, or advancement-tracked like Bells of Ireland,
-   add the matching files under `src/main/resources/data/emeraldisleflora/` (recipes,
-   advancements) and `src/main/resources/data/minecraft/tags/` (vanilla tag hookups).
+5. If it's a cross-shaped block (a flower, sapling, etc.), see AGENTS.md's "Cross-shaped
+   blocks" convention — the render-layer registration needed (or not) differs by
+   loader *and* Minecraft version.
+6. If it should be craftable, compostable, or advancement-tracked like the existing
+   flowers, add the matching files under `src/main/resources/data/emeraldisleflora/`
+   (recipes, advancements) and `src/main/resources/data/minecraft/tags/` (vanilla tag
+   hookups).
+7. If it should naturally generate, see "Adding/changing natural worldgen" below —
+   **don't forget to regenerate the checked-in datagen JSON**, or the block simply won't
+   spawn in the world despite the Java code looking correct.
 
 See [AGENTS.md](AGENTS.md) for the full package layout and naming conventions.
 
 ## Adding a grow/harvest-style mechanic (a bigger example)
 
-The Bells of Ireland → Grown Bells of Ireland bone-meal mechanic (`util/ModBlocks.java`,
+The bone-meal grow/harvest mechanic (`registry/ModBlocks.java`, `registry/GrowableFlower.java`,
 `util/ModCommonLogic.java`, `util/ModBoneMealInteraction.java`,
 `util/ModDispenserBehavior.java`) is the reference pattern if you're building something
-similar for another flower:
+similar for another flower — the three existing flowers already share this exact
+mechanic, so a fourth flower needs no new plumbing here, just new entries following the
+same pattern:
 
 1. A shared logic method (`ModCommonLogic.growOrHarvest`) that both entry points below
    call, rather than duplicating the logic per entry point. If the mechanic should be
    config-gated, gate it **inside this shared method**, not in each caller separately —
-   see how `enableGrownFlowerHarvesting` is checked in exactly one place.
-2. A `UseBlockCallback` registration (`ModBoneMealInteraction`) for the by-hand path.
+   see how `enableGrownFlowerHarvesting`/`enableGrownFlowering` are each checked in
+   exactly one place.
+2. A by-hand interaction entry point (`ModBoneMealInteraction`) — a Fabric
+   `UseBlockCallback` on Fabric, a `PlayerInteractEvent.RightClickBlock` listener on
+   Forge/NeoForge (shared verbatim across Forge/NeoForge via `forgeLike`).
 3. A `DispenserBlock.registerBehavior(...)` registration (`ModDispenserBehavior`) for
    the dispenser path — and if you're registering a behavior for an item that already
    has vanilla behavior (bone meal does), you **must** reimplement the vanilla fallback
@@ -72,20 +97,84 @@ similar for another flower:
    into `ModMenuIntegration`, add its translation keys, and gate it per step 1 above —
    all in the same change.
 
+## Adding/changing natural worldgen
+
+1. Add (or edit) the configured feature in `registry/ModConfiguredFeatures.java` and the
+   placed feature in `registry/ModPlacedFeatures.java`.
+2. Wire the biome injection **twice** — once in `registry/ModWorldGen.java` (Fabric,
+   `BiomeModifications.addFeature(...)`) and once as declarative JSON under
+   `data/emeraldisleflora/{forge,neoforge}/biome_modifier/` (Forge/NeoForge don't use a
+   Java API for this at all).
+3. **Regenerate the checked-in datagen JSON** — the bootstrap methods in step 1 are only
+   consumed at *datagen* time; every target reads the static, checked-in JSON at
+   *runtime*, not the Java bootstrap directly. Forgetting this step is a silent,
+   no-compile-error bug: the code looks right, `./gradlew build` stays green, and the
+   feature just never spawns.
+
+   There are two checked-in trees, one per mapping scheme (see AGENTS.md's Yarn-vs-Mojmap
+   section) — regenerate **both**, from **one Fabric target on each side**, as two
+   separate commands:
+
+   ```bash
+   ./gradlew :1.20.1-fabric:runDatagen   # -> src/main/generated (any Yarn target works)
+   ./gradlew :26.2-fabric:runDatagen     # -> src/main/generated-mojmap
+   ```
+
+   **Don't** run `chiseledDatagen` (every target at once) or two same-side Fabric
+   targets' `runDatagen` together for this — they write to the same shared output
+   directory and race on Fabric's own stale-file-cleanup cache, which has actually
+   deleted correct, already-committed files when this was tried. One command per side,
+   run sequentially, is both sufficient (the JSON only depends on which side of the
+   Yarn/Mojmap split ran, not the exact game version within a side) and safe.
+4. `git diff -- src/main/generated src/main/generated-mojmap` after regenerating — if
+   it's non-empty, commit the diff alongside your Java changes. CI checks this (see
+   `.github/actions/build-mod/action.yml`'s `verify-datagen` step) and will fail the
+   build if they've drifted apart.
+
+## Real-install testing (deployToPrism)
+
+Loom's dev-launch (`runClient`) is currently broken or misleading on several targets in
+this matrix (see AGENTS.md's "Other gotchas"), and has repeatedly missed or actively
+hidden real bugs during this project's version-migration work. For anything touching
+registration, rendering, or interaction logic, prefer testing a real installed instance:
+
+```bash
+./gradlew :<target>:deployToPrism   # copies that target's jar into a matching
+                                     # Prism Launcher instance's mods folder, if one
+                                     # exists at the configured path
+./gradlew deployToPrism             # same, across every target with a matching instance
+```
+
+The task looks for a Prism Launcher instance whose **folder name exactly matches the
+chiseled target name** (e.g. `1.21.11-neoforge`) under `prismInstancesDir` (defaults to
+a path in `build.gradle.kts`; override via `-PprismInstancesDir=...` or a
+`gradle.properties` entry if yours differs). Targets with no matching instance are
+skipped, not failed, so this is safe to run across the whole matrix even if you only
+have a few instances set up locally. It doesn't launch the instance for you — deploy,
+then launch it yourself from Prism.
+
 ## Before opening a PR
 
-- [ ] `./gradlew build` passes
-- [ ] You've actually run `./gradlew runClient` and checked your change in-game — there
-      is no automated test suite yet (see AGENTS.md's "Build & verification commands"),
-      so this is the actual bar, not optional polish. Rendering bugs, wrong registry
-      ordering, and client code leaking into common code are the recurring categories of
-      bug that only show up at runtime, not at compile time.
+- [ ] `./gradlew build` passes for the **whole matrix**, not just the target(s) you were
+      actively iterating on.
+- [ ] You've actually deployed and launched a real instance (`deployToPrism`, see above)
+      for at least the target(s) your change most directly affects, and checked it
+      in-game — there is no automated test suite yet, and `runClient`/a green build alone
+      have both missed real bugs in this repo before (see AGENTS.md). This is the actual
+      bar, not optional polish.
 - [ ] New content has translation keys, and (if applicable) a texture/model, loot table,
-      and tag entries — see AGENTS.md's "Conventions to follow when adding content".
+      tag entries, and — if it naturally generates — regenerated datagen JSON on **both**
+      sides of the Yarn/Mojmap split (see "Adding/changing natural worldgen" above). See
+      AGENTS.md's "Conventions to follow when adding content" for the full list.
 - [ ] If you copied a recipe/advancement/loot table JSON from elsewhere as a starting
       point, every mod-ID reference inside it actually got updated. This exact mistake
       has happened in this repo before (a stray reference to a different mod's ID in an
       advancement file) — these fail silently at runtime, not at build time.
+- [ ] If a code change is version- or loader-specific, double-check any *existing* bare
+      version condition it sits near still means what you think for every target that
+      condition now needs to cover — see AGENTS.md's "raw numeric version comparison"
+      gotcha before assuming a `>=`/`<` check written for an older matrix still only
+      matches what it originally did.
 - [ ] If you touched `README.md`, `AGENTS.md`, or this file and the change makes any of
       the others inaccurate, update those too in the same PR rather than letting docs
       drift — this has also happened in this repo before and taken multiple follow-up

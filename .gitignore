@@ -5,6 +5,7 @@ out/
 classes/
 bin/
 src/main/generated/.cache
+src/main/generated-mojmap/.cache
 
 # eclipse
 *.launch
@@ -27,3 +28,6 @@ run/
 
 # vim
 *.swp
+
+# local agent working docs (plans, notes) - not meant to be tracked
+.agents/

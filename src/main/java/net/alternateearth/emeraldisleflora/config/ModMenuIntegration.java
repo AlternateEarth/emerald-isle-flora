@@ -1,5 +1,11 @@
 package net.alternateearth.emeraldisleflora.config;
 
+// Excluded on Mojmap-only targets (26.2+): Cloth Config's currently-published build for
+// those targets ships an access-widener incompatible with Loom's no-remap pipeline, so
+// it isn't a dependency there at all yet - see build.gradle.kts's hasConfigScreenSupport
+// comment. Config-GUI-on-26.2 is an accepted gap for now, same treatment as the
+// pre-existing Forge/NeoForge config-GUI gap.
+/*? if fabric && <26.2 {*/
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
@@ -62,3 +68,4 @@ public class ModMenuIntegration implements ModMenuApi {
 		};
 	}
 }
+/*?}*/
