@@ -10,21 +10,6 @@ env:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      # Must match settings.gradle.kts's mc(...) matrix - one job per chiseled
-      # Stonecutter subproject, so all 8 build on separate runners in parallel instead
-      # of sharing one runner's core count via Gradle's own --parallel.
-      matrix:
-        target:
-          - 1.20.1-fabric
-          - 1.20.1-forge
-          - 1.21.1-fabric
-          - 1.21.1-neoforge
-          - 1.21.11-fabric
-          - 1.21.11-neoforge
-          - 26.2-fabric
-          - 26.2-neoforge
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -36,17 +21,17 @@ jobs:
         uses: ./.github/actions/build-mod
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          target: ${{ matrix.target }}
 
-      - name: Upload built JAR
+      - name: Upload built JARs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          # One artifact per target - actions/upload-artifact doesn't allow multiple
-          # jobs to write into the same named artifact, so each matrix leg gets its own.
-          name: emerald-isle-flora-${{ github.sha }}-${{ matrix.target }}
+          name: emerald-isle-flora-${{ github.sha }}
+          # One build/libs per chiseled Stonecutter subproject now (versions/<target>/),
+          # not a single root build/libs - excludes -sources.jar, keeping just the
+          # loadable mod jar per target/loader/version combination.
           path: |
-            versions/${{ matrix.target }}/build/libs/*.jar
-            !versions/${{ matrix.target }}/build/libs/*-sources.jar
+            versions/*/build/libs/*.jar
+            !versions/*/build/libs/*-sources.jar
           if-no-files-found: error
 
   dependency-submission:

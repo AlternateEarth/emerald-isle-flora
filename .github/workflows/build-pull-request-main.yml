@@ -10,21 +10,6 @@ env:
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      # Must match settings.gradle.kts's mc(...) matrix - one job per chiseled
-      # Stonecutter subproject, so all 8 build on separate runners in parallel instead
-      # of sharing one runner's core count via Gradle's own --parallel.
-      matrix:
-        target:
-          - 1.20.1-fabric
-          - 1.20.1-forge
-          - 1.21.1-fabric
-          - 1.21.1-neoforge
-          - 1.21.11-fabric
-          - 1.21.11-neoforge
-          - 26.2-fabric
-          - 26.2-neoforge
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -36,19 +21,4 @@ jobs:
         uses: ./.github/actions/build-mod
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          target: ${{ matrix.target }}
-
-  verify-datagen:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout The Repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 #v7.0.0
-
-      - name: Verify datagen
-        uses: ./.github/actions/build-mod
-        with:
-          java-version: ${{ env.JAVA_VERSION }}
           verify-datagen: true
-          skip-build: true
