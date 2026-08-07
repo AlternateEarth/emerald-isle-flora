@@ -28,3 +28,6 @@ run/
 
 # vim
 *.swp
+
+# local agent working docs (plans, notes) - not meant to be tracked
+.agents/
