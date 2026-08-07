@@ -97,9 +97,11 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.BELLS_OF_IRELAND);
 					entries.add(ModBlocks.BOG_ROSEMARY);
 					entries.add(ModBlocks.BULBOUS_BUTTERCUP);
+					entries.add(ModBlocks.BLUEBELL);
 					entries.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
 					entries.add(ModBlocks.GROWN_BOG_ROSEMARY);
 					entries.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+					entries.add(ModBlocks.GROWN_BLUEBELL);
 				})
 				.build());
 		/*?} else {*/
@@ -113,9 +115,11 @@ public final class ModItemGroups {
 					entries.accept(ModBlocks.BELLS_OF_IRELAND);
 					entries.accept(ModBlocks.BOG_ROSEMARY);
 					entries.accept(ModBlocks.BULBOUS_BUTTERCUP);
+					entries.accept(ModBlocks.BLUEBELL);
 					entries.accept(ModBlocks.GROWN_BELLS_OF_IRELAND);
 					entries.accept(ModBlocks.GROWN_BOG_ROSEMARY);
 					entries.accept(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+					entries.accept(ModBlocks.GROWN_BLUEBELL);
 				})
 				.build());*/
 		/*?}*/
@@ -134,6 +138,8 @@ public final class ModItemGroups {
 			content.addAfter(ModBlocks.BULBOUS_BUTTERCUP, ModBlocks.GROWN_BELLS_OF_IRELAND);
 			content.addAfter(ModBlocks.GROWN_BELLS_OF_IRELAND, ModBlocks.GROWN_BOG_ROSEMARY);
 			content.addAfter(ModBlocks.GROWN_BOG_ROSEMARY, ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+			content.addAfter(ModBlocks.GROWN_BULBOUS_BUTTERCUP, ModBlocks.BLUEBELL);
+			content.addAfter(ModBlocks.BLUEBELL, ModBlocks.GROWN_BLUEBELL);
 		});
 		/*?} else {*/
 		/*CreativeModeTabEvents.modifyOutputEvent(NATURAL_BLOCKS).register(content -> {
@@ -143,6 +149,8 @@ public final class ModItemGroups {
 			content.insertAfter(ModBlocks.BULBOUS_BUTTERCUP, ModBlocks.GROWN_BELLS_OF_IRELAND);
 			content.insertAfter(ModBlocks.GROWN_BELLS_OF_IRELAND, ModBlocks.GROWN_BOG_ROSEMARY);
 			content.insertAfter(ModBlocks.GROWN_BOG_ROSEMARY, ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+			content.insertAfter(ModBlocks.GROWN_BULBOUS_BUTTERCUP, ModBlocks.BLUEBELL);
+			content.insertAfter(ModBlocks.BLUEBELL, ModBlocks.GROWN_BLUEBELL);
 		});*/
 		/*?}*/
 
@@ -161,9 +169,11 @@ public final class ModItemGroups {
 						entries.add(ModBlocks.BELLS_OF_IRELAND);
 						entries.add(ModBlocks.BOG_ROSEMARY);
 						entries.add(ModBlocks.BULBOUS_BUTTERCUP);
+						entries.add(ModBlocks.BLUEBELL);
 						entries.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
 						entries.add(ModBlocks.GROWN_BOG_ROSEMARY);
 						entries.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+						entries.add(ModBlocks.GROWN_BLUEBELL);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.getValue(), group);
@@ -182,9 +192,11 @@ public final class ModItemGroups {
 						entries.accept(ModBlocks.BELLS_OF_IRELAND);
 						entries.accept(ModBlocks.BOG_ROSEMARY);
 						entries.accept(ModBlocks.BULBOUS_BUTTERCUP);
+						entries.accept(ModBlocks.BLUEBELL);
 						entries.accept(ModBlocks.GROWN_BELLS_OF_IRELAND);
 						entries.accept(ModBlocks.GROWN_BOG_ROSEMARY);
 						entries.accept(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+						entries.accept(ModBlocks.GROWN_BLUEBELL);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.identifier(), group);
@@ -208,9 +220,11 @@ public final class ModItemGroups {
 		event.accept(() -> ModBlocks.BELLS_OF_IRELAND);
 		event.accept(() -> ModBlocks.BOG_ROSEMARY);
 		event.accept(() -> ModBlocks.BULBOUS_BUTTERCUP);
+		event.accept(() -> ModBlocks.BLUEBELL);
 		event.accept(() -> ModBlocks.GROWN_BELLS_OF_IRELAND);
 		event.accept(() -> ModBlocks.GROWN_BOG_ROSEMARY);
 		event.accept(() -> ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+		event.accept(() -> ModBlocks.GROWN_BLUEBELL);
 	}
 	*/
 	/*?}*/
@@ -229,9 +243,11 @@ public final class ModItemGroups {
 		event.add(ModBlocks.BELLS_OF_IRELAND);
 		event.add(ModBlocks.BOG_ROSEMARY);
 		event.add(ModBlocks.BULBOUS_BUTTERCUP);
+		event.add(ModBlocks.BLUEBELL);
 		event.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
 		event.add(ModBlocks.GROWN_BOG_ROSEMARY);
 		event.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+		event.add(ModBlocks.GROWN_BLUEBELL);
 	}
 	*/
 	/*?}*/
@@ -249,9 +265,11 @@ public final class ModItemGroups {
 		event.accept(ModBlocks.BELLS_OF_IRELAND);
 		event.accept(ModBlocks.BOG_ROSEMARY);
 		event.accept(ModBlocks.BULBOUS_BUTTERCUP);
+		event.accept(ModBlocks.BLUEBELL);
 		event.accept(ModBlocks.GROWN_BELLS_OF_IRELAND);
 		event.accept(ModBlocks.GROWN_BOG_ROSEMARY);
 		event.accept(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+		event.accept(ModBlocks.GROWN_BLUEBELL);
 	}
 	*/
 	/*?}*/

@@ -90,6 +90,22 @@ public final class ModWorldGen {
                 RegistryKeys.PLACED_FEATURE,
                 Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_meadow"))
         );
+
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(BiomeKeys.FOREST),
+            GenerationStep.Feature.VEGETAL_DECORATION,
+            RegistryKey.of(
+                RegistryKeys.PLACED_FEATURE,
+                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bluebell_forest"))
+        );
+
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(BiomeKeys.FLOWER_FOREST),
+            GenerationStep.Feature.VEGETAL_DECORATION,
+            RegistryKey.of(
+                RegistryKeys.PLACED_FEATURE,
+                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bluebell_flower_forest"))
+        );
         /*?} else {*/
         /*
         // 26.2: same shape, Mojmap names - BiomeKeys -> Biomes, RegistryKeys -> Registries
@@ -151,6 +167,22 @@ public final class ModWorldGen {
             ResourceKey.create(
                 Registries.PLACED_FEATURE,
                 Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_meadow"))
+        );
+
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(Biomes.FOREST),
+            GenerationStep.Decoration.VEGETAL_DECORATION,
+            ResourceKey.create(
+                Registries.PLACED_FEATURE,
+                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bluebell_forest"))
+        );
+
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST),
+            GenerationStep.Decoration.VEGETAL_DECORATION,
+            ResourceKey.create(
+                Registries.PLACED_FEATURE,
+                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bluebell_flower_forest"))
         );
         */
         /*?}*/

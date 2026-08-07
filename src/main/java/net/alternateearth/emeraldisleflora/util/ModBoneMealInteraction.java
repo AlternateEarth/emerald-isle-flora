@@ -220,7 +220,11 @@ public final class ModBoneMealInteraction {
                 state.isOf(ModBlocks.BULBOUS_BUTTERCUP) ||
                 state.isOf(ModBlocks.GROWN_BULBOUS_BUTTERCUP) ||
                 state.isOf(ModBlocks.POTTED_BULBOUS_BUTTERCUP) ||
-                state.isOf(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP);
+                state.isOf(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP) ||
+                state.isOf(ModBlocks.BLUEBELL) ||
+                state.isOf(ModBlocks.GROWN_BLUEBELL) ||
+                state.isOf(ModBlocks.POTTED_BLUEBELL) ||
+                state.isOf(ModBlocks.POTTED_GROWN_BLUEBELL);
         /*?} else {*/
         /*return state.getBlock() == ModBlocks.BELLS_OF_IRELAND ||
                 state.getBlock() == ModBlocks.GROWN_BELLS_OF_IRELAND ||
@@ -233,7 +237,11 @@ public final class ModBoneMealInteraction {
                 state.getBlock() == ModBlocks.BULBOUS_BUTTERCUP ||
                 state.getBlock() == ModBlocks.GROWN_BULBOUS_BUTTERCUP ||
                 state.getBlock() == ModBlocks.POTTED_BULBOUS_BUTTERCUP ||
-                state.getBlock() == ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP;*/
+                state.getBlock() == ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP ||
+                state.getBlock() == ModBlocks.BLUEBELL ||
+                state.getBlock() == ModBlocks.GROWN_BLUEBELL ||
+                state.getBlock() == ModBlocks.POTTED_BLUEBELL ||
+                state.getBlock() == ModBlocks.POTTED_GROWN_BLUEBELL;*/
         /*?}*/
     }
 }

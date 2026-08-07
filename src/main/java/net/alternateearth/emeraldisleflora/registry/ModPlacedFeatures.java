@@ -45,6 +45,9 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_PLAINS_KEY = registerKey("patch_bulbous_buttercup_plains");
     public static final RegistryKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_SUNFLOWER_PLAINS_KEY = registerKey("patch_bulbous_buttercup_sunflower_plains");
     public static final RegistryKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_MEADOW_KEY = registerKey("patch_bulbous_buttercup_meadow");
+
+    public static final RegistryKey<PlacedFeature> PATCH_BLUEBELL_FOREST_KEY = registerKey("patch_bluebell_forest");
+    public static final RegistryKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");
     /*?} else {*/
     /*public static final ResourceKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_MEADOW_KEY = registerKey("patch_bells_of_ireland_meadow");
     public static final ResourceKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_PLAINS_KEY = registerKey("patch_bells_of_ireland_plains");
@@ -54,7 +57,10 @@ public class ModPlacedFeatures {
 
     public static final ResourceKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_PLAINS_KEY = registerKey("patch_bulbous_buttercup_plains");
     public static final ResourceKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_SUNFLOWER_PLAINS_KEY = registerKey("patch_bulbous_buttercup_sunflower_plains");
-    public static final ResourceKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_MEADOW_KEY = registerKey("patch_bulbous_buttercup_meadow");*/
+    public static final ResourceKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_MEADOW_KEY = registerKey("patch_bulbous_buttercup_meadow");
+
+    public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FOREST_KEY = registerKey("patch_bluebell_forest");
+    public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -141,6 +147,30 @@ public class ModPlacedFeatures {
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY),
             List.of(
                 RarityFilterPlacementModifier.of(24),
+                SquarePlacementModifier.of(),
+                PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
+                BiomePlacementModifier.of()
+            )
+        );
+
+        register(
+            context,
+            PATCH_BLUEBELL_FOREST_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLUEBELL_KEY),
+            List.of(
+                RarityFilterPlacementModifier.of(24),
+                SquarePlacementModifier.of(),
+                PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
+                BiomePlacementModifier.of()
+            )
+        );
+
+        register(
+            context,
+            PATCH_BLUEBELL_FLOWER_FOREST_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLUEBELL_KEY),
+            List.of(
+                RarityFilterPlacementModifier.of(12),
                 SquarePlacementModifier.of(),
                 PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of()
@@ -253,6 +283,34 @@ public class ModPlacedFeatures {
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY),
             List.of(
                 RarityFilter.onAverageOnceEvery(24),
+                InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP,
+                BiomeFilter.biome(),
+                CountPlacement.of(64),
+                RandomOffsetPlacement.ofTriangle(6, 4)
+            )
+        );
+
+        register(
+            context,
+            PATCH_BLUEBELL_FOREST_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLUEBELL_KEY),
+            List.of(
+                RarityFilter.onAverageOnceEvery(24),
+                InSquarePlacement.spread(),
+                PlacementUtils.HEIGHTMAP,
+                BiomeFilter.biome(),
+                CountPlacement.of(64),
+                RandomOffsetPlacement.ofTriangle(6, 4)
+            )
+        );
+
+        register(
+            context,
+            PATCH_BLUEBELL_FLOWER_FOREST_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.PATCH_BLUEBELL_KEY),
+            List.of(
+                RarityFilter.onAverageOnceEvery(12),
                 InSquarePlacement.spread(),
                 PlacementUtils.HEIGHTMAP,
                 BiomeFilter.biome(),

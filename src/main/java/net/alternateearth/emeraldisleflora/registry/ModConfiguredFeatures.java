@@ -42,11 +42,13 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BOG_ROSEMARY_KEY = registerKey("patch_bog_rosemary");
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BOG_ROSEMARY_KEY = registerKey("patch_blended_bog_rosemary");
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
     /*?} else {*/
     /*public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BELLS_OF_IRELAND_KEY = registerKey("patch_bells_of_ireland");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BOG_ROSEMARY_KEY = registerKey("patch_bog_rosemary");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BOG_ROSEMARY_KEY = registerKey("patch_blended_bog_rosemary");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");*/
+    public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -125,6 +127,22 @@ public class ModConfiguredFeatures {
                     )
                 ))
         );
+
+        register(
+            context,
+            PATCH_BLUEBELL_KEY,
+            Feature.FLOWER,
+            new RandomPatchFeatureConfig(
+                64,
+                6,
+                4,
+                PlacedFeatures.createEntry(
+                    Feature.SIMPLE_BLOCK,
+                    new SimpleBlockFeatureConfig(
+                        BlockStateProvider.of(ModBlocks.BLUEBELL)
+                    )
+                ))
+        );
     }
     /*?} else {*/
     /*
@@ -179,6 +197,15 @@ public class ModConfiguredFeatures {
                         .add(ModBlocks.BULBOUS_BUTTERCUP.defaultBlockState(), 1)
                         .add(ModBlocks.GROWN_BULBOUS_BUTTERCUP.defaultBlockState(), 2)
                 )
+            )
+        );
+
+        register(
+            context,
+            PATCH_BLUEBELL_KEY,
+            Feature.SIMPLE_BLOCK,
+            new SimpleBlockConfiguration(
+                BlockStateProvider.simple(ModBlocks.BLUEBELL)
             )
         );
     }

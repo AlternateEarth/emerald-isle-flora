@@ -84,6 +84,17 @@ public final class ModBlocks {
             /*?}*/
     );
 
+    public static final Block BLUEBELL = new FlowerBlock(StatusEffects.JUMP_BOOST, 100, AbstractBlock.Settings.copy(DANDELION)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("bluebell"))*/
+            /*?}*/
+    );
+    public static final Block GROWN_BLUEBELL = new GrowableFlower(StatusEffects.JUMP_BOOST, 100, AbstractBlock.Settings.copy(BLUEBELL)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("grown_bluebell"))*/
+            /*?}*/
+    );
+
     //-----------------------Potted Flowers------------------------
     public static final Block POTTED_BELLS_OF_IRELAND = new FlowerPotBlock(BELLS_OF_IRELAND, AbstractBlock.Settings.copy(POTTED_DANDELION)
             /*? if >=1.21.11 {*/
@@ -115,6 +126,17 @@ public final class ModBlocks {
     public static final Block POTTED_GROWN_BULBOUS_BUTTERCUP = new FlowerPotBlock(GROWN_BULBOUS_BUTTERCUP, AbstractBlock.Settings.copy(POTTED_BULBOUS_BUTTERCUP)
             /*? if >=1.21.11 {*/
             /*.registryKey(blockId("potted_grown_bulbous_buttercup"))*/
+            /*?}*/
+    );
+
+    public static final Block POTTED_BLUEBELL = new FlowerPotBlock(BLUEBELL, AbstractBlock.Settings.copy(POTTED_DANDELION)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("potted_bluebell"))*/
+            /*?}*/
+    );
+    public static final Block POTTED_GROWN_BLUEBELL = new FlowerPotBlock(GROWN_BLUEBELL, AbstractBlock.Settings.copy(POTTED_BLUEBELL)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("potted_grown_bluebell"))*/
             /*?}*/
     );
 
@@ -152,6 +174,11 @@ public final class ModBlocks {
     public static final Block GROWN_BULBOUS_BUTTERCUP = new GrowableFlower(MobEffects.NAUSEA, 100, BlockBehaviour.Properties.ofFullCopy(BULBOUS_BUTTERCUP)
             .setId(blockId("grown_bulbous_buttercup")));
 
+    public static final Block BLUEBELL = new FlowerBlock(MobEffects.JUMP_BOOST, 100, BlockBehaviour.Properties.ofFullCopy(DANDELION)
+            .setId(blockId("bluebell")));
+    public static final Block GROWN_BLUEBELL = new GrowableFlower(MobEffects.JUMP_BOOST, 100, BlockBehaviour.Properties.ofFullCopy(BLUEBELL)
+            .setId(blockId("grown_bluebell")));
+
     //-----------------------Potted Flowers------------------------
     public static final Block POTTED_BELLS_OF_IRELAND = new FlowerPotBlock(BELLS_OF_IRELAND, BlockBehaviour.Properties.ofFullCopy(POTTED_DANDELION)
             .setId(blockId("potted_bells_of_ireland")));
@@ -167,6 +194,11 @@ public final class ModBlocks {
             .setId(blockId("potted_bulbous_buttercup")));
     public static final Block POTTED_GROWN_BULBOUS_BUTTERCUP = new FlowerPotBlock(GROWN_BULBOUS_BUTTERCUP, BlockBehaviour.Properties.ofFullCopy(POTTED_BULBOUS_BUTTERCUP)
             .setId(blockId("potted_grown_bulbous_buttercup")));
+
+    public static final Block POTTED_BLUEBELL = new FlowerPotBlock(BLUEBELL, BlockBehaviour.Properties.ofFullCopy(POTTED_DANDELION)
+            .setId(blockId("potted_bluebell")));
+    public static final Block POTTED_GROWN_BLUEBELL = new FlowerPotBlock(GROWN_BLUEBELL, BlockBehaviour.Properties.ofFullCopy(POTTED_BLUEBELL)
+            .setId(blockId("potted_grown_bluebell")));
 
     // Carried forward from the >=1.21.11 requirement that a Block/Item registry id be
     // set via the Settings/Properties builder before construction (NullPointerException/
@@ -200,6 +232,11 @@ public final class ModBlocks {
         register("grown_bulbous_buttercup", GROWN_BULBOUS_BUTTERCUP, true);
         register("potted_bulbous_buttercup", POTTED_BULBOUS_BUTTERCUP, false);
         register("potted_grown_bulbous_buttercup", POTTED_GROWN_BULBOUS_BUTTERCUP, false);
+
+        register("bluebell", BLUEBELL, true);
+        register("grown_bluebell", GROWN_BLUEBELL, true);
+        register("potted_bluebell", POTTED_BLUEBELL, false);
+        register("potted_grown_bluebell", POTTED_GROWN_BLUEBELL, false);
 
         registerComposting();
 
@@ -266,6 +303,11 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), GROWN_BULBOUS_BUTTERCUP);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bulbous_buttercup"), POTTED_BULBOUS_BUTTERCUP);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bulbous_buttercup"), POTTED_GROWN_BULBOUS_BUTTERCUP);
+
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), GROWN_BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bluebell"), POTTED_BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bluebell"), POTTED_GROWN_BLUEBELL);
         });
 
         event.register(ForgeRegistries.Keys.ITEMS, helper -> {
@@ -275,9 +317,12 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), new BlockItem(GROWN_BOG_ROSEMARY, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), new BlockItem(BULBOUS_BUTTERCUP, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings()));
         });
 
         registerComposting();
+        registerFlowerPotPlants();
     }
     */
     /*?}*/
@@ -312,6 +357,11 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), GROWN_BULBOUS_BUTTERCUP);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bulbous_buttercup"), POTTED_BULBOUS_BUTTERCUP);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bulbous_buttercup"), POTTED_GROWN_BULBOUS_BUTTERCUP);
+
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), GROWN_BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bluebell"), POTTED_BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bluebell"), POTTED_GROWN_BLUEBELL);
         });
 
         event.register(RegistryKeys.ITEM, helper -> {
@@ -321,6 +371,8 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), new BlockItem(GROWN_BOG_ROSEMARY, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), new BlockItem(BULBOUS_BUTTERCUP, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings()));
         });
 
         registerComposting();
@@ -346,6 +398,11 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), GROWN_BULBOUS_BUTTERCUP);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bulbous_buttercup"), POTTED_BULBOUS_BUTTERCUP);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bulbous_buttercup"), POTTED_GROWN_BULBOUS_BUTTERCUP);
+
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), GROWN_BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bluebell"), POTTED_BLUEBELL);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bluebell"), POTTED_GROWN_BLUEBELL);
         });
 
         event.register(RegistryKeys.ITEM, helper -> {
@@ -355,6 +412,8 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), new BlockItem(GROWN_BOG_ROSEMARY, new Item.Settings().registryKey(itemId("grown_bog_rosemary")).useBlockPrefixedTranslationKey()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), new BlockItem(BULBOUS_BUTTERCUP, new Item.Settings().registryKey(itemId("bulbous_buttercup")).useBlockPrefixedTranslationKey()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings().registryKey(itemId("grown_bulbous_buttercup")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings().registryKey(itemId("bluebell")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings().registryKey(itemId("grown_bluebell")).useBlockPrefixedTranslationKey()));
         });
 
         registerComposting();
@@ -384,6 +443,11 @@ public final class ModBlocks {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), GROWN_BULBOUS_BUTTERCUP);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "potted_bulbous_buttercup"), POTTED_BULBOUS_BUTTERCUP);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "potted_grown_bulbous_buttercup"), POTTED_GROWN_BULBOUS_BUTTERCUP);
+
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bluebell"), BLUEBELL);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), GROWN_BLUEBELL);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "potted_bluebell"), POTTED_BLUEBELL);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "potted_grown_bluebell"), POTTED_GROWN_BLUEBELL);
         });
 
         event.register(Registries.ITEM, helper -> {
@@ -393,6 +457,8 @@ public final class ModBlocks {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), new BlockItem(GROWN_BOG_ROSEMARY, new Item.Properties().setId(itemId("grown_bog_rosemary")).useBlockDescriptionPrefix()));
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), new BlockItem(BULBOUS_BUTTERCUP, new Item.Properties().setId(itemId("bulbous_buttercup")).useBlockDescriptionPrefix()));
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Properties().setId(itemId("grown_bulbous_buttercup")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Properties().setId(itemId("bluebell")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Properties().setId(itemId("grown_bluebell")).useBlockDescriptionPrefix()));
         });
 
         registerComposting();
@@ -409,6 +475,8 @@ public final class ModBlocks {
         ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BOG_ROSEMARY, 0.95f);
         ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BULBOUS_BUTTERCUP, 0.65f);
         ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BULBOUS_BUTTERCUP, 0.95f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BLUEBELL, 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BLUEBELL, 0.95f);
         /*?} else {*/
         /*
         // 26.2: same Object2FloatMap<ItemLike>, field renamed ITEM_TO_LEVEL_INCREASE_CHANCE -> COMPOSTABLES.
@@ -417,22 +485,30 @@ public final class ModBlocks {
         ComposterBlock.COMPOSTABLES.put(BOG_ROSEMARY, 0.65f);
         ComposterBlock.COMPOSTABLES.put(GROWN_BOG_ROSEMARY, 0.95f);
         ComposterBlock.COMPOSTABLES.put(BULBOUS_BUTTERCUP, 0.65f);
-        ComposterBlock.COMPOSTABLES.put(GROWN_BULBOUS_BUTTERCUP, 0.95f);*/
+        ComposterBlock.COMPOSTABLES.put(GROWN_BULBOUS_BUTTERCUP, 0.95f);
+        ComposterBlock.COMPOSTABLES.put(BLUEBELL, 0.65f);
+        ComposterBlock.COMPOSTABLES.put(GROWN_BLUEBELL, 0.95f);*/
         /*?}*/
     }
 
-    // NeoForge-only: NeoForge patches FlowerPotBlock away from vanilla's simple
-    // construct-time "CONTENT_TO_POTTED.put(content, this)" toward a registry-key-keyed
-    // per-instance "fullPots" map, exposed via addPlant(Identifier, Supplier<Block>) on
-    // the canonical empty pot (Blocks.FLOWER_POT). The plain FlowerPotBlock(Block,
-    // Settings) constructor we use above for POTTED_* *does* try to auto-register into
-    // this map, but it does so by looking up the content block's registry key at
-    // *construction* time (BuiltInRegistries.BLOCK.getKey(content)) - since our blocks
-    // are constructed as eager static fields before ModBlocks.onRegister ever runs,
-    // that lookup finds nothing and the auto-registration silently captures the wrong
-    // key. Registering explicitly here, after we already know the real ids, fixes it.
-    // Confirmed via decompiling NeoForge's actual (Mojmap) shipped FlowerPotBlock class -
-    // this method does not exist on vanilla/Fabric's FlowerPotBlock at all.
+    // ForgeLike-only (Forge and NeoForge both): both patch FlowerPotBlock away from
+    // vanilla's simple construct-time "CONTENT_TO_POTTED.put(content, this)" toward a
+    // registry-key-keyed per-instance "fullPots" map, exposed via
+    // addPlant(Identifier, Supplier<Block>) on the canonical empty pot (Blocks.FLOWER_POT).
+    // The plain FlowerPotBlock(Block, Settings) constructor we use above for POTTED_*
+    // *does* try to auto-register into this map, but it does so by looking up the content
+    // block's registry key at *construction* time (e.g.
+    // ForgeRegistries.BLOCKS.getKey(content) on Forge, BuiltInRegistries.BLOCK.getKey(content)
+    // on NeoForge) - since our blocks are constructed as eager static fields before
+    // ModBlocks.onRegister ever runs, that lookup finds nothing and the auto-registration
+    // silently captures the wrong key. Registering explicitly here, after we already know
+    // the real ids, fixes it. Confirmed via decompiling both loaders' actual shipped
+    // FlowerPotBlock class (Forge 1.20.1-47.4.10's real patched+Yarn-mapped
+    // minecraft-merged jar, and NeoForge's - see below) - this method does not exist on
+    // vanilla/Fabric's FlowerPotBlock at all. Found on Forge only after a real-install
+    // regression report: 1.20.1-forge could place vanilla flowers in pots but not this
+    // mod's, since this method was originally added NeoForge-only and never extended to
+    // plain Forge, despite Forge having the exact same patch.
     //
     // Confirmed still present, same shape, for 26.2 too - decompiled the real patched
     // minecraft-merged jar from a 26.2-neoforge Loom build
@@ -441,14 +517,16 @@ public final class ModBlocks {
     // check (NeoForge ships its vanilla patches as a binary diff applied only during the
     // real NeoForm/Loom pipeline, invisible to static jar-only research). addPlant() and
     // getEmptyPot() are both still there, unchanged shape (just Identifier now being the
-    // Mojmap resources.Identifier instead of Yarn's util.Identifier).
+    // Mojmap resources.Identifier instead of Yarn's util.Identifier). Forge never reaches
+    // 26.2 at all in this project's matrix, so only the NeoForge side needed a >=26.2
+    // variant.
     // Split into version variants (rather than one body with a nested Stonecutter
     // conditional) for the same reason onRegister() above is split: this whole method is
-    // already one big disabled block comment when neoforge is inactive, and nesting a
+    // already one big disabled block comment when forgeLike is inactive, and nesting a
     // second /*? ... ?*/ marker inside disabled block-comment text doesn't work - it's
     // both invisible to Stonecutter's scanner and, worse, a literal Java block comment
     // can't nest, so an inner "/*? if ... {*/" would prematurely close the outer comment.
-    /*? if neoforge && <26.2 {*/
+    /*? if forgeLike && <26.2 {*/
     /*private static void registerFlowerPotPlants() {
         // Key is the registry id of the HELD ITEM's block (the plain flower); the
         // supplier is the resulting block placed in the world, which must be the
@@ -460,6 +538,8 @@ public final class ModBlocks {
             emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), () -> POTTED_GROWN_BOG_ROSEMARY);
             emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), () -> POTTED_BULBOUS_BUTTERCUP);
             emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), () -> POTTED_GROWN_BULBOUS_BUTTERCUP);
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), () -> POTTED_BLUEBELL);
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), () -> POTTED_GROWN_BLUEBELL);
         }
     }*/
     /*?}*/
@@ -472,6 +552,8 @@ public final class ModBlocks {
             emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bog_rosemary"), () -> POTTED_GROWN_BOG_ROSEMARY);
             emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bulbous_buttercup"), () -> POTTED_BULBOUS_BUTTERCUP);
             emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), () -> POTTED_GROWN_BULBOUS_BUTTERCUP);
+            emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bluebell"), () -> POTTED_BLUEBELL);
+            emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), () -> POTTED_GROWN_BLUEBELL);
         }
     }*/
     /*?}*/

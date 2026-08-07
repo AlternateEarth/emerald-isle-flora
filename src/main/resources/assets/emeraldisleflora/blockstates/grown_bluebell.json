@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "emeraldisleflora:block/bluebell/grown_bluebell_1"
+      },
+      {
+        "model": "emeraldisleflora:block/bluebell/grown_bluebell_2"
+      },
+      {
+        "model": "emeraldisleflora:block/bluebell/grown_bluebell_3"
+      },
+      {
+        "model": "emeraldisleflora:block/bluebell/grown_bluebell_4"
+      },
+      {
+        "model": "emeraldisleflora:block/bluebell/grown_bluebell_5"
+      }
+    ]
+  }
+}

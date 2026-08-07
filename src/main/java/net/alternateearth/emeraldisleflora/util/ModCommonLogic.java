@@ -80,6 +80,22 @@ public final class ModCommonLogic {
             }
             Block.dropStack(world, pos, new ItemStack(ModBlocks.BULBOUS_BUTTERCUP.asItem()));
             world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
+        } else if (state.isOf(ModBlocks.BLUEBELL)) {
+            if (!growingEnabled) {
+                return false;
+            }
+            world.setBlockState(pos, ModBlocks.GROWN_BLUEBELL.getDefaultState());
+        } else if (state.isOf(ModBlocks.POTTED_BLUEBELL)) {
+            if (!growingEnabled) {
+                return false;
+            }
+            world.setBlockState(pos, ModBlocks.POTTED_GROWN_BLUEBELL.getDefaultState());
+        } else if (state.isOf(ModBlocks.GROWN_BLUEBELL) || state.isOf(ModBlocks.POTTED_GROWN_BLUEBELL)) {
+            if (!harvestingEnabled) {
+                return false;
+            }
+            Block.dropStack(world, pos, new ItemStack(ModBlocks.BLUEBELL.asItem()));
+            world.emitGameEvent(null, GameEvent.ENTITY_PLACE, pos);
         } else {
             return false;
         }
@@ -152,6 +168,22 @@ public final class ModCommonLogic {
                 return false;
             }
             Block.popResource(world, pos, new ItemStack(ModBlocks.BULBOUS_BUTTERCUP.asItem()));
+            world.gameEvent(null, GameEvent.ENTITY_PLACE, pos);
+        } else if (state.getBlock() == ModBlocks.BLUEBELL) {
+            if (!growingEnabled) {
+                return false;
+            }
+            world.setBlockAndUpdate(pos, ModBlocks.GROWN_BLUEBELL.defaultBlockState());
+        } else if (state.getBlock() == ModBlocks.POTTED_BLUEBELL) {
+            if (!growingEnabled) {
+                return false;
+            }
+            world.setBlockAndUpdate(pos, ModBlocks.POTTED_GROWN_BLUEBELL.defaultBlockState());
+        } else if (state.getBlock() == ModBlocks.GROWN_BLUEBELL || state.getBlock() == ModBlocks.POTTED_GROWN_BLUEBELL) {
+            if (!harvestingEnabled) {
+                return false;
+            }
+            Block.popResource(world, pos, new ItemStack(ModBlocks.BLUEBELL.asItem()));
             world.gameEvent(null, GameEvent.ENTITY_PLACE, pos);
         } else {
             return false;

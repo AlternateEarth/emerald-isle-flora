@@ -77,6 +77,8 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 		putCutout(ModBlocks.GROWN_BOG_ROSEMARY);
 		putCutout(ModBlocks.BULBOUS_BUTTERCUP);
 		putCutout(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+		putCutout(ModBlocks.BLUEBELL);
+		putCutout(ModBlocks.GROWN_BLUEBELL);
 
 		//-----------------------Potted Flowers------------------------
 		putCutout(ModBlocks.POTTED_BELLS_OF_IRELAND);
@@ -85,6 +87,8 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 		putCutout(ModBlocks.POTTED_GROWN_BOG_ROSEMARY);
 		putCutout(ModBlocks.POTTED_BULBOUS_BUTTERCUP);
 		putCutout(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP);
+		putCutout(ModBlocks.POTTED_BLUEBELL);
+		putCutout(ModBlocks.POTTED_GROWN_BLUEBELL);
 		/*?}*/
 		// >=26.2: nothing to do here - see the class javadoc above, render layers are
 		// auto-detected from sprite pixel data now.
