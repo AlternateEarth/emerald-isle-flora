@@ -5,8 +5,16 @@ inputs:
     description: 'JDK version to build with'
     required: false
     default: '21'
+  target:
+    description: 'Chiseled Stonecutter subproject to build (e.g. "1.20.1-fabric"). Empty builds every target.'
+    required: false
+    default: ''
   verify-datagen:
     description: 'Also run datagen and fail if it differs from what is committed'
+    required: false
+    default: 'false'
+  skip-build:
+    description: 'Skip the "./gradlew build" step (e.g. a job that only wants verify-datagen)'
     required: false
     default: 'false'
 runs:
@@ -39,7 +47,9 @@ runs:
       # - confirmed locally to wrongly delete the just-regenerated, correct committed
       # files. Two targets on *different* sides of the split, one command each below, is
       # both sufficient (the JSON only depends on which side of the Stonecutter `<26.2`/
-      # `>=26.2` split ran, not the exact game version within a side) and race-free.
+      # `>=26.2` split ran, not the exact game version within a side) and race-free. Runs
+      # as its own job in the calling workflow (not per matrix leg) - it's unrelated to
+      # which target(s) are being built.
       if: inputs.verify-datagen == 'true'
       shell: bash
       run: |
@@ -50,5 +60,15 @@ runs:
         )
 
     - name: Build With Gradle
+      if: inputs.skip-build != 'true'
       shell: bash
-      run: ./gradlew build
+      # Empty target builds every chiseled subproject in one Gradle invocation (still
+      # useful standalone, e.g. a local "does everything build" check) - CI itself always
+      # passes a target now, fanning the 8 targets out across separate parallel jobs
+      # instead of relying on one runner's core count via org.gradle.parallel.
+      run: |
+        if [ -n "${{ inputs.target }}" ]; then
+          ./gradlew :${{ inputs.target }}:build
+        else
+          ./gradlew build
+        fi
