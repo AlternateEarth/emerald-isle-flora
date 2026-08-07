@@ -20,16 +20,27 @@ repositories {
 // outright on a no-remap target ("Expected official namespace for access widener entry,
 // found: intermediary") - a real, current ecosystem-maturity gap in Cloth Config's own
 // 26.2 build, not something fixable from this project. Until that's fixed upstream,
-// Cloth Config (and therefore the Mod Menu integration that surfaces its screen) is
-// skipped entirely on Mojmap-only targets - same accepted-gap treatment this project
-// already gives the config GUI on Forge/NeoForge (see the migration plan doc).
+// Cloth Config (and therefore the config screen it powers) is skipped entirely on
+// Mojmap-only targets - see the migration plan doc's Progress section for when this was
+// last checked.
 val hasYarnMappings = project.hasProperty("yarn_mappings")
 val hasConfigScreenSupport = hasYarnMappings
 
+// Cloth Config genuinely publishes Fabric, Forge, *and* NeoForge builds - but this mod's
+// own config-screen integration only actually exists on Fabric (ModMenuIntegration.java).
+// Wiring the equivalent for Forge/NeoForge (Forge's ConfigScreenHandler /
+// IConfigScreenFactory, both straightforward to register) was attempted, but Cloth
+// Config's Forge/NeoForge artifacts are ordinary third-party Maven jars compiled against
+// real Mojang mappings, never remapped by Architectury Loom the way modImplementation
+// remaps Fabric dependencies (Loom only remaps the vanilla/loader jars it manages
+// itself) - confirmed via javap against the real cloth-config-forge/-neoforge jars and
+// against this project's actual compile classpath (neither exposes the other's class
+// names at all, so there's no cast/qualification that bridges them, and Architectury
+// Loom's own docs confirm this interoperability gap isn't currently addressed by the
+// plugin). Revisit if Cloth Config ever ships Yarn-mapped Forge/NeoForge builds, or if
+// Loom adds a remapping mechanism for this case.
 dependencies {
-    if (mod.isFabric && hasConfigScreenSupport) {
-        // Cloth Config powers our in-game config screen. It's a real dependency (not
-        // optional) since it's what the sample config option's GUI is built from.
+    if (hasConfigScreenSupport && mod.isFabric) {
         "modImplementation"("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}")
 
         // Mod Menu is an optional/soft dependency: the mod works completely fine
@@ -142,4 +153,73 @@ tasks.register<Copy>("deployToPrism") {
 
     from(jarTask.flatMap { it.archiveFile })
     into(modsDir)
+}
+
+// Stonecraft's own configurePublishing() (applied automatically per chiseled
+// subproject, before this block runs - see its real source,
+// gg/meza/stonecraft/configurations/Publishing.kt, decompiled from the pinned 1.12.5
+// jar to confirm rather than guessed) already wires up File/modLoaders/minecraftVersions/
+// credentials/dryRun correctly for every target with zero code here. This block only
+// overrides the three things worth a project-specific choice:
+// - version/displayName: Stonecraft's own defaults ("${mod.version}+${mod.loader}-
+//   $minecraftVersion" / "${mod.version} for ${loader} $minecraftVersion") are reasonable
+//   but don't include the mod name and order loader/version the other way round - matches
+//   what was actually decided on, not just accepting the framework default silently.
+// - changelog: Stonecraft's own default publishes the *entire* CHANGELOG.md verbatim to
+//   every single version on every platform - fine for a single-version mod, but with 8
+//   targets per release that means players see the whole project history repeated 8
+//   times instead of just what's new in this release. Extracts just the section for the
+//   current mod.version instead (Keep a Changelog format - see CHANGELOG.md itself).
+val changelogForCurrentVersion = run {
+    val file = rootProject.layout.projectDirectory.file("CHANGELOG.md").asFile
+    if (!file.exists()) return@run "No changelog provided."
+    val lines = file.readLines()
+    val start = lines.indexOfFirst { it.startsWith("## [${mod.version}]") }
+    if (start == -1) return@run "No changelog provided."
+    val end = lines.drop(start + 1).indexOfFirst { it.startsWith("## ") }
+        .let { if (it == -1) lines.size else start + 1 + it }
+    lines.subList(start + 1, end).joinToString("\n").trim()
+}
+
+// mod.loader is the lowercase Stonecutter loader id ("fabric"/"forge"/"neoforge") -
+// replaceFirstChar{} alone would render NeoForge as "Neoforge", so this maps the one
+// case that actually needs it explicitly rather than guessing at a capitalization rule.
+val loaderDisplayName = when (mod.loader) {
+    "neoforge" -> "NeoForge"
+    else -> mod.loader.replaceFirstChar { it.uppercase() }
+}
+
+publishMods {
+    version.set("${mod.version}+${mod.minecraftVersion}-${mod.loader}")
+    displayName.set("${mod.name} ${mod.version} ($loaderDisplayName ${mod.minecraftVersion})")
+    changelog.set(changelogForCurrentVersion)
+
+    // Gated the same way Stonecraft's own configurePublishing() gates its Modrinth
+    // block: calling modrinth{} unconditionally creates the publishModrinth task
+    // regardless of whether Stonecraft's own auto-config actually ran (it skips
+    // entirely, with just a log line, when MODRINTH_TOKEN/MODRINTH_ID aren't set) -
+    // confirmed the hard way, this fails validation locally with "projectId doesn't
+    // have a configured value" otherwise, since project id/token are only ever set by
+    // Stonecraft's own block, never by this one.
+    if (project.providers.environmentVariable("MODRINTH_TOKEN").isPresent &&
+        project.providers.environmentVariable("MODRINTH_ID").isPresent) {
+        modrinth {
+            // Matches this mod's real dependencies{} block above and fabric.mod.json
+            // (see clothConfigDependsLine for why cloth-config is conditional there) -
+            // Fabric API is required on every Fabric target. Cloth Config is itself a
+            // real multi-loader mod (Fabric, Forge, *and* NeoForge all publish it), but
+            // that's not what this declares: it declares what *this mod* actually
+            // depends on, which is Cloth Config + Mod Menu on Fabric only - this mod has
+            // no Forge/NeoForge config-screen integration (see the dependencies{} block
+            // comment above for why that isn't currently feasible), so claiming either
+            // dependency there would describe an integration that doesn't exist.
+            if (mod.isFabric) {
+                requires("fabric-api")
+                if (hasConfigScreenSupport) {
+                    requires("cloth-config")
+                    optional("modmenu")
+                }
+            }
+        }
+    }
 }

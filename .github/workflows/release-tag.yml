@@ -5,10 +5,14 @@ on:
     tags: ["v*"]
 
 env:
-  GAME_VERSION: 1.20.1
   JAVA_VERSION: 21
+  DO_PUBLISH: "true"
   MODRINTH_TOKEN: ${{ secrets.PUBLISH_MODRINTH_TOKEN }}
-  GITHUB_TOKEN: ${{ secrets.PUBLISH_GITHUB_TOKEN }}
+  # Modrinth's own project id, gg.meza.stonecraft reads this via the MODRINTH_ID env
+  # var (see build.gradle.kts's publishMods block, and Publishing.kt in Stonecraft's
+  # own source - not a secret, project ids are public).
+  MODRINTH_ID: fmhwwICG
+  GH_TOKEN: ${{ secrets.PUBLISH_GITHUB_TOKEN }}
 
 jobs:
   release:
@@ -23,33 +27,51 @@ jobs:
         shell: bash
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
-          PROJECT_VERSION="$(grep '^mod_version=' gradle.properties | cut -d'=' -f2)"
+          PROJECT_VERSION="$(grep '^mod.version=' gradle.properties | cut -d'=' -f2)"
           if [ "$TAG_VERSION" != "$PROJECT_VERSION" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME (version $TAG_VERSION) doesn't match mod_version=$PROJECT_VERSION in gradle.properties"
+            echo "::error::Tag $GITHUB_REF_NAME (version $TAG_VERSION) doesn't match mod.version=$PROJECT_VERSION in gradle.properties"
             exit 1
           fi
 
-      - name: Build mod
+      - name: Verify CHANGELOG.md has an entry for this version
+        shell: bash
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if ! grep -q "^## \[$TAG_VERSION\]" CHANGELOG.md; then
+            echo "::error::CHANGELOG.md has no '## [$TAG_VERSION]' section - add one before tagging (see build.gradle.kts's publishMods block, which publishes exactly that section to Modrinth for every target)."
+            exit 1
+          fi
+
+      - name: Build mod (full matrix)
         uses: ./.github/actions/build-mod
         with:
           java-version: ${{ env.JAVA_VERSION }}
           verify-datagen: true
 
-      - name: Publish Build Artifacts to GitHub Release and Modrinth
-        uses: Kir-Antipov/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
-        with:
-          files: build/libs/!(*-@(dev|sources|javadoc)).jar
-          name: "Emerald Isle Flora ${{ github.ref_name }}"
-          version: ${{ github.ref_name }}
-          version-type: release
-          loaders: fabric
-          game-versions: ${{ env.GAME_VERSION }}
+      - name: Publish to Modrinth (all targets, one invocation)
+        # Fans out across every chiseled subproject automatically - see build.gradle.kts's
+        # publishMods block for the per-target version/changelog/dependency wiring.
+        # DO_PUBLISH=true above turns off mod-publish-plugin's default dry-run mode.
+        run: ./gradlew publishMods
 
-          # --- Modrinth ---
-          modrinth-id: fmhwwICG
-          modrinth-token: ${{env.MODRINTH_TOKEN}}
+      - name: Extract this version's changelog section
+        shell: bash
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          awk -v ver="$TAG_VERSION" '
+            /^## \[/ {
+              if (found) exit
+              if ($0 ~ "^## \\[" ver "\\]") { found = 1; next }
+            }
+            found { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
 
-          # --- GitHub ---
-          github-token: ${{env.GITHUB_TOKEN}}
-          github-tag: ${{ github.ref_name }}
-          github-generate-changelog: true
+      - name: Create GitHub Release
+        shell: bash
+        run: |
+          mapfile -t jars < <(find versions -path '*/build/libs/*.jar' ! -name '*-sources.jar')
+          gh release create "${{ github.ref_name }}" \
+            --title "Emerald Isle Flora ${{ github.ref_name }}" \
+            --notes-file /tmp/release-notes.md \
+            --repo "${{ github.repository }}" \
+            "${jars[@]}"

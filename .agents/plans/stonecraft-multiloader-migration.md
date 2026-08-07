@@ -358,9 +358,42 @@ commit, already pushed to no remote (local only so far — nothing has been push
   `./gradlew build` reconfirmed green for the full matrix after these changes (no code
   changed, only CI/docs), and the exact CI `verify-datagen` command sequence run locally
   end-to-end with a clean diff both times.
-- **Next up: add a new flower, then Stage 6a** (wire `publishMods`, fix/finish
-  `release-tag.yml` for the full matrix) once there's new content worth publishing - see
-  your instruction above. Not started.
+- **Bluebell added** (a fourth flower - Jump Boost suspicious stew effect, Forest/Flower
+  Forest worldgen), confirmed working on real installs across the full 8-target matrix.
+  Also found and fixed a real pre-existing bug along the way: `1.20.1-forge` couldn't pot
+  *any* of this mod's flowers (not just Bluebell) - Forge's patched `FlowerPotBlock`
+  needed the same construction-order fix Stage 4 gave NeoForge, but it was only ever
+  wired up for NeoForge. Confirmed via decompiling the real Forge 1.20.1-47.4.10 patched
+  jar (same `addPlant`/`fullPots` API shape as NeoForge's). Version bumped to 1.6.0.
+- **Stage 6a — done, Modrinth-only** (CurseForge deferred, per your call - the old
+  `release-tag.yml` never actually had it wired up either). `publishMods` (from
+  `me.modmuss50.mod-publish-plugin`, which Stonecraft wraps) fans out across all 8
+  chiseled subprojects from one Gradle invocation - confirmed by decompiling the real
+  pinned Stonecraft 1.12.5 jar's `Publishing.kt` rather than trusting docs summaries
+  alone, since the doc site's own content was too thin to fully trust (project id/token
+  come from `MODRINTH_TOKEN`/`MODRINTH_ID` env vars automatically, `file`/`modLoaders`/
+  `minecraftVersions`/`dryRun` are all auto-derived per subproject with zero code needed).
+  `build.gradle.kts`'s `publishMods {}` block overrides just three things worth a
+  project-specific choice: `version`/`displayName` (to match what you picked -
+  `1.6.0+1.20.1-fabric` / `Emerald Isle Flora 1.6.0 (Fabric 1.20.1)` - rather than
+  Stonecraft's close-but-different built-in default), and `changelog` (Stonecraft's own
+  default publishes the *entire* `CHANGELOG.md` verbatim to every version on every
+  platform; overridden to extract just the section for the current `mod.version` instead,
+  so 8 targets don't each show the whole project history). Real bug caught before it
+  shipped: an unconditional `modrinth { ... }` call in that override block created the
+  `publishModrinth` task even when Modrinth credentials aren't set, failing Gradle's own
+  property validation - fixed by gating it behind the same `MODRINTH_TOKEN`/`MODRINTH_ID`
+  presence check Stonecraft's own internals use, confirmed working via a real (token-less,
+  `DO_PUBLISH` unset) dry run across the whole matrix, checking the logged version/
+  display-name/changelog/dependency output for all 8 targets by hand.
+  `release-tag.yml` rewritten: fixes the stale `mod_version` property name (real property
+  is `mod.version`), adds a new pre-flight check that `CHANGELOG.md` actually has a
+  section for the tag being released (fails fast instead of silently publishing "No
+  changelog provided."), runs `./gradlew publishMods` for Modrinth, and creates a GitHub
+  Release afterward via the `gh` CLI directly (no third-party action) - reusing the same
+  changelog-section-extraction logic (as a small `awk` script, verified against the real
+  `CHANGELOG.md` locally) for the release notes, and uploading every target's built jar
+  (`versions/*/build/libs/*.jar`, sources jars excluded).
 
 Known open items, not blockers, revisit later:
 - `./gradlew :1.20.1-forge:runClient`, `:1.21.1-fabric:runClient`, and
@@ -494,6 +527,24 @@ register its own config-screen factory on those loaders without Mod Menu (verify
 empirically in Stage 2) — but if it doesn't, Forge/NeoForge players get the config file
 only, no in-game GUI, for this migration. Treat that as an acceptable v1 gap, not a
 blocker; revisit as a follow-up if it matters.
+
+**Update, post-Stage-6a: attempted and confirmed currently infeasible, not just
+undone.** Forge's `ConfigScreenHandler.ConfigScreenFactory` and NeoForge's
+`IConfigScreenFactory` are both straightforward to register (real, confirmed APIs) — the
+blocker is upstream of that. Cloth Config's `cloth-config-forge`/`cloth-config-neoforge`
+artifacts are ordinary third-party Maven jars, compiled and published against real Mojang
+mappings, and Architectury Loom never remaps third-party dependency jars the way
+`modImplementation` remaps Fabric ones (Loom only remaps the vanilla/loader jars it
+manages itself). Confirmed via `javap` on the real downloaded artifacts and on this
+project's actual `compileClasspath` for both `1.20.1-forge` and `1.21.1-neoforge`/
+`1.21.11-neoforge`: Cloth Config's Mojmap-named parameter types (`net.minecraft.client
+.gui.screens.Screen`, `net.minecraft.network.chat.Component`) aren't resolvable anywhere
+on the classpath, so `javac` can't even attempt overload resolution against its API —
+not a casting/qualification problem, a genuinely missing symbol. Architectury Loom's own
+docs (fetched directly, not assumed) confirm this "official-mapped Forge/NeoForge
+dependency" interoperability gap isn't currently addressed by the plugin. Reverted the
+attempt (see Stage 7 below for what a real fix would require) rather than shipping a
+broken build.
 
 ---
 
@@ -710,8 +761,22 @@ produces jars for all 8 targets.
 ## Stage 7 (optional, out of scope for v1) — Forge/NeoForge config GUI parity
 
 Only pick this up if the config-GUI gap from Stage 2 turns out to matter in practice.
-Would mean either confirming Cloth Config's own screen factory covers Forge/NeoForge
-without Mod Menu, or building a loader-native config screen for those platforms.
+Cloth Config's own screen factory does cover Forge/NeoForge (confirmed - both loaders'
+native extension points work fine), but a real attempt (post-Stage-6a) found the actual
+blocker is upstream: Cloth Config's Forge/NeoForge artifacts are Mojmap-mapped
+third-party jars that Architectury Loom doesn't remap into this project's Yarn-mapped
+compile classpath at all (see the "Known scope gap" section above for the full
+confirmation). A real fix needs one of:
+- A custom Gradle task that pre-remaps `cloth-config-forge`/`cloth-config-neoforge` jars
+  Mojmap→Yarn using Loom's own bundled TinyRemapper before depending on them locally —
+  technically sound, keeps normal typed code, but real new infrastructure (remap task,
+  output caching, per-target wiring), not a small addition.
+- Reflection-based invocation of Cloth Config's `ConfigBuilder` API instead of direct
+  calls — avoids the compile-time symbol problem entirely, but the whole screen-building
+  chain (7-8 chained calls) would need reflection, which is a real ongoing maintenance
+  burden and inconsistent with the rest of this codebase.
+- Checking whether Cloth Config or Architectury Loom ship a fix upstream later (worth a
+  periodic check — this is a real, known ecosystem gap, not specific to this project).
 
 ---
 
