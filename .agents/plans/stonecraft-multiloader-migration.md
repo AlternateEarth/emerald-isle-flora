@@ -211,11 +211,110 @@ commit, already pushed to no remote (local only so far — nothing has been push
   instead of a `RenderLayer`/`RenderLayers` object. `1.21.11-fabric` confirmed fully
   working on a real install (loads, renders cutout correctly) after this fix - the whole
   6-target matrix has now been confirmed working on a real install at least once.
-- **Next up: Stage 5** (26.2, Fabric + NeoForge, Mojmap-only) — not started. The
-  `.registryKey(...)` requirement discovered in Stage 4 should be re-checked immediately
-  (very likely still applies); this is also the stage where Yarn naming stops applying
-  entirely (Mojmap-only), so expect the biggest single chunk of source-level rework in the
-  migration - see the Stage 5 section below.
+- **Stage 5 — done and fully verified** (26.2, Fabric + NeoForge, Mojmap-only). By far
+  the largest single chunk of source-level rework in the migration, as expected - every
+  file touched needed real Mojmap names, verified via `javap` against real jars (the
+  official 26.2 client jar, downloaded straight from Mojang's `piston-meta` manifest since
+  26.1+ ships fully deobfuscated; the real NeoForge 26.2.0.49-beta universal jar; the real
+  Fabric API 0.156.0+26.2 jar and its unpacked `META-INF/jars/` submodules) before writing
+  code, per your explicit request to front-load research and avoid the repeated
+  build-crash-decompile-fix cycles of Stages 3/4. Full research written up first as a plan
+  (`.agents/plans/fuzzy-percolating-matsumoto.md`), then implemented against it.
+  - The `.registryKey(...)`-before-construction requirement from Stage 4 does still apply,
+    Mojmap name `.setId(ResourceKey<T>)` (on both `BlockBehaviour.Properties` and
+    `Item.Properties`).
+  - Confirmed the single most important trap up front: Mojmap's `Registries` class holds
+    registry **key constants** (Yarn's `RegistryKeys`), while Mojmap's
+    `BuiltInRegistries` class holds the registry **instances** (Yarn's `Registries`) - the
+    exact opposite of what the shared name suggests.
+  - `Identifier` is Mojang's own new name for `ResourceLocation` (package
+    `net.minecraft.resources`, coincidentally matching Yarn's class name) -
+    `Identifier.of(String,String)` doesn't exist there, `.fromNamespaceAndPath(...)` does.
+  - `Item.Properties#useBlockPrefixedTranslationKey()` (the Stage-4 fix) was itself
+    renamed again to `useBlockDescriptionPrefix()` - would have been a silent, un-crashing
+    regression (broken item names, no error) if not re-verified via `javap` instead of
+    assumed to still apply.
+  - World-gen needed real restructuring, not just renames: `Feature.FLOWER`/
+    `RandomPatchFeatureConfig` don't exist at all in 26.2 - Mojang moved "patch of
+    scattered blocks" down to `Feature.SIMPLE_BLOCK`/`SimpleBlockConfiguration` at the
+    configured-feature level, with the old tries/xzSpread/ySpread absorbed into two new
+    placement modifiers (`CountPlacement.of(tries)`,
+    `RandomOffsetPlacement.ofTriangle(xzSpread, ySpread)` - confirmed via `javap` that
+    `ofTriangle` is exactly `of(TrapezoidInt.triangle(n), TrapezoidInt.triangle(m))`, and
+    `TrapezoidInt.triangle(n)` is exactly the old +/-spread semantic). Modeled directly on
+    vanilla's own real, shipped `patch_sunflower.json`/`flower_default.json`.
+  - `ModItemGroups`: `CreativeModeTabs.NATURAL_BLOCKS` is private in 26.2 - worked around
+    by reconstructing the same `ResourceKey` by hand (`ResourceKey.create(Registries.
+    CREATIVE_MODE_TAB, Identifier.withDefaultNamespace("natural_blocks"))`; confirmed via
+    bytecode this is `==`-equal to vanilla's own private field since `ResourceKey`
+    instances are interned by `(registry, id)`. Also: Mojmap's `CreativeModeTab.Output`
+    (what both Fabric's and NeoForge's tab-content callbacks now hand you) uses `accept`
+    as its own standard default method name, not `add` - a real, easy-to-miss naming
+    divergence between Yarn and Mojmap for what's conceptually the same method.
+  - **Both of the plan's explicitly-flagged "can't resolve by static analysis alone"
+    items were resolved by the real experimentation the plan called for, not by guessing**:
+    - NeoForge's `FlowerPotBlock` patch (`addPlant`/`getEmptyPot`) is still present,
+      unchanged shape, for 26.2 - confirmed by building `26.2-neoforge` far enough to
+      inspect the real NeoForm-patched `minecraft-merged` jar directly, exactly as the
+      plan said to do rather than assume either way.
+    - Fabric's block-render-layer mechanism turned out to not need replacing at all: as
+      of 26.1+, Minecraft auto-assigns each quad's `ChunkSectionLayer` from the sprite's
+      own pixel data (translucent pixels -> translucent, only opaque/transparent pixels ->
+      cutout, neither -> solid) - the entire `BlockRenderLayerMap`/`"render_type"`
+      mechanism from every earlier stage is obsolete for this target. Found via Fabric's
+      own 26.1 release notes after static jar analysis alone couldn't produce a confident
+      answer (no drop-in replacement class existed in `fabric-rendering-v1`); confirmed
+      this mod's plain "cross" model with a properly-transparent texture needs zero
+      Java-side registration on `>=26.2`.
+  - **Cross-cutting bug caught and fixed before it could bite**: several files already had
+    bare `>=1.21.11`-style Stonecutter conditions from Stage 4. Version comparisons are
+    raw numeric, so `26.2 >= 1.21.11` is also true - every such condition would have
+    silently pulled 26.2 into 1.21.11-era Yarn-named code. Audited and fixed every
+    instance (`ModBlocks`, `ModConfiguredFeatures`, `EmeraldIsleFloraClient`,
+    `ModWorldGenerator`) by bounding them (`>=1.21.11 && <26.2`) or restructuring into
+    proper 3-way chains, rather than letting 26.2 fall through into stale branches.
+  - **Two more real, previously-unknown-until-hit issues**, neither visible from static
+    jar research since they're Gradle/ecosystem-packaging problems, not Java API surface:
+    Loom only creates the remap-aware `mod*` Gradle configuration family
+    (`modImplementation` etc.) for targets that actually need remapping, so a Mojmap-only
+    target's `dependencies {}` block needs the plain `implementation`/`compileOnly`/
+    `localRuntime` configs instead; and Cloth Config's currently-published 26.2 build
+    ships an access-widener still targeting the `intermediary` namespace, which Loom
+    rejects outright on a no-remap target - a real upstream ecosystem-maturity gap, not
+    fixable here. Cloth Config (and the Mod Menu integration built on it) is skipped
+    entirely on Mojmap-only targets, same accepted-gap treatment already given to the
+    Forge/NeoForge config GUI.
+  - **Real-install crash found and fixed after the first "green build"**: the checked-in
+    datagen output (`src/main/generated/data/emeraldisleflora/worldgen/...`) was a single
+    tree shared unconditionally across all 8 targets - fine through Stage 4 since
+    1.20.1-1.21.11 all use compatible schemas, but genuinely incompatible with 26.2's new
+    `Feature.SIMPLE_BLOCK`-based JSON. `26.2-fabric` loaded fine but crashed at registry
+    load (`Unknown registry key ... minecraft:flower`) the first time it actually read the
+    stale Yarn-schema JSON. Fixed by splitting `modSettings.generatedResources` into two
+    checked-in trees keyed off mapping set (`src/main/generated` for Yarn targets,
+    `src/main/generated-mojmap` for Mojmap-only), each regenerated by running datagen on a
+    target from its own side of the split.
+  - **A second real, related bug surfaced fixing the first**: regenerating datagen for
+    `26.2-fabric` failed at mod-resolution before it could even run, because
+    `fabric.mod.json` hard-`depends`-on `cloth-config` unconditionally on every Fabric
+    target - but Cloth Config is deliberately skipped on Mojmap targets (previous bullet).
+    Per your call, kept the hard requirement on existing Yarn targets unchanged and made
+    the dependency line itself conditional via a small `processResources` content filter
+    (a distinct `@CLOTH_CONFIG_DEPENDS_LINE@` token, not Groovy `${...}` templating, since
+    `fabric.mod.json` already has its own `expand()`-based token substitution from
+    Stonecraft and a second `expand()` call on the same file clobbers it rather than
+    composing).
+  - Also fixed: `deployToPrism` unconditionally depended on a `remapJar` task, which Loom
+    doesn't create for no-remap (Mojmap-only) targets - now picks `remapJar` if present,
+    else falls back to the plain `jar` task.
+
+  `./gradlew build` green for all 8 targets. Both `26.2-fabric` and `26.2-neoforge`
+  confirmed fully working by you on real installs via `deployToPrism` (flower-pot
+  placement on NeoForge and cutout rendering on Fabric - the two spots most likely to
+  silently regress - both specifically re-tested and working), after the real-install
+  worldgen-JSON crash above was found and fixed. The whole 8-target matrix has now been
+  confirmed working on a real install at least once.
+- **Next up: Stage 6** (CI, publishing, and docs rewrite) — not started.
 
 Known open items, not blockers, revisit later:
 - `./gradlew :1.20.1-forge:runClient`, `:1.21.1-fabric:runClient`, and

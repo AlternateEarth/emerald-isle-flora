@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:simple_block",
+  "config": {
+    "to_place": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "data": {
+            "Name": "emeraldisleflora:bog_rosemary"
+          },
+          "weight": 4
+        },
+        {
+          "data": {
+            "Name": "emeraldisleflora:grown_bog_rosemary"
+          },
+          "weight": 1
+        }
+      ]
+    }
+  }
+}
