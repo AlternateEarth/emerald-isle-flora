@@ -131,6 +131,79 @@ same pattern:
    `.github/actions/build-mod/action.yml`'s `verify-datagen` step) and will fail the
    build if they've drifted apart.
 
+## Adding/changing recipes (dye-from-flower, grown-from-flowers)
+
+Recipe/advancement JSON is datagen'd too (`data/ModRecipeProvider.java`), not
+hand-written — Mojang's own recipe data format changed twice across this mod's version
+range (the directory was renamed `recipes`/`advancements` -> `recipe`/`advancement`, and
+the recipe `result` field was renamed `item` -> `id`, both at 1.21; the `ingredients`
+format was further flattened from `{"item": "x"}` objects to bare `"x"` strings at
+1.21.11), confirmed by decompiling the real game's `ItemStack`/`Ingredient` codecs and
+`RegistryKeys.RECIPE`'s registry path for each version, not assumed from changelog notes.
+Hand JSON shared unconditionally across every Stonecutter target silently broke wherever
+the format had moved on (see issue #17).
+
+All four Minecraft versions are covered, split into four full sibling Stonecutter
+branches in `ModRecipeProvider.java` (deliberately not nested — a `<1.21`/`else` split
+nested inside a `<1.21.11` block corrupted Stonecutter's output the moment a target
+outside `<1.21.11` needed the whole block disabled, a new failure mode; see its own doc
+comment for the full per-branch breakdown of what changed and why). Add new recipes in
+**every** branch, kept in sync the same way `EmeraldIsleFlora.java`'s loader-specific
+constructors are.
+
+**Regenerate the checked-in datagen JSON.** Unlike worldgen's JSON above, recipe output
+can't share `src/main/generated`/`-mojmap` at all, even across a regeneration run that's
+otherwise safe: Fabric's own recipe-provider cache identity ("Recipes", from vanilla
+`RecipeProvider.getName()`, which is `final` and can't be overridden) is the same
+regardless of which format a given Stonecutter branch emits, so a second format group's
+regen run into the same directory would see the first group's files as stale and delete
+them — confirmed by inspecting the real per-provider cache manifest Fabric writes under
+`generated/.cache/`, not assumed. Each recipe-format group therefore gets its own
+permanently-separate directory, populated by running datagen into the *shared* directory
+as normal and then relocating just the recipe output out into its own directory:
+
+```bash
+./gradlew :1.20.1-fabric:runDatagen
+rm -rf src/main/generated-recipes-1.20.1/data/emeraldisleflora/{recipes,advancements}
+mkdir -p src/main/generated-recipes-1.20.1/data/emeraldisleflora
+mv src/main/generated/data/emeraldisleflora/recipes src/main/generated-recipes-1.20.1/data/emeraldisleflora/recipes
+mv src/main/generated/data/emeraldisleflora/advancements src/main/generated-recipes-1.20.1/data/emeraldisleflora/advancements
+
+./gradlew :26.2-fabric:runDatagen
+rm -rf src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora/{recipe,advancement}
+mkdir -p src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora
+mv src/main/generated-mojmap/data/emeraldisleflora/recipe src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora/recipe
+mv src/main/generated-mojmap/data/emeraldisleflora/advancement src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora/advancement
+```
+
+`src/main/generated`/`-mojmap` should end up containing only `data/emeraldisleflora/worldgen`
+afterward - if `recipes`/`recipe`/etc. are still sitting there, a move step above didn't
+run (or ran against the wrong directory) and needs to be redone before committing, or
+you'll end up committing the same directory's worldgen output twice pointlessly
+(harmless, but a sign the step was skipped). `git diff -- src/main/generated
+src/main/generated-mojmap src/main/generated-recipes-1.20.1
+src/main/generated-recipes-1.21.11-plus` after regenerating — commit the diff alongside
+your Java changes.
+
+**1.21.1/1.21.11-fabric's `runDatagen` crashes** on a real, reproduced-on-two-
+independent-machines Fabric API bug, not a sandbox artifact - confirmed via the full
+crash log: `fabric-mining-level-api-v1`'s `SwordItemMixin` fails to apply against
+`net.minecraft.item.SwordItem` for this exact Minecraft/mappings build, specifically in
+the dev-launch bootstrap sequence (`Bootstrap.initialize()` → `Blocks.<clinit>`), not
+confirmed to affect real installs. No newer Fabric API release exists for 1.21.1 to try
+instead (`0.116.15+1.21.1` is already latest); 1.21.11 hits the same class of bug.
+
+For those two, this was worked around by hand-deriving their directories
+(`src/main/generated-recipes-1.21.1`, and the `>=1.21.11` half of
+`src/main/generated-recipes-1.21.11-plus`) directly from a real, verified run's output
+(1.20.1's for 1.21.1; 26.2's for 1.21.11, since their schemas are identical - confirmed,
+not assumed) — not by guessing the format, since every change applied was already
+independently confirmed against the real target codecs before `ModRecipeProvider` was
+written. Don't repeat this by hand again for a future format group without similarly-
+solid confirmation of the exact target schema first - `ModRecipeProvider`'s doc comment
+has the full per-branch reasoning. Revisit with a real `runDatagen` run for these two if
+the Fabric API bug is ever fixed upstream.
+
 ## Real-install testing (deployToPrism)
 
 Loom's dev-launch (`runClient`) is currently broken or misleading on several targets in

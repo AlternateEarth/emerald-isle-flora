@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_bog_rosemary": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "emeraldisleflora:bog_rosemary"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "emeraldisleflora:grown_bog_rosemary_from_flowers"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_bog_rosemary",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "emeraldisleflora:grown_bog_rosemary_from_flowers"
+    ]
+  },
+  "sends_telemetry_event": false
+}

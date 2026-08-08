@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "emeraldisleflora:bells_of_ireland"
+    },
+    {
+      "item": "emeraldisleflora:bells_of_ireland"
+    }
+  ],
+  "result": {
+    "id": "emeraldisleflora:grown_bells_of_ireland"
+  }
+}

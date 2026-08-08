@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "emeraldisleflora:bog_rosemary",
+    "emeraldisleflora:bog_rosemary"
+  ],
+  "result": {
+    "id": "emeraldisleflora:grown_bog_rosemary"
+  }
+}

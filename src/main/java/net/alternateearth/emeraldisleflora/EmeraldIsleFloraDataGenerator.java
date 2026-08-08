@@ -1,6 +1,7 @@
 package net.alternateearth.emeraldisleflora;
 
 /*? if fabric {*/
+import net.alternateearth.emeraldisleflora.data.ModRecipeProvider;
 import net.alternateearth.emeraldisleflora.data.ModWorldGenerator;
 import net.alternateearth.emeraldisleflora.registry.ModConfiguredFeatures;
 import net.alternateearth.emeraldisleflora.registry.ModPlacedFeatures;
@@ -26,6 +27,7 @@ public class EmeraldIsleFloraDataGenerator implements DataGeneratorEntrypoint {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
         pack.addProvider(ModWorldGenerator::new);
+        pack.addProvider(ModRecipeProvider::new);
     }
 
     /*? if <26.2 {*/
