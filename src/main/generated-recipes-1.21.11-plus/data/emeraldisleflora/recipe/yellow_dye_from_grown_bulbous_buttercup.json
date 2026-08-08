@@ -1,11 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "group": "yellow_dye",
   "ingredients": [
-    {
-      "item": "emeraldisleflora:grown_bulbous_buttercup"
-    }
+    "emeraldisleflora:grown_bulbous_buttercup"
   ],
   "result": {
     "count": 2,

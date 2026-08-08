@@ -1,14 +1,12 @@
 package net.alternateearth.emeraldisleflora;
 
 /*? if fabric {*/
+import net.alternateearth.emeraldisleflora.data.ModRecipeProvider;
 import net.alternateearth.emeraldisleflora.data.ModWorldGenerator;
 import net.alternateearth.emeraldisleflora.registry.ModConfiguredFeatures;
 import net.alternateearth.emeraldisleflora.registry.ModPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-/*? if <1.21.11 {*/
-import net.alternateearth.emeraldisleflora.data.ModRecipeProvider;
-/*?}*/
 /*? if <26.2 {*/
 import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
@@ -29,9 +27,7 @@ public class EmeraldIsleFloraDataGenerator implements DataGeneratorEntrypoint {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
         pack.addProvider(ModWorldGenerator::new);
-        /*? if <1.21.11 {*/
         pack.addProvider(ModRecipeProvider::new);
-        /*?}*/
     }
 
     /*? if <26.2 {*/

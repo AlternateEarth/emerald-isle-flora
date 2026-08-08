@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_grown_bluebell": {
+      "conditions": {
+        "items": [
+          {
+            "items": "emeraldisleflora:grown_bluebell"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "emeraldisleflora:blue_dye_from_grown_bluebell"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_grown_bluebell"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "emeraldisleflora:blue_dye_from_grown_bluebell"
+    ]
+  }
+}

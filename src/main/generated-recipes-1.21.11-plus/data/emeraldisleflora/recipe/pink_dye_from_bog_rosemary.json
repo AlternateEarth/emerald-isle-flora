@@ -1,14 +1,10 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "group": "pink_dye",
   "ingredients": [
-    {
-      "item": "emeraldisleflora:grown_bog_rosemary"
-    }
+    "emeraldisleflora:bog_rosemary"
   ],
   "result": {
-    "count": 2,
     "id": "minecraft:pink_dye"
   }
 }

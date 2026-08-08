@@ -1,14 +1,11 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "misc",
   "group": "green_dye",
   "ingredients": [
-    {
-      "item": "emeraldisleflora:grown_bells_of_ireland"
-    }
+    "emeraldisleflora:grown_bells_of_ireland"
   ],
   "result": {
     "count": 2,
-    "item": "minecraft:green_dye"
+    "id": "minecraft:green_dye"
   }
 }
