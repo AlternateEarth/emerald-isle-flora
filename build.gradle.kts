@@ -123,6 +123,26 @@ val recipeGeneratedResources: String? = when (mod.minecraftVersion) {
     else -> null
 }
 
+// Grown flowers' Silk Touch/Shears loot condition is genuinely hand-written JSON, not
+// datagen'd - unlike recipes, this only needs a 2-way split (Mojang's item-predicate
+// schema changed once, at 1.21, restructuring it around a generic "predicates" map
+// keyed by component-predicate-type id, part of the same 1.21 data-components overhaul;
+// confirmed identical across 1.21.1/1.21.11/26.2 by decompiling the real predicate
+// codecs and comparing vanilla's own real loot tables, e.g. azalea_leaves.json, across
+// all four versions), and datagen would've required either duplicating a lot of loot-
+// table-building code by hand or reaching into a non-public Fabric API class for 26.2
+// (its own loot-table datagen wrapper doesn't extend vanilla's BlockLootSubProvider
+// there) - not worth it for two JSON shapes already independently confirmed correct
+// against real shipped vanilla loot tables. Only the 4 grown-flower loot tables need
+// this: regular/potted flowers just always drop themselves (no tool-dependent
+// condition, unaffected by this schema change) and stay in the shared src/main/resources
+// tree. See CONTRIBUTING.md for the exact shapes if these ever need to change.
+val lootTableResources: String = if (mod.minecraftVersion == "1.20.1") {
+    "src/main/loot-tables-1.20.1"
+} else {
+    "src/main/loot-tables-1.21.1-plus"
+}
+
 // fabric.mod.json hard-depends on cloth-config, but Mojmap-only targets skip Cloth
 // Config entirely (see the dependencies{} block above) - a real, un-emptied "depends"
 // entry there would make Fabric Loader flatly refuse to load the mod on a clean 26.2+
@@ -165,6 +185,12 @@ if (recipeGeneratedResources != null) {
     sourceSets.main {
         resources.srcDir(rootProject.layout.projectDirectory.dir(recipeGeneratedResources))
     }
+}
+
+// Same reasoning as recipeGeneratedResources above - not covered by Stonecraft's own
+// ForgeLike auto-add, every loader needs it explicitly.
+sourceSets.main {
+    resources.srcDir(rootProject.layout.projectDirectory.dir(lootTableResources))
 }
 
 tasks.named<Jar>("jar") {

@@ -10,7 +10,7 @@
           "children": [
             {
               "type": "minecraft:item",
-              "name": "emeraldisleflora:grown_bells_of_ireland",
+              "name": "emeraldisleflora:grown_bluebell",
               "conditions": [
                 {
                   "condition": "minecraft:any_of",
@@ -18,19 +18,22 @@
                     {
                       "condition": "minecraft:match_tool",
                       "predicate": {
-                        "items": [
-                          "minecraft:shears"
-                        ]
+                        "items": "minecraft:shears"
                       }
                     },
                     {
                       "condition": "minecraft:match_tool",
                       "predicate": {
-                        "enchantments": [
-                          {
-                            "enchantment": "minecraft:silk_touch"
-                          }
-                        ]
+                        "predicates": {
+                          "minecraft:enchantments": [
+                            {
+                              "enchantments": "minecraft:silk_touch",
+                              "levels": {
+                                "min": 1
+                              }
+                            }
+                          ]
+                        }
                       }
                     }
                   ]
@@ -39,7 +42,7 @@
             },
             {
               "type": "minecraft:item",
-              "name": "emeraldisleflora:bells_of_ireland",
+              "name": "emeraldisleflora:bluebell",
               "functions": [
                 {
                   "function": "minecraft:set_count",
