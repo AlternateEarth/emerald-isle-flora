@@ -7,6 +7,16 @@ Each version's section below is published verbatim as that version's changelog o
 Modrinth (see `publishMods` in `build.gradle.kts`) — write entries with players in
 mind, not as a commit log.
 
+## [1.6.1] - 2026-08-08
+
+### Fixed
+
+- Dye and grown-flower crafting recipes are now generated per Minecraft version instead
+  of shared as one hand-written copy across every version, fixing recipes silently
+  failing to load wherever Minecraft's own recipe data format had moved on since 1.20.1
+  (confirmed fixed on 1.20.1; 1.21.1/1.21.11/26.2 recipes remain broken for now - work
+  continues, see issue #17).
+
 ## [1.6.0] - 2026-08-07
 
 ### Added
