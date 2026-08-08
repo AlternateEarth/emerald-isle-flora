@@ -177,12 +177,24 @@ the format had moved on (see issue #17).
 3. `git diff -- src/main/generated src/main/generated-recipes-1.20.1` (extend the path
    list as more format groups get their own directory) after regenerating - commit the
    diff alongside your Java changes.
-4. **1.21.1/1.21.11-fabric's `runDatagen` currently crashes** on the same pre-existing
-   Fabric/Mixin dev-launch bug documented in AGENTS.md for `runClient` on those targets
-   (confirmed - not specific to recipes) - there's currently no way to regenerate a
-   `ModRecipeProvider` implementation for those format groups in a broken dev-launch
-   environment. Revisit once that bug is fixed upstream, or if you find a working
-   environment for it.
+4. **1.21.1/1.21.11-fabric's `runDatagen` currently crashes** on a real, reproduced-on-
+   two-independent-machines Fabric API bug, not a sandbox artifact - confirmed via the
+   full crash log: `fabric-mining-level-api-v1`'s `SwordItemMixin` fails to apply against
+   `net.minecraft.item.SwordItem` for this exact Minecraft/mappings build, specifically in
+   the dev-launch bootstrap sequence (`Bootstrap.initialize()` → `Blocks.<clinit>`), not
+   confirmed to affect real installs. No newer Fabric API release exists for 1.21.1 to
+   try instead (`0.116.15+1.21.1` is already latest).
+
+   For 1.21.1 specifically, this was worked around **once**, by hand-deriving
+   `src/main/generated-recipes-1.21.1` directly from the committed 1.20.1 output with a
+   small script - not by guessing the format, since every change applied (directory
+   names, `result`'s `item` → `id`) was already independently confirmed against the real
+   1.21.1 codecs before `ModRecipeProvider` was written. Don't repeat this by hand again
+   for a *different* format group without similarly-solid confirmation of the exact
+   target schema first - `ModRecipeProvider`'s doc comment on its 1.21.1 branch has the
+   full reasoning. 1.21.11/26.2 remain genuinely unimplemented (see its doc comment) and
+   still have no recipes at all. Revisit 1.21.1's real `runDatagen` if the Fabric API bug
+   is ever fixed upstream.
 
 ## Real-install testing (deployToPrism)
 

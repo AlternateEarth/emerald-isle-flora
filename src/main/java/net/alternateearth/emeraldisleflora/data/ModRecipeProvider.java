@@ -43,7 +43,19 @@ import net.minecraft.registry.RegistryWrapper;
  * <p>
  * Only covers &lt;1.21.11 so far (the versions issue #17 confirmed broken) - 1.21.11 and
  * 26.2 need a further Ingredient/RecipeGenerator API rework (registry-lookup-based
- * ingredient creation) and still ship their pre-existing static recipe JSON for now.
+ * ingredient creation) and still ship no recipes for now.
+ * <p>
+ * The &lt;1.21 branch's output ({@code src/main/generated-recipes-1.20.1}) is the real,
+ * live datagen output. The {@code else} branch below is still written and kept correct
+ * against 1.21.1's real API (confirmed against the actual game classes), but its output
+ * ({@code src/main/generated-recipes-1.21.1}) was hand-derived once from the 1.20.1
+ * output instead of actually running {@code :1.21.1-fabric:runDatagen} - that task
+ * crashes on a real, reproduced-on-two-machines Fabric API bug unrelated to this mod
+ * (fabric-mining-level-api-v1's SwordItemMixin fails to apply in the dev-launch
+ * bootstrap sequence for this exact Minecraft/mappings build) - see
+ * build.gradle.kts's recipeGeneratedResources comment. Revisit with a real datagen run
+ * if that bug ever gets fixed upstream; until then, this branch exists so the code is
+ * ready and the next person doesn't have to re-derive 1.21.1's API shape from scratch.
  */
 public class ModRecipeProvider extends FabricRecipeProvider {
     /*? if <1.21 {*/

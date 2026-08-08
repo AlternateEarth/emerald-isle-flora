@@ -95,9 +95,22 @@ modSettings {
 // run's data/emeraldisleflora/{recipes,advancements} output out of whichever directory
 // modSettings.generatedResources pointed at for that target, into the directory below -
 // see CONTRIBUTING.md for the exact steps. null means "not generated yet for this
-// version" (see ModRecipeProvider's own <1.21.11 gating) - only 1.20.1 exists so far.
-val recipeGeneratedResources: String? = when {
-    mod.minecraftVersion == "1.20.1" -> "src/main/generated-recipes-1.20.1"
+// version" (see ModRecipeProvider's own <1.21.11 gating).
+//
+// 1.21.1 is the one exception to "regenerated via runDatagen": :1.21.1-fabric:runDatagen
+// crashes on a real (reproduced on two independent machines, not sandbox-specific)
+// pre-existing Fabric API bug unrelated to this mod - fabric-mining-level-api-v1's
+// SwordItemMixin fails to apply against this exact Minecraft/mappings build in the
+// dev-launch bootstrap sequence specifically (confirmed not to be a stale-cache issue).
+// Its 12 recipe + 12 advancement files were instead hand-derived, once, directly from
+// the committed 1.20.1 output (same content, just the confirmed 1.21.1 schema changes
+// applied: recipe/advancement -> singular directories, result's "item" key -> "id") -
+// not a return to guessing the format by hand, since every change applied was already
+// independently confirmed against the real 1.21.1 codecs before ModRecipeProvider was
+// written. Revisit with real datagen if that Fabric API bug ever gets fixed upstream.
+val recipeGeneratedResources: String? = when (mod.minecraftVersion) {
+    "1.20.1" -> "src/main/generated-recipes-1.20.1"
+    "1.21.1" -> "src/main/generated-recipes-1.21.1"
     else -> null
 }
 
