@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "emeraldisleflora:bulbous_buttercup"
@@ -9,7 +10,6 @@
     }
   ],
   "result": {
-    "item": "emeraldisleflora:grown_bulbous_buttercup",
-    "count": 1
+    "item": "emeraldisleflora:grown_bulbous_buttercup"
   }
 }

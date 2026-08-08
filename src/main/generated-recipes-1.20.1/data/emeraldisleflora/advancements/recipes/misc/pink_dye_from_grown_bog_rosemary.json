@@ -1,14 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
-      "conditions": {
-        "recipe": "emeraldisleflora:pink_dye_from_grown_bog_rosemary"
-      }
-    },
     "has_grown_bog_rosemary": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -17,7 +10,14 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:pink_dye_from_grown_bog_rosemary"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "emeraldisleflora:pink_dye_from_grown_bog_rosemary"
+      "minecraft:pink_dye_from_grown_bog_rosemary"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

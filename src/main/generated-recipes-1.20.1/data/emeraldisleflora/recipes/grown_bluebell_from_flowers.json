@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "emeraldisleflora:bluebell"
@@ -9,7 +10,6 @@
     }
   ],
   "result": {
-    "item": "emeraldisleflora:grown_bluebell",
-    "count": 1
+    "item": "emeraldisleflora:grown_bluebell"
   }
 }

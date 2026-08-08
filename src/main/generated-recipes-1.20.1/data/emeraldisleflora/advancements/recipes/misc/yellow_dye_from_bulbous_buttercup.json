@@ -1,14 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
-      "conditions": {
-        "recipe": "emeraldisleflora:grown_bulbous_buttercup_from_flowers"
-      }
-    },
     "has_bulbous_buttercup": {
-      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
@@ -17,7 +10,14 @@
             ]
           }
         ]
-      }
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:yellow_dye_from_bulbous_buttercup"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
@@ -28,7 +28,8 @@
   ],
   "rewards": {
     "recipes": [
-      "emeraldisleflora:grown_bulbous_buttercup_from_flowers"
+      "minecraft:yellow_dye_from_bulbous_buttercup"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -131,6 +131,59 @@ same pattern:
    `.github/actions/build-mod/action.yml`'s `verify-datagen` step) and will fail the
    build if they've drifted apart.
 
+## Adding/changing recipes (dye-from-flower, grown-from-flowers)
+
+Recipe/advancement JSON is datagen'd too (`data/ModRecipeProvider.java`), not
+hand-written — Mojang's own recipe data format changed twice across this mod's version
+range (the directory was renamed `recipes`/`advancements` -> `recipe`/`advancement`, and
+the recipe `result` field was renamed `item` -> `id`, both at 1.21; the `ingredients`
+format was further flattened from `{"item": "x"}` objects to bare `"x"` strings at
+1.21.11), confirmed by decompiling the real game's `ItemStack`/`Ingredient` codecs and
+`RegistryKeys.RECIPE`'s registry path for each version, not assumed from changelog notes.
+Hand JSON shared unconditionally across every Stonecutter target silently broke wherever
+the format had moved on (see issue #17).
+
+1. Add the recipe in `ModRecipeProvider.generate(...)` (both the `<1.21` and `else`
+   Stonecutter branches, kept in sync the same way `EmeraldIsleFlora.java`'s
+   loader-specific constructors are — see AGENTS.md's nesting gotcha for why these are
+   two full sibling copies, not one shared body with a nested version check).
+2. **Regenerate the checked-in datagen JSON.** Unlike worldgen's JSON above, recipe
+   output can't share `src/main/generated`/`-mojmap` at all, even across a regeneration
+   run that's otherwise safe: Fabric's own recipe-provider cache identity ("Recipes",
+   from vanilla `RecipeProvider.getName()`, which is `final` and can't be overridden) is
+   the same regardless of which format a given Stonecutter branch emits, so a second
+   format-group's regen run into the same directory would see the first group's files as
+   stale and delete them — confirmed by inspecting the real per-provider cache manifest
+   Fabric writes under `generated/.cache/`, not assumed. Each recipe-format group
+   therefore gets its own permanently-separate directory (currently only
+   `src/main/generated-recipes-1.20.1` - 1.21.1 and 1.21.11+ don't have a
+   `ModRecipeProvider` implementation yet, see its doc comment), populated by running
+   datagen into the *shared* directory as normal and then relocating just the recipe
+   output out into its own directory:
+
+   ```bash
+   ./gradlew :1.20.1-fabric:runDatagen
+   rm -rf src/main/generated-recipes-1.20.1/data/emeraldisleflora/{recipes,advancements}
+   mkdir -p src/main/generated-recipes-1.20.1/data/emeraldisleflora
+   mv src/main/generated/data/emeraldisleflora/recipes src/main/generated-recipes-1.20.1/data/emeraldisleflora/recipes
+   mv src/main/generated/data/emeraldisleflora/advancements src/main/generated-recipes-1.20.1/data/emeraldisleflora/advancements
+   ```
+
+   `src/main/generated` should end up containing only `data/emeraldisleflora/worldgen`
+   afterward - if `recipes`/`advancements` are still sitting there, the move step above
+   didn't run (or ran against the wrong directory) and needs to be redone before
+   committing, or you'll end up committing the same directory's worldgen output twice
+   pointlessly (harmless, but a sign the step was skipped).
+3. `git diff -- src/main/generated src/main/generated-recipes-1.20.1` (extend the path
+   list as more format groups get their own directory) after regenerating - commit the
+   diff alongside your Java changes.
+4. **1.21.1/1.21.11-fabric's `runDatagen` currently crashes** on the same pre-existing
+   Fabric/Mixin dev-launch bug documented in AGENTS.md for `runClient` on those targets
+   (confirmed - not specific to recipes) - there's currently no way to regenerate a
+   `ModRecipeProvider` implementation for those format groups in a broken dev-launch
+   environment. Revisit once that bug is fixed upstream, or if you find a working
+   environment for it.
+
 ## Real-install testing (deployToPrism)
 
 Loom's dev-launch (`runClient`) is currently broken or misleading on several targets in

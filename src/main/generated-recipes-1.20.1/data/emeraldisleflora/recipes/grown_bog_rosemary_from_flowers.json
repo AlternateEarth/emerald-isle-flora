@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "emeraldisleflora:bog_rosemary"
@@ -9,7 +10,6 @@
     }
   ],
   "result": {
-    "item": "emeraldisleflora:grown_bog_rosemary",
-    "count": 1
+    "item": "emeraldisleflora:grown_bog_rosemary"
   }
 }
