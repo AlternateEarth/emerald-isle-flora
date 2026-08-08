@@ -19,6 +19,10 @@ mind, not as a commit log.
 - Crafting dye from a grown flower now correctly yields 2 dye instead of 1, matching the
   original intended recipe (this had silently regressed to 1 during the fix above and
   was caught before release).
+- Silk Touch and Shears work again on grown flowers on 1.21.1, 1.21.11, and 26.2 -
+  breaking one with either was supposed to keep the grown flower itself instead of
+  reverting to 2 of the base flower, but silently stopped working on every version past
+  1.20.1 for the same underlying reason as the recipes above.
 
 ## [1.6.0] - 2026-08-07
 
