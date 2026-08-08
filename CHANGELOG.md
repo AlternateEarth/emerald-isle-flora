@@ -11,11 +11,14 @@ mind, not as a commit log.
 
 ### Fixed
 
-- Dye and grown-flower crafting recipes are now generated per Minecraft version instead
-  of shared as one hand-written copy across every version, fixing recipes silently
-  failing to load wherever Minecraft's own recipe data format had moved on since 1.20.1
-  (confirmed fixed on 1.20.1; 1.21.1/1.21.11/26.2 recipes remain broken for now - work
-  continues, see issue #17).
+- Dye and grown-flower crafting recipes work again on 1.21.1, 1.21.11, and 26.2 - they'd
+  silently failed to load on every version past 1.20.1, since Minecraft's own recipe
+  data format changed twice and the recipes were shared as one hand-written copy across
+  every version regardless (fixes #17). Verified working in-game on all 8
+  loader/version combinations.
+- Crafting dye from a grown flower now correctly yields 2 dye instead of 1, matching the
+  original intended recipe (this had silently regressed to 1 during the fix above and
+  was caught before release).
 
 ## [1.6.0] - 2026-08-07
 
