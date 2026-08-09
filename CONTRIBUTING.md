@@ -259,6 +259,27 @@ content just needs to exist under both directory names:
 `src/main/tags-1.21.1-plus/data/minecraft/tags/{block,item}/`. If you add a new tag
 entry or a new tag file, add it identically to both directories.
 
+Membership in the plain `flowers`/`small_flowers` tags isn't enough to make a block
+bee-attractive on every version - confirmed by decompiling the real `BeeEntity`/`Bee`
+class across all four versions, which flower tag it actually checks changed twice, not
+just once:
+- `1.20.1`: checks `ItemTags.FLOWERS`/`BlockTags.FLOWERS` directly - already covered by
+  the existing `flowers` tags, no extra tag needed.
+- `1.21.1`: item side switched to the new `ItemTags.BEE_FOOD` (`bee_food`), but the
+  block side (pollination target) still checks the old `BlockTags.FLOWERS` - a genuine
+  transitional/mixed state, not a clean cutover. Needs `bee_food` (item) added; `flowers`
+  (block) already covers it.
+- `1.21.11`/`26.2`: block side also switched, to `BlockTags.BEE_ATTRACTIVE`
+  (`bee_attractive`) - the fully-migrated state. Needs both `bee_food` (item) and
+  `bee_attractive` (block).
+
+`data/minecraft/tags/block/bee_attractive.json` is included in the whole
+`tags-1.21.1-plus` directory uniformly (covering 1.21.1 too, even though 1.21.1's own
+`Bee` class doesn't consult it) rather than a third, more precisely-scoped directory -
+tags are freeform, an unreferenced one is simply inert on that version, not an error,
+confirmed vanilla itself doesn't even ship a `bee_attractive` tag file at 1.21.1 (only
+`bee_food`) - so this is a deliberate simplification, not an oversight.
+
 ## Real-install testing (deployToPrism)
 
 Loom's dev-launch (`runClient`) is currently broken or misleading on several targets in
