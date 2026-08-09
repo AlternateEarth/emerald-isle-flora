@@ -204,32 +204,46 @@ solid confirmation of the exact target schema first - `ModRecipeProvider`'s doc 
 has the full per-branch reasoning. Revisit with a real `runDatagen` run for these two if
 the Fabric API bug is ever fixed upstream.
 
-## Adding/changing loot tables (Silk Touch/Shears conditions)
+## Adding/changing loot tables
 
-Grown flowers' loot tables use a real Silk Touch/Shears condition (break with either and
-get the grown block back; otherwise get 2 of the base flower) - this one genuinely is
-hand-written JSON, split by Minecraft version like recipes, but **not** datagen'd: it
-only needs a 2-way split (Mojang's item-predicate schema changed once, at 1.21, as part
-of the same data-components overhaul that changed recipes - `"items": [x]` flattened to
-`"items": x`, and the enchantment predicate restructured around a generic `"predicates"`
-map keyed by component-predicate-type id, e.g. `"predicates": {"minecraft:enchantments":
-[...]}`, confirmed identical across 1.21.1/1.21.11/26.2 by decompiling the real predicate
-codecs and comparing vanilla's own shipped loot tables, e.g. `azalea_leaves.json`, across
-all four versions), and reaching for datagen here would've meant either duplicating a lot
-of loot-table-building code by hand or reaching into a non-public Fabric API class for
-26.2 (its loot-table datagen wrapper there doesn't extend vanilla's `BlockLootSubProvider`,
-unlike every earlier version) - not worth it for two shapes already independently
-confirmed correct against real shipped vanilla loot tables, unlike recipes where the
-exact encoding logic (recipe id derivation, criterion structure) genuinely needed a real
-run to be confident in.
+Every loot table (`src/main/loot-tables-1.20.1` for 1.20.1,
+`src/main/loot-tables-1.21.1-plus` for everything else) is genuinely hand-written JSON,
+**not** datagen'd - reaching for datagen here would've meant either duplicating a lot of
+loot-table-building code by hand or reaching into a non-public Fabric API class for 26.2
+(its loot-table datagen wrapper there doesn't extend vanilla's `BlockLootSubProvider`,
+unlike every earlier version), not worth it once both shapes below were independently
+confirmed correct against real shipped vanilla loot tables.
 
-Regular and potted flowers just always drop themselves unconditionally (no tool-
-dependent condition), unaffected by this schema change, and stay in the shared
-`src/main/resources` tree as before. Only the 4 grown-flower loot tables
-(`src/main/loot-tables-1.20.1` for 1.20.1, `src/main/loot-tables-1.21.1-plus` for
-everything else) need to exist twice. If a future block needs the same Silk Touch/Shears
-pattern, add it to **both** directories using the same two shapes - see either directory's
-existing files for the exact structure per group.
+**All 16 loot tables need both directories, not just the 4 grown-flower ones with a
+Silk Touch/Shears condition** - the directory itself was *also* renamed at 1.21,
+`loot_tables` -> `loot_table` (singular; `data/emeraldisleflora/loot_table/blocks/` on
+1.21.1+, still `data/emeraldisleflora/loot_tables/blocks/` on 1.20.1), the same pattern
+as recipes'/advancements' directory renames - confirmed via `RegistryKeys.LOOT_TABLE`'s
+real registry path and by comparing vanilla's own shipped
+`data/minecraft/loot_table{,s}/blocks/dandelion.json` across all four versions. This was
+missed on the first pass of this fix (only the 4 grown-flower tables' *content* was
+checked, not the directory name shared by all 16), which meant literally none of this
+mod's loot tables were discovered at all on 1.21+ until caught by real in-game testing -
+regular, completely unmodified flowers dropped nothing on 1.21.1/26.2, not just the
+grown ones with the Silk Touch condition. **If you ever see "nothing drops" across
+every block, not just the ones with a tool-dependent condition, suspect the directory
+name first, not the condition JSON** - that's what happened here.
+
+Grown flowers additionally use a real Silk Touch/Shears condition (break with either and
+get the grown block back; otherwise get 2 of the base flower) - only this part changed
+shape at 1.21, not just directory: `"items": [x]` flattened to `"items": x`, and the
+enchantment predicate restructured around a generic `"predicates"` map keyed by
+component-predicate-type id, e.g. `"predicates": {"minecraft:enchantments": [...]}`, part
+of the same 1.21 data-components overhaul that changed recipes - confirmed identical
+across 1.21.1/1.21.11/26.2 by decompiling the real predicate codecs and comparing
+vanilla's own shipped loot tables (`azalea_leaves.json`) across all four versions.
+Regular/potted flowers just always drop themselves unconditionally (no tool-dependent
+condition), so only their directory changes, not their content.
+
+If a future block needs the same Silk Touch/Shears pattern, add it to **both**
+directories using the same two shapes - see either directory's existing files for the
+exact structure per group. For anything simpler (no tool condition), just make sure it
+exists, unchanged, in both directories under the correct folder name for each.
 
 ## Real-install testing (deployToPrism)
 
