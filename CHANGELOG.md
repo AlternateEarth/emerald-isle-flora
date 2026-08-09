@@ -7,7 +7,14 @@ Each version's section below is published verbatim as that version's changelog o
 Modrinth (see `publishMods` in `build.gradle.kts`) — write entries with players in
 mind, not as a commit log.
 
-## [1.6.1] - 2026-08-08
+## [1.6.5] - 2026-08-08
+
+### Added
+
+- Bees can now pollinate and be attracted to this mod's flowers on 1.21.1, 1.21.11, and
+  26.2, matching how they already worked on 1.20.1 - Minecraft changed which tags bees
+  actually check twice across that range, so this needed dedicated support rather than
+  already working automatically.
 
 ### Fixed
 
@@ -24,6 +31,11 @@ mind, not as a commit log.
   same underlying reason as the recipes above. Grown flowers also correctly keep
   themselves when broken with Silk Touch or Shears again, instead of always reverting
   to 2 of the base flower.
+- Fixed flowers silently disappearing from vanilla's `flowers`/`small_flowers`/
+  `flower_pots` tags on 1.21.1, 1.21.11, and 26.2 - anything checking those tags
+  (other mods' recipes, compatibility checks, etc.) stopped recognizing this mod's
+  flowers on those versions, for the same underlying reason as the recipes and loot
+  tables above.
 
 ## [1.6.0] - 2026-08-07
 
