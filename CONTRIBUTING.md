@@ -245,6 +245,20 @@ directories using the same two shapes - see either directory's existing files fo
 exact structure per group. For anything simpler (no tool condition), just make sure it
 exists, unchanged, in both directories under the correct folder name for each.
 
+## Adding/changing vanilla tags (data/minecraft/tags)
+
+Same directory-rename pattern again, for the vanilla `flowers`/`small_flowers`/
+`flower_pots` block and item tags this mod contributes to
+(`data/minecraft/tags/{blocks,items}/*.json`): `tags/blocks`/`tags/items` ->
+`tags/block`/`tags/item` (singular) at 1.21, confirmed by comparing vanilla's own real
+`data/minecraft/tags/block{,s}/flowers.json` across all four versions. Unlike loot
+tables, the file *content* doesn't change shape at all here (still a plain
+`{"replace": ..., "values": [...]}`) - only the directory name does, so the exact same
+content just needs to exist under both directory names:
+`src/main/tags-1.20.1/data/minecraft/tags/{blocks,items}/` and
+`src/main/tags-1.21.1-plus/data/minecraft/tags/{block,item}/`. If you add a new tag
+entry or a new tag file, add it identically to both directories.
+
 ## Real-install testing (deployToPrism)
 
 Loom's dev-launch (`runClient`) is currently broken or misleading on several targets in

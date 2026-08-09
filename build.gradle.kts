@@ -152,6 +152,19 @@ val lootTableResources: String = if (mod.minecraftVersion == "1.20.1") {
     "src/main/loot-tables-1.21.1-plus"
 }
 
+// Same rename pattern again, this time for vanilla's own block/item tags this mod
+// contributes to (data/minecraft/tags/{blocks,items}/*.json) - "tags/blocks"/"tags/items"
+// -> "tags/block"/"tags/item" (singular) at 1.21, confirmed by comparing vanilla's own
+// real data/minecraft/tags/block{,s}/flowers.json across all four versions. Content
+// shape is unchanged (still a plain {"replace": ..., "values": [...]} ), only the
+// directory renamed, so - unlike recipes/loot tables - the exact same file content just
+// needs to exist under both directory names.
+val tagResources: String = if (mod.minecraftVersion == "1.20.1") {
+    "src/main/tags-1.20.1"
+} else {
+    "src/main/tags-1.21.1-plus"
+}
+
 // fabric.mod.json hard-depends on cloth-config, but Mojmap-only targets skip Cloth
 // Config entirely (see the dependencies{} block above) - a real, un-emptied "depends"
 // entry there would make Fabric Loader flatly refuse to load the mod on a clean 26.2+
@@ -200,6 +213,7 @@ if (recipeGeneratedResources != null) {
 // ForgeLike auto-add, every loader needs it explicitly.
 sourceSets.main {
     resources.srcDir(rootProject.layout.projectDirectory.dir(lootTableResources))
+    resources.srcDir(rootProject.layout.projectDirectory.dir(tagResources))
 }
 
 tasks.named<Jar>("jar") {
