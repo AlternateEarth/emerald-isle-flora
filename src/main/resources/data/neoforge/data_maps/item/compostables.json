@@ -1,0 +1,28 @@
+{
+  "values": {
+    "emeraldisleflora:bells_of_ireland": {
+      "chance": 0.65
+    },
+    "emeraldisleflora:grown_bells_of_ireland": {
+      "chance": 0.95
+    },
+    "emeraldisleflora:bog_rosemary": {
+      "chance": 0.65
+    },
+    "emeraldisleflora:grown_bog_rosemary": {
+      "chance": 0.95
+    },
+    "emeraldisleflora:bulbous_buttercup": {
+      "chance": 0.65
+    },
+    "emeraldisleflora:grown_bulbous_buttercup": {
+      "chance": 0.95
+    },
+    "emeraldisleflora:bluebell": {
+      "chance": 0.65
+    },
+    "emeraldisleflora:grown_bluebell": {
+      "chance": 0.95
+    }
+  }
+}

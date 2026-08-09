@@ -204,6 +204,149 @@ solid confirmation of the exact target schema first - `ModRecipeProvider`'s doc 
 has the full per-branch reasoning. Revisit with a real `runDatagen` run for these two if
 the Fabric API bug is ever fixed upstream.
 
+## Adding/changing loot tables
+
+Every loot table (`src/main/loot-tables-1.20.1` for 1.20.1,
+`src/main/loot-tables-1.21.1-plus` for everything else) is genuinely hand-written JSON,
+**not** datagen'd - reaching for datagen here would've meant either duplicating a lot of
+loot-table-building code by hand or reaching into a non-public Fabric API class for 26.2
+(its loot-table datagen wrapper there doesn't extend vanilla's `BlockLootSubProvider`,
+unlike every earlier version), not worth it once both shapes below were independently
+confirmed correct against real shipped vanilla loot tables.
+
+**All 16 loot tables need both directories, not just the 4 grown-flower ones with a
+Silk Touch/Shears condition** - the directory itself was *also* renamed at 1.21,
+`loot_tables` -> `loot_table` (singular; `data/emeraldisleflora/loot_table/blocks/` on
+1.21.1+, still `data/emeraldisleflora/loot_tables/blocks/` on 1.20.1), the same pattern
+as recipes'/advancements' directory renames - confirmed via `RegistryKeys.LOOT_TABLE`'s
+real registry path and by comparing vanilla's own shipped
+`data/minecraft/loot_table{,s}/blocks/dandelion.json` across all four versions. This was
+missed on the first pass of this fix (only the 4 grown-flower tables' *content* was
+checked, not the directory name shared by all 16), which meant literally none of this
+mod's loot tables were discovered at all on 1.21+ until caught by real in-game testing -
+regular, completely unmodified flowers dropped nothing on 1.21.1/26.2, not just the
+grown ones with the Silk Touch condition. **If you ever see "nothing drops" across
+every block, not just the ones with a tool-dependent condition, suspect the directory
+name first, not the condition JSON** - that's what happened here.
+
+Grown flowers additionally use a real Silk Touch/Shears condition (break with either and
+get the grown block back; otherwise get 2 of the base flower) - only this part changed
+shape at 1.21, not just directory: `"items": [x]` flattened to `"items": x`, and the
+enchantment predicate restructured around a generic `"predicates"` map keyed by
+component-predicate-type id, e.g. `"predicates": {"minecraft:enchantments": [...]}`, part
+of the same 1.21 data-components overhaul that changed recipes - confirmed identical
+across 1.21.1/1.21.11/26.2 by decompiling the real predicate codecs and comparing
+vanilla's own shipped loot tables (`azalea_leaves.json`) across all four versions.
+Regular/potted flowers just always drop themselves unconditionally (no tool-dependent
+condition), so only their directory changes, not their content.
+
+If a future block needs the same Silk Touch/Shears pattern, add it to **both**
+directories using the same two shapes - see either directory's existing files for the
+exact structure per group. For anything simpler (no tool condition), just make sure it
+exists, unchanged, in both directories under the correct folder name for each.
+
+## Adding/changing vanilla tags (data/minecraft/tags)
+
+Same directory-rename pattern again, for the vanilla `flowers`/`small_flowers`/
+`flower_pots` block and item tags this mod contributes to
+(`data/minecraft/tags/{blocks,items}/*.json`): `tags/blocks`/`tags/items` ->
+`tags/block`/`tags/item` (singular) at 1.21, confirmed by comparing vanilla's own real
+`data/minecraft/tags/block{,s}/flowers.json` across all four versions. Unlike loot
+tables, the file *content* doesn't change shape at all here (still a plain
+`{"replace": ..., "values": [...]}`) - only the directory name does, so the exact same
+content just needs to exist under both directory names:
+`src/main/tags-1.20.1/data/minecraft/tags/{blocks,items}/` and
+`src/main/tags-1.21.1-plus/data/minecraft/tags/{block,item}/`. If you add a new tag
+entry or a new tag file, add it identically to both directories.
+
+Membership in the plain `flowers`/`small_flowers` tags isn't enough to make a block
+bee-attractive on every version - confirmed by decompiling the real `BeeEntity`/`Bee`
+class across all four versions, which flower tag it actually checks changed twice, not
+just once:
+- `1.20.1`: checks `ItemTags.FLOWERS`/`BlockTags.FLOWERS` directly - already covered by
+  the existing `flowers` tags, no extra tag needed.
+- `1.21.1`: item side switched to the new `ItemTags.BEE_FOOD` (`bee_food`), but the
+  block side (pollination target) still checks the old `BlockTags.FLOWERS` - a genuine
+  transitional/mixed state, not a clean cutover. Needs `bee_food` (item) added; `flowers`
+  (block) already covers it.
+- `1.21.11`/`26.2`: block side also switched, to `BlockTags.BEE_ATTRACTIVE`
+  (`bee_attractive`) - the fully-migrated state. Needs both `bee_food` (item) and
+  `bee_attractive` (block).
+
+`data/minecraft/tags/block/bee_attractive.json` is included in the whole
+`tags-1.21.1-plus` directory uniformly (covering 1.21.1 too, even though 1.21.1's own
+`Bee` class doesn't consult it) rather than a third, more precisely-scoped directory -
+tags are freeform, an unreferenced one is simply inert on that version, not an error,
+confirmed vanilla itself doesn't even ship a `bee_attractive` tag file at 1.21.1 (only
+`bee_food`) - so this is a deliberate simplification, not an oversight.
+
+## Adding/changing compostable items
+
+Composting is registered in `ModBlocks.registerComposting()` by writing directly into
+vanilla's `ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE`/`COMPOSTABLES` static field
+(same field, renamed at 26.2 - see the version-rename table already in this file).
+Fabric and (old, 1.20.1) Forge both still read straight from this field at composting
+time - confirmed by decompiling `ComposterBlock`'s real `useOnBlock`/`insertItem`/
+`addItem` methods in both loaders' shipped jars, neither patches it.
+
+NeoForge is different on **every** version this mod targets (1.21.1, 1.21.11, 26.2):
+NeoForge patches `ComposterBlock` to deprecate that field and read exclusively from its
+own `neoforge:compostables` data map instead - confirmed by decompiling NeoForge's own
+`ComposterBlock.java.patch` for all three versions (byte-for-byte identical patch
+content across all three), which redirects every `COMPOSTABLES.containsKey`/`getFloat`
+call site to a new `getValue(ItemStack)` that reads
+`item.getData(NeoForgeDataMaps.COMPOSTABLES)` and ignores the static field entirely.
+Writing to the Java field on NeoForge compiles and runs without error, it's just
+silently ineffective - the classic "no crash, just doesn't work" shape this project has
+run into with every other data-driven registry migration so far.
+
+The real NeoForge-side fix is a data map JSON, merged the same way tags are (any mod can
+contribute entries to the same virtual path, keyed by the *data map's own* namespace,
+not the contributing mod's): `data/neoforge/data_maps/item/compostables.json`, format
+confirmed identical across all three NeoForge versions (`values` object keyed by item
+ID, each an object with a `chance` float):
+```json
+{
+  "values": {
+    "emeraldisleflora:bells_of_ireland": { "chance": 0.65 }
+  }
+}
+```
+Kept in the shared, all-loader `src/main/resources` dir rather than split by version -
+it's simply inert, unreferenced data on Fabric/Forge (same freeform-data reasoning as
+this project's vanilla tag files), and no version split is needed since the schema
+doesn't change across 1.21.1/1.21.11/26.2. If you add a new compostable item, add its
+`chance` to **both** `registerComposting()` (for Fabric/Forge) **and** this JSON file
+(for NeoForge) - the two are independent, loader-specific sources of truth for what
+looks like one feature.
+
+`registerComposting()` also has to pass `.asItem()` on every block, not the block
+reference itself - `ITEM_TO_LEVEL_INCREASE_CHANCE`/`COMPOSTABLES` is generically typed
+`Object2FloatMap<ItemConvertible>`/`<ItemLike>`, and `.put(...)` is the plain generic map
+method, it does not convert for you. Vanilla's own bootstrap always converts explicitly
+(confirmed by decompiling `ComposterBlock.registerCompostableItem`, private, which calls
+`item.asItem()` before every `.put(...)`). A `Block` and its `Item` are different objects
+with default (identity) `equals`/`hashCode`, so a `.put(block, chance)` entry can never
+match a real lookup, which always keys off `itemStack.getItem()`, an `Item`.
+
+Fixing that alone was still not enough on Forge 1.20.1, even after it fixed Fabric - a
+second bug: `Block.asItem()` lazily caches its result forever after the first call
+(confirmed by decompiling the real 1.20.1 jar - it's backed by a private `cachedItem`
+field, computed once via `Item.fromBlock(this)`, never recomputed). Fabric's `register()`
+is one linear pass, so by the time `registerComposting()` ever runs once, every block
+already has its item. Forge/NeoForge's `onRegister(RegisterEvent)` is event-driven
+instead: `RegisterEvent` fires once *per registry*, so `onRegister` actually runs
+multiple times total, and `event.register(key, ...)` silently no-ops whenever the
+current dispatch's registry doesn't match `key`. Calling `registerComposting()`
+unconditionally after both `event.register(...)` calls meant it also ran during
+whichever *other* registry's dispatch happened to fire first - permanently caching
+`Items.AIR` into `.asItem()` before any `BlockItem` existed, before the real, later
+`ITEMS` dispatch ever got a chance to fix it. The fix: call `registerComposting()` from
+*inside* the `ITEMS`-registry helper lambda itself, in every `onRegister()` variant
+(Forge, and all three NeoForge version branches) - guaranteeing it only ever runs once,
+already after that same call's own `BlockItem` construction. If you add a new
+compostable item, keep the call there, not back at the outer method level.
+
 ## Real-install testing (deployToPrism)
 
 Loom's dev-launch (`runClient`) is currently broken or misleading on several targets in
