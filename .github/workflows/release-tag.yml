@@ -6,7 +6,7 @@ on:
 
 env:
   JAVA_VERSION: 21
-  DO_PUBLISH: "true"
+  DO_PUBLISH: "false"
   MODRINTH_TOKEN: ${{ secrets.PUBLISH_MODRINTH_TOKEN }}
   # Modrinth's own project id, gg.meza.stonecraft reads this via the MODRINTH_ID env
   # var (see build.gradle.kts's publishMods block, and Publishing.kt in Stonecraft's
