@@ -320,6 +320,33 @@ doesn't change across 1.21.1/1.21.11/26.2. If you add a new compostable item, ad
 (for NeoForge) - the two are independent, loader-specific sources of truth for what
 looks like one feature.
 
+`registerComposting()` also has to pass `.asItem()` on every block, not the block
+reference itself - `ITEM_TO_LEVEL_INCREASE_CHANCE`/`COMPOSTABLES` is generically typed
+`Object2FloatMap<ItemConvertible>`/`<ItemLike>`, and `.put(...)` is the plain generic map
+method, it does not convert for you. Vanilla's own bootstrap always converts explicitly
+(confirmed by decompiling `ComposterBlock.registerCompostableItem`, private, which calls
+`item.asItem()` before every `.put(...)`). A `Block` and its `Item` are different objects
+with default (identity) `equals`/`hashCode`, so a `.put(block, chance)` entry can never
+match a real lookup, which always keys off `itemStack.getItem()`, an `Item`.
+
+Fixing that alone was still not enough on Forge 1.20.1, even after it fixed Fabric - a
+second bug: `Block.asItem()` lazily caches its result forever after the first call
+(confirmed by decompiling the real 1.20.1 jar - it's backed by a private `cachedItem`
+field, computed once via `Item.fromBlock(this)`, never recomputed). Fabric's `register()`
+is one linear pass, so by the time `registerComposting()` ever runs once, every block
+already has its item. Forge/NeoForge's `onRegister(RegisterEvent)` is event-driven
+instead: `RegisterEvent` fires once *per registry*, so `onRegister` actually runs
+multiple times total, and `event.register(key, ...)` silently no-ops whenever the
+current dispatch's registry doesn't match `key`. Calling `registerComposting()`
+unconditionally after both `event.register(...)` calls meant it also ran during
+whichever *other* registry's dispatch happened to fire first - permanently caching
+`Items.AIR` into `.asItem()` before any `BlockItem` existed, before the real, later
+`ITEMS` dispatch ever got a chance to fix it. The fix: call `registerComposting()` from
+*inside* the `ITEMS`-registry helper lambda itself, in every `onRegister()` variant
+(Forge, and all three NeoForge version branches) - guaranteeing it only ever runs once,
+already after that same call's own `BlockItem` construction. If you add a new
+compostable item, keep the call there, not back at the outer method level.
+
 ## Real-install testing (deployToPrism)
 
 Loom's dev-launch (`runClient`) is currently broken or misleading on several targets in

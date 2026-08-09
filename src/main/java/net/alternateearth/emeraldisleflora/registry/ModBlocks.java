@@ -319,9 +319,21 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings()));
+
+            // registerComposting() must run in here, not after both event.register(...)
+            // calls at the outer method level - see the long comment on registerComposting()
+            // itself for why: Block.asItem() lazily caches its result forever on first call,
+            // and RegisterEvent fires once per registry (this whole onRegister method runs
+            // multiple times total, once per registry Forge processes), so calling it at the
+            // outer level ran it during earlier, unrelated dispatches too - before any
+            // BlockItem existed - permanently caching the wrong (air) item and silently
+            // breaking composting no matter how many times it was harmlessly called again
+            // afterward. Confirmed via real-install testing: this was still broken after the
+            // .asItem() fix alone fixed Fabric (which registers everything in one linear,
+            // non-event-driven pass, never hitting this trap).
+            registerComposting();
         });
 
-        registerComposting();
         registerFlowerPotPlants();
     }
     */
@@ -373,9 +385,12 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings()));
+
+            // Must run in here, not after both event.register(...) calls at the outer
+            // method level - see the comment on registerComposting() itself.
+            registerComposting();
         });
 
-        registerComposting();
         registerFlowerPotPlants();
     }
     */
@@ -414,9 +429,12 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings().registryKey(itemId("grown_bulbous_buttercup")).useBlockPrefixedTranslationKey()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings().registryKey(itemId("bluebell")).useBlockPrefixedTranslationKey()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings().registryKey(itemId("grown_bluebell")).useBlockPrefixedTranslationKey()));
+
+            // Must run in here, not after both event.register(...) calls at the outer
+            // method level - see the comment on registerComposting() itself.
+            registerComposting();
         });
 
-        registerComposting();
         registerFlowerPotPlants();
     }
     */
@@ -459,9 +477,12 @@ public final class ModBlocks {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Properties().setId(itemId("grown_bulbous_buttercup")).useBlockDescriptionPrefix()));
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Properties().setId(itemId("bluebell")).useBlockDescriptionPrefix()));
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Properties().setId(itemId("grown_bluebell")).useBlockDescriptionPrefix()));
+
+            // Must run in here, not after both event.register(...) calls at the outer
+            // method level - see the comment on registerComposting() itself.
+            registerComposting();
         });
 
-        registerComposting();
         registerFlowerPotPlants();
     }
     */
@@ -483,27 +504,63 @@ public final class ModBlocks {
     // is left in the shared (all-loader) resources dir since it's simply inert,
     // unreferenced data on Fabric/Forge (same freeform-data reasoning as this project's
     // vanilla tag files).
+    // ITEM_TO_LEVEL_INCREASE_CHANCE/COMPOSTABLES is an Object2FloatMap<ItemConvertible>
+    // (Yarn)/<ItemLike> (Mojmap), and .put(...) is the plain generic map method - it does
+    // NOT call .asItem() for you, it just stores whatever object reference you hand it as
+    // the raw hash key. Vanilla's own bootstrap (ComposterBlock.registerCompostableItem,
+    // private, confirmed via decompiling the real class) always calls item.asItem() before
+    // putting - e.g. it registers Items.OAK_LEAVES, an Item, not Blocks.OAK_LEAVES, a
+    // Block. The actual lookup during composting always keys off itemStack.getItem(), an
+    // Item. Passing a Block reference directly (as this method did previously) silently
+    // inserts a dead entry keyed on the Block object, which a Block and an Item are never
+    // equal/same-hashCode for (neither overrides Object's identity equals/hashCode) - so
+    // the real per-item lookup at composting time never matches it. This was a real,
+    // pre-existing bug independent of the whole multi-version migration, confirmed by
+    // real-install testing: NeoForge (whose composting is driven by the data map JSON
+    // above, not this field at all) worked; Fabric and Forge 1.20.1 (both still driven by
+    // this exact field) did not, until .asItem() was added below.
+    //
+    // .asItem() alone was still not enough to fix Forge 1.20.1, even after it fixed
+    // Fabric - a second, separate bug, also confirmed by decompiling (Block.asItem() /
+    // m_5456_ in the real 1.20.1 jar): it's a LAZILY CACHED getter (backed by a private
+    // cachedItem field, computed once via Item.fromBlock(this) on first call and never
+    // recomputed after). Fabric's register() is one linear, synchronous pass - every
+    // block+item is constructed and registered before registerComposting() ever runs
+    // once at the end, so .asItem() resolves correctly the first (and only) time it's
+    // called. Forge/NeoForge's onRegister(RegisterEvent) is different: RegisterEvent
+    // fires once per registry, so this same onRegister method actually runs multiple
+    // times total (once when the event is for BLOCKS, once for ITEMS, etc.) - and
+    // event.register(key, ...) is a silent no-op whenever the dispatch's registry
+    // doesn't match. Calling registerComposting() unconditionally after both
+    // event.register(...) calls (the previous shape) meant it also ran during every
+    // *other* registry's dispatch too - including, on at least one loader/version,
+    // one that fires before ITEMS - permanently caching Items.AIR into asItem() before
+    // any BlockItem existed, before the later, correct ITEMS dispatch ever got a
+    // chance. Fixed by moving the registerComposting() call to inside the ITEMS-registry
+    // helper lambda itself, in every onRegister() variant below (Forge and all three
+    // NeoForge version branches) - guaranteeing it only ever runs once, and only after
+    // this method's own BlockItem construction has already happened in that same call.
     private static void registerComposting() {
         /*? if <26.2 {*/
-        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BELLS_OF_IRELAND, 0.65f);
-        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BELLS_OF_IRELAND, 0.95f);
-        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BOG_ROSEMARY, 0.65f);
-        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BOG_ROSEMARY, 0.95f);
-        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BULBOUS_BUTTERCUP, 0.65f);
-        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BULBOUS_BUTTERCUP, 0.95f);
-        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BLUEBELL, 0.65f);
-        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BLUEBELL, 0.95f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BELLS_OF_IRELAND.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BELLS_OF_IRELAND.asItem(), 0.95f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BOG_ROSEMARY.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BOG_ROSEMARY.asItem(), 0.95f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BULBOUS_BUTTERCUP.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BULBOUS_BUTTERCUP.asItem(), 0.95f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BLUEBELL.asItem(), 0.65f);
+        ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(GROWN_BLUEBELL.asItem(), 0.95f);
         /*?} else {*/
         /*
         // 26.2: same Object2FloatMap<ItemLike>, field renamed ITEM_TO_LEVEL_INCREASE_CHANCE -> COMPOSTABLES.
-        ComposterBlock.COMPOSTABLES.put(BELLS_OF_IRELAND, 0.65f);
-        ComposterBlock.COMPOSTABLES.put(GROWN_BELLS_OF_IRELAND, 0.95f);
-        ComposterBlock.COMPOSTABLES.put(BOG_ROSEMARY, 0.65f);
-        ComposterBlock.COMPOSTABLES.put(GROWN_BOG_ROSEMARY, 0.95f);
-        ComposterBlock.COMPOSTABLES.put(BULBOUS_BUTTERCUP, 0.65f);
-        ComposterBlock.COMPOSTABLES.put(GROWN_BULBOUS_BUTTERCUP, 0.95f);
-        ComposterBlock.COMPOSTABLES.put(BLUEBELL, 0.65f);
-        ComposterBlock.COMPOSTABLES.put(GROWN_BLUEBELL, 0.95f);*/
+        ComposterBlock.COMPOSTABLES.put(BELLS_OF_IRELAND.asItem(), 0.65f);
+        ComposterBlock.COMPOSTABLES.put(GROWN_BELLS_OF_IRELAND.asItem(), 0.95f);
+        ComposterBlock.COMPOSTABLES.put(BOG_ROSEMARY.asItem(), 0.65f);
+        ComposterBlock.COMPOSTABLES.put(GROWN_BOG_ROSEMARY.asItem(), 0.95f);
+        ComposterBlock.COMPOSTABLES.put(BULBOUS_BUTTERCUP.asItem(), 0.65f);
+        ComposterBlock.COMPOSTABLES.put(GROWN_BULBOUS_BUTTERCUP.asItem(), 0.95f);
+        ComposterBlock.COMPOSTABLES.put(BLUEBELL.asItem(), 0.65f);
+        ComposterBlock.COMPOSTABLES.put(GROWN_BLUEBELL.asItem(), 0.95f);*/
         /*?}*/
     }
 
