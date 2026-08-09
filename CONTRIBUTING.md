@@ -280,6 +280,46 @@ tags are freeform, an unreferenced one is simply inert on that version, not an e
 confirmed vanilla itself doesn't even ship a `bee_attractive` tag file at 1.21.1 (only
 `bee_food`) - so this is a deliberate simplification, not an oversight.
 
+## Adding/changing compostable items
+
+Composting is registered in `ModBlocks.registerComposting()` by writing directly into
+vanilla's `ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE`/`COMPOSTABLES` static field
+(same field, renamed at 26.2 - see the version-rename table already in this file).
+Fabric and (old, 1.20.1) Forge both still read straight from this field at composting
+time - confirmed by decompiling `ComposterBlock`'s real `useOnBlock`/`insertItem`/
+`addItem` methods in both loaders' shipped jars, neither patches it.
+
+NeoForge is different on **every** version this mod targets (1.21.1, 1.21.11, 26.2):
+NeoForge patches `ComposterBlock` to deprecate that field and read exclusively from its
+own `neoforge:compostables` data map instead - confirmed by decompiling NeoForge's own
+`ComposterBlock.java.patch` for all three versions (byte-for-byte identical patch
+content across all three), which redirects every `COMPOSTABLES.containsKey`/`getFloat`
+call site to a new `getValue(ItemStack)` that reads
+`item.getData(NeoForgeDataMaps.COMPOSTABLES)` and ignores the static field entirely.
+Writing to the Java field on NeoForge compiles and runs without error, it's just
+silently ineffective - the classic "no crash, just doesn't work" shape this project has
+run into with every other data-driven registry migration so far.
+
+The real NeoForge-side fix is a data map JSON, merged the same way tags are (any mod can
+contribute entries to the same virtual path, keyed by the *data map's own* namespace,
+not the contributing mod's): `data/neoforge/data_maps/item/compostables.json`, format
+confirmed identical across all three NeoForge versions (`values` object keyed by item
+ID, each an object with a `chance` float):
+```json
+{
+  "values": {
+    "emeraldisleflora:bells_of_ireland": { "chance": 0.65 }
+  }
+}
+```
+Kept in the shared, all-loader `src/main/resources` dir rather than split by version -
+it's simply inert, unreferenced data on Fabric/Forge (same freeform-data reasoning as
+this project's vanilla tag files), and no version split is needed since the schema
+doesn't change across 1.21.1/1.21.11/26.2. If you add a new compostable item, add its
+`chance` to **both** `registerComposting()` (for Fabric/Forge) **and** this JSON file
+(for NeoForge) - the two are independent, loader-specific sources of truth for what
+looks like one feature.
+
 ## Real-install testing (deployToPrism)
 
 Loom's dev-launch (`runClient`) is currently broken or misleading on several targets in

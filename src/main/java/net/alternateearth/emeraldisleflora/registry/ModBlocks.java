@@ -467,6 +467,22 @@ public final class ModBlocks {
     */
     /*?}*/
 
+    // Fabric and (old, 1.20.1) Forge both still read straight from this vanilla static
+    // field at composting time (confirmed via decompiling ComposterBlock.useOnBlock/
+    // insertItem/addItem in both those loaders' real jars - neither patches it), so this
+    // registerComposting() call is a real, working fix there. NeoForge (all three
+    // versions this mod targets: 1.21.1, 1.21.11, 26.2) is different: NeoForge patches
+    // ComposterBlock to deprecate this field and read exclusively from its own
+    // "neoforge:compostables" data map instead (confirmed via decompiling NeoForge's own
+    // ComposterBlock.java.patch for each version - identical patch content across all
+    // three, redirecting every COMPOSTABLES.containsKey/getFloat call site to a new
+    // getValue(ItemStack) that reads item.getData(NeoForgeDataMaps.COMPOSTABLES) and
+    // ignores this field entirely). The .put(...) calls below are therefore harmless
+    // but functionally dead on NeoForge - the real fix for that loader is the data map
+    // JSON at src/main/resources/data/neoforge/data_maps/item/compostables.json, which
+    // is left in the shared (all-loader) resources dir since it's simply inert,
+    // unreferenced data on Fabric/Forge (same freeform-data reasoning as this project's
+    // vanilla tag files).
     private static void registerComposting() {
         /*? if <26.2 {*/
         ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BELLS_OF_IRELAND, 0.65f);
