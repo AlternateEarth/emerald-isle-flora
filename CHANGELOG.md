@@ -12,30 +12,15 @@ mind, not as a commit log.
 ### Added
 
 - Bees can now pollinate and be attracted to this mod's flowers on 1.21.1, 1.21.11, and
-  26.2, matching how they already worked on 1.20.1 - Minecraft changed which tags bees
-  actually check twice across that range, so this needed dedicated support rather than
-  already working automatically.
+  26.2, matching how they already worked on 1.20.1.
 
 ### Fixed
 
-- Dye and grown-flower crafting recipes work again on 1.21.1, 1.21.11, and 26.2 - they'd
-  silently failed to load on every version past 1.20.1, since Minecraft's own recipe
-  data format changed twice and the recipes were shared as one hand-written copy across
-  every version regardless (fixes #17). Verified working in-game on all 8
-  loader/version combinations.
-- Crafting dye from a grown flower now correctly yields 2 dye instead of 1, matching the
-  original intended recipe (this had silently regressed to 1 during the fix above and
-  was caught before release).
-- All flowers (regular, grown, and potted) drop correctly again when broken on 1.21.1,
-  1.21.11, and 26.2 - they silently dropped nothing at all on those versions, for the
-  same underlying reason as the recipes above. Grown flowers also correctly keep
-  themselves when broken with Silk Touch or Shears again, instead of always reverting
-  to 2 of the base flower.
-- Fixed flowers silently disappearing from vanilla's `flowers`/`small_flowers`/
-  `flower_pots` tags on 1.21.1, 1.21.11, and 26.2 - anything checking those tags
-  (other mods' recipes, compatibility checks, etc.) stopped recognizing this mod's
-  flowers on those versions, for the same underlying reason as the recipes and loot
-  tables above.
+- Dye and grown-flower crafting recipes work again on 1.21.1, 1.21.11, and 26.2.
+- All flowers (regular, grown, and potted) drop correctly again when broken on 1.21.1, 1.21.11, and 26.2. 
+- Grown flowers also correctly keep themselves when broken with Silk Touch or Shears again, instead of always reverting to 2 of the base flower.
+- Fixed flowers silently disappearing from vanilla's `flowers`/`small_flowers`/`flower_pots` tags on 1.21.1, 1.21.11, and 26.2.
+- Composting this mod's flowers works now, on every loader and Minecraft version.
 
 ## [1.6.0] - 2026-08-07
 
