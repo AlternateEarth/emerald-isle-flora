@@ -1,12 +1,10 @@
 package net.alternateearth.emeraldisleflora.util;
 
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
-import net.alternateearth.emeraldisleflora.registry.ModBlocks;
 /*? if fabric {*/
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 /*?}*/
 /*? if <26.2 {*/
-import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
@@ -71,7 +69,7 @@ public final class ModBoneMealInteraction {
 
             BlockPos pos = hitResult.getBlockPos();
 
-            if (!isOurBlock(world.getBlockState(pos))) {
+            if (!ModCommonLogic.isModManaged(world.getBlockState(pos))) {
                 /*? if <26.2 {*/
                 return ActionResult.PASS;
                 /*?} else {*/
@@ -123,7 +121,7 @@ public final class ModBoneMealInteraction {
         BlockPos pos = event.getPos();
         World world = event.getLevel();
 
-        if (!isOurBlock(world.getBlockState(pos))) {
+        if (!ModCommonLogic.isModManaged(world.getBlockState(pos))) {
             return;
         }
 
@@ -159,7 +157,7 @@ public final class ModBoneMealInteraction {
         BlockPos pos = event.getPos();
         World world = event.getLevel();
 
-        if (!isOurBlock(world.getBlockState(pos))) {
+        if (!ModCommonLogic.isModManaged(world.getBlockState(pos))) {
             return;
         }
 
@@ -191,7 +189,7 @@ public final class ModBoneMealInteraction {
         BlockPos pos = event.getPos();
         Level world = event.getLevel();
 
-        if (!isOurBlock(world.getBlockState(pos))) {
+        if (!ModCommonLogic.isModManaged(world.getBlockState(pos))) {
             return;
         }
 
@@ -206,42 +204,4 @@ public final class ModBoneMealInteraction {
     }
     */
     /*?}*/
-
-    private static boolean isOurBlock(BlockState state) {
-        /*? if <26.2 {*/
-        return state.isOf(ModBlocks.BELLS_OF_IRELAND) ||
-                state.isOf(ModBlocks.GROWN_BELLS_OF_IRELAND) ||
-                state.isOf(ModBlocks.POTTED_BELLS_OF_IRELAND) ||
-                state.isOf(ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND) ||
-                state.isOf(ModBlocks.BOG_ROSEMARY) ||
-                state.isOf(ModBlocks.GROWN_BOG_ROSEMARY) ||
-                state.isOf(ModBlocks.POTTED_BOG_ROSEMARY) ||
-                state.isOf(ModBlocks.POTTED_GROWN_BOG_ROSEMARY) ||
-                state.isOf(ModBlocks.BULBOUS_BUTTERCUP) ||
-                state.isOf(ModBlocks.GROWN_BULBOUS_BUTTERCUP) ||
-                state.isOf(ModBlocks.POTTED_BULBOUS_BUTTERCUP) ||
-                state.isOf(ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP) ||
-                state.isOf(ModBlocks.BLUEBELL) ||
-                state.isOf(ModBlocks.GROWN_BLUEBELL) ||
-                state.isOf(ModBlocks.POTTED_BLUEBELL) ||
-                state.isOf(ModBlocks.POTTED_GROWN_BLUEBELL);
-        /*?} else {*/
-        /*return state.getBlock() == ModBlocks.BELLS_OF_IRELAND ||
-                state.getBlock() == ModBlocks.GROWN_BELLS_OF_IRELAND ||
-                state.getBlock() == ModBlocks.POTTED_BELLS_OF_IRELAND ||
-                state.getBlock() == ModBlocks.POTTED_GROWN_BELLS_OF_IRELAND ||
-                state.getBlock() == ModBlocks.BOG_ROSEMARY ||
-                state.getBlock() == ModBlocks.GROWN_BOG_ROSEMARY ||
-                state.getBlock() == ModBlocks.POTTED_BOG_ROSEMARY ||
-                state.getBlock() == ModBlocks.POTTED_GROWN_BOG_ROSEMARY ||
-                state.getBlock() == ModBlocks.BULBOUS_BUTTERCUP ||
-                state.getBlock() == ModBlocks.GROWN_BULBOUS_BUTTERCUP ||
-                state.getBlock() == ModBlocks.POTTED_BULBOUS_BUTTERCUP ||
-                state.getBlock() == ModBlocks.POTTED_GROWN_BULBOUS_BUTTERCUP ||
-                state.getBlock() == ModBlocks.BLUEBELL ||
-                state.getBlock() == ModBlocks.GROWN_BLUEBELL ||
-                state.getBlock() == ModBlocks.POTTED_BLUEBELL ||
-                state.getBlock() == ModBlocks.POTTED_GROWN_BLUEBELL;*/
-        /*?}*/
-    }
 }
