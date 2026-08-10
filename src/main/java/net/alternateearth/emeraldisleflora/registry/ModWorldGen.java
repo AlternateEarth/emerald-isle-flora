@@ -1,21 +1,25 @@
 package net.alternateearth.emeraldisleflora.registry;
 
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
+
 /*? if fabric && <26.2 {*/
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.gen.GenerationStep;
 /*?}*/
+
 /*? if fabric && >=26.2 {*/
 /*import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.GenerationStep;
 */
@@ -35,159 +39,62 @@ public final class ModWorldGen {
         EmeraldIsleFlora.LOGGER.info("Registering World Generation for " + EmeraldIsleFlora.MOD_ID);
 
         /*? if <26.2 {*/
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.PLAINS),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bells_of_ireland_plains"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.MEADOW),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bells_of_ireland_meadow"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.SWAMP),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bog_rosemary_swamp"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.MANGROVE_SWAMP),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bog_rosemary_mangrove_swamp"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.PLAINS),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_plains"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.SUNFLOWER_PLAINS),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_sunflower_plains"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.MEADOW),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_meadow"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.FOREST),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bluebell_forest"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(BiomeKeys.FLOWER_FOREST),
-            GenerationStep.Feature.VEGETAL_DECORATION,
-            RegistryKey.of(
-                RegistryKeys.PLACED_FEATURE,
-                Identifier.of(EmeraldIsleFlora.MOD_ID, "patch_bluebell_flower_forest"))
-        );
+        addFeature(BiomeKeys.PLAINS, "patch_bells_of_ireland_plains");
+        addFeature(BiomeKeys.MEADOW, "patch_bells_of_ireland_meadow");
+        addFeature(BiomeKeys.SWAMP, "patch_bog_rosemary_swamp");
+        addFeature(BiomeKeys.MANGROVE_SWAMP, "patch_bog_rosemary_mangrove_swamp");
+        addFeature(BiomeKeys.PLAINS, "patch_bulbous_buttercup_plains");
+        addFeature(BiomeKeys.SUNFLOWER_PLAINS, "patch_bulbous_buttercup_sunflower_plains");
+        addFeature(BiomeKeys.MEADOW, "patch_bulbous_buttercup_meadow");
+        addFeature(BiomeKeys.FOREST, "patch_bluebell_forest");
+        addFeature(BiomeKeys.FLOWER_FOREST, "patch_bluebell_flower_forest");
         /*?} else {*/
         /*
-        // 26.2: same shape, Mojmap names - BiomeKeys -> Biomes, RegistryKeys -> Registries
-        // (key constants; see ModBlocks for the full swap explanation), GenerationStep.
-        // Feature -> GenerationStep.Decoration (enum itself renamed too, not just its
-        // containing class untouched) - all confirmed via javap against the real Fabric
-        // API 26.2 jar's fabric-biome-api-v1 submodule and the real 26.2 client jar.
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.PLAINS),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bells_of_ireland_plains"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.MEADOW),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bells_of_ireland_meadow"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.SWAMP),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bog_rosemary_swamp"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.MANGROVE_SWAMP),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bog_rosemary_mangrove_swamp"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.PLAINS),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_plains"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.SUNFLOWER_PLAINS),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_sunflower_plains"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.MEADOW),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bulbous_buttercup_meadow"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.FOREST),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bluebell_forest"))
-        );
-
-        BiomeModifications.addFeature(
-            BiomeSelectors.includeByKey(Biomes.FLOWER_FOREST),
-            GenerationStep.Decoration.VEGETAL_DECORATION,
-            ResourceKey.create(
-                Registries.PLACED_FEATURE,
-                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "patch_bluebell_flower_forest"))
-        );
+        addFeature(Biomes.PLAINS, "patch_bells_of_ireland_plains");
+        addFeature(Biomes.MEADOW, "patch_bells_of_ireland_meadow");
+        addFeature(Biomes.SWAMP, "patch_bog_rosemary_swamp");
+        addFeature(Biomes.MANGROVE_SWAMP, "patch_bog_rosemary_mangrove_swamp");
+        addFeature(Biomes.PLAINS, "patch_bulbous_buttercup_plains");
+        addFeature(Biomes.SUNFLOWER_PLAINS, "patch_bulbous_buttercup_sunflower_plains");
+        addFeature(Biomes.MEADOW, "patch_bulbous_buttercup_meadow");
+        addFeature(Biomes.FOREST, "patch_bluebell_forest");
+        addFeature(Biomes.FLOWER_FOREST, "patch_bluebell_flower_forest");
         */
         /*?}*/
 
         EmeraldIsleFlora.LOGGER.info("Finished registering World Generation for " + EmeraldIsleFlora.MOD_ID);
         /*?}*/
     }
+
+    // Everything that differs between the two mapping sets - RegistryKey vs ResourceKey,
+    // RegistryKeys vs Registries, Identifier.of vs Identifier.fromNamespaceAndPath,
+    // GenerationStep.Feature vs GenerationStep.Decoration - lives only here, confirmed
+    // via javap against the real jars for both mapping sets. register() just passes a
+    // biome key and a placed-feature id.
+
+    /*? if fabric && <26.2 {*/
+    private static void addFeature(RegistryKey<Biome> biome, String featureId) {
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(biome),
+            GenerationStep.Feature.VEGETAL_DECORATION,
+            RegistryKey.of(
+                RegistryKeys.PLACED_FEATURE,
+                Identifier.of(EmeraldIsleFlora.MOD_ID, featureId))
+        );
+    }
+    /*?}*/
+
+    /*? if fabric && >=26.2 {*/
+    /*
+    private static void addFeature(ResourceKey<Biome> biome, String featureId) {
+        BiomeModifications.addFeature(
+            BiomeSelectors.includeByKey(biome),
+            GenerationStep.Decoration.VEGETAL_DECORATION,
+            ResourceKey.create(
+                Registries.PLACED_FEATURE,
+                Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, featureId))
+        );
+    }
+    */
+    /*?}*/
 }
