@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "#W#",
+    "#W#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "W": {
+      "item": "emeraldisleflora:yew_planks"
+    }
+  },
+  "result": {
+    "id": "emeraldisleflora:yew_fence_gate"
+  }
+}

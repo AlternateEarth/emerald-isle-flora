@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building_blocks",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "emeraldisleflora:yew_planks"
+    }
+  },
+  "result": {
+    "id": "emeraldisleflora:yew_stairs",
+    "count": 4
+  }
+}

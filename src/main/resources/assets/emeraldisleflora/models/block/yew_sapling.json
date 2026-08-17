@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "emeraldisleflora:block/yew_sapling"
+  },
+  "render_type": "cutout"
+}

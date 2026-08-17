@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "emeraldisleflora:yew_planks"
+    }
+  ],
+  "result": {
+    "item": "emeraldisleflora:yew_button"
+  }
+}

@@ -102,6 +102,23 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.GROWN_BOG_ROSEMARY);
 					entries.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 					entries.add(ModBlocks.GROWN_BLUEBELL);
+					entries.add(ModBlocks.YEW_LOG);
+					entries.add(ModBlocks.YEW_WOOD);
+					entries.add(ModBlocks.STRIPPED_YEW_LOG);
+					entries.add(ModBlocks.STRIPPED_YEW_WOOD);
+					entries.add(ModBlocks.YEW_PLANKS);
+					entries.add(ModBlocks.YEW_LEAVES);
+					entries.add(ModBlocks.YEW_SAPLING);
+					entries.add(ModBlocks.YEW_STAIRS);
+					entries.add(ModBlocks.YEW_SLAB);
+					entries.add(ModBlocks.YEW_FENCE);
+					entries.add(ModBlocks.YEW_FENCE_GATE);
+					entries.add(ModBlocks.YEW_DOOR);
+					entries.add(ModBlocks.YEW_TRAPDOOR);
+					entries.add(ModBlocks.YEW_PRESSURE_PLATE);
+					entries.add(ModBlocks.YEW_BUTTON);
+					entries.add(ModBlocks.YEW_SIGN);
+					entries.add(ModBlocks.YEW_HANGING_SIGN);
 				})
 				.build());
 		/*?} else {*/
@@ -120,6 +137,23 @@ public final class ModItemGroups {
 					entries.accept(ModBlocks.GROWN_BOG_ROSEMARY);
 					entries.accept(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 					entries.accept(ModBlocks.GROWN_BLUEBELL);
+					entries.accept(ModBlocks.YEW_LOG);
+					entries.accept(ModBlocks.YEW_WOOD);
+					entries.accept(ModBlocks.STRIPPED_YEW_LOG);
+					entries.accept(ModBlocks.STRIPPED_YEW_WOOD);
+					entries.accept(ModBlocks.YEW_PLANKS);
+					entries.accept(ModBlocks.YEW_LEAVES);
+					entries.accept(ModBlocks.YEW_SAPLING);
+					entries.accept(ModBlocks.YEW_STAIRS);
+					entries.accept(ModBlocks.YEW_SLAB);
+					entries.accept(ModBlocks.YEW_FENCE);
+					entries.accept(ModBlocks.YEW_FENCE_GATE);
+					entries.accept(ModBlocks.YEW_DOOR);
+					entries.accept(ModBlocks.YEW_TRAPDOOR);
+					entries.accept(ModBlocks.YEW_PRESSURE_PLATE);
+					entries.accept(ModBlocks.YEW_BUTTON);
+					entries.accept(ModBlocks.YEW_SIGN);
+					entries.accept(ModBlocks.YEW_HANGING_SIGN);
 				})
 				.build());*/
 		/*?}*/
@@ -174,6 +208,23 @@ public final class ModItemGroups {
 						entries.add(ModBlocks.GROWN_BOG_ROSEMARY);
 						entries.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 						entries.add(ModBlocks.GROWN_BLUEBELL);
+						entries.add(ModBlocks.YEW_LOG);
+						entries.add(ModBlocks.YEW_WOOD);
+						entries.add(ModBlocks.STRIPPED_YEW_LOG);
+						entries.add(ModBlocks.STRIPPED_YEW_WOOD);
+						entries.add(ModBlocks.YEW_PLANKS);
+						entries.add(ModBlocks.YEW_LEAVES);
+						entries.add(ModBlocks.YEW_SAPLING);
+						entries.add(ModBlocks.YEW_STAIRS);
+						entries.add(ModBlocks.YEW_SLAB);
+						entries.add(ModBlocks.YEW_FENCE);
+						entries.add(ModBlocks.YEW_FENCE_GATE);
+						entries.add(ModBlocks.YEW_DOOR);
+						entries.add(ModBlocks.YEW_TRAPDOOR);
+						entries.add(ModBlocks.YEW_PRESSURE_PLATE);
+						entries.add(ModBlocks.YEW_BUTTON);
+						entries.add(ModBlocks.YEW_SIGN);
+						entries.add(ModBlocks.YEW_HANGING_SIGN);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.getValue(), group);
@@ -197,6 +248,23 @@ public final class ModItemGroups {
 						entries.accept(ModBlocks.GROWN_BOG_ROSEMARY);
 						entries.accept(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 						entries.accept(ModBlocks.GROWN_BLUEBELL);
+						entries.accept(ModBlocks.YEW_LOG);
+						entries.accept(ModBlocks.YEW_WOOD);
+						entries.accept(ModBlocks.STRIPPED_YEW_LOG);
+						entries.accept(ModBlocks.STRIPPED_YEW_WOOD);
+						entries.accept(ModBlocks.YEW_PLANKS);
+						entries.accept(ModBlocks.YEW_LEAVES);
+						entries.accept(ModBlocks.YEW_SAPLING);
+						entries.accept(ModBlocks.YEW_STAIRS);
+						entries.accept(ModBlocks.YEW_SLAB);
+						entries.accept(ModBlocks.YEW_FENCE);
+						entries.accept(ModBlocks.YEW_FENCE_GATE);
+						entries.accept(ModBlocks.YEW_DOOR);
+						entries.accept(ModBlocks.YEW_TRAPDOOR);
+						entries.accept(ModBlocks.YEW_PRESSURE_PLATE);
+						entries.accept(ModBlocks.YEW_BUTTON);
+						entries.accept(ModBlocks.YEW_SIGN);
+						entries.accept(ModBlocks.YEW_HANGING_SIGN);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.identifier(), group);

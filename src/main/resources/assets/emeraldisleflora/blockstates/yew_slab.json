@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "emeraldisleflora:block/yew_slab" },
+    "type=double": { "model": "emeraldisleflora:block/yew_planks" },
+    "type=top": { "model": "emeraldisleflora:block/yew_slab_top" }
+  }
+}
