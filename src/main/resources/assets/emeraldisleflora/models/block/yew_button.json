@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/button",
+  "textures": {
+    "texture": "emeraldisleflora:block/yew_planks"
+  }
+}

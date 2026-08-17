@@ -117,9 +117,9 @@ src/main/resources/            fabric.mod.json, mods.toml/neoforge.mods.toml, la
                                 files are further templated with ${...}/@TOKEN@ tokens
                                 resolved per-target by build.gradle.kts (see its
                                 dependencies{}/processResources blocks).
-src/main/generated/            Checked-in datagen output (worldgen configured/placed
+src/main/generated/yarn/       Checked-in datagen output (worldgen configured/placed
                                 features) for Yarn targets (<26.2).
-src/main/generated-mojmap/     The same, but Mojmap-schema, for 26.2+ - genuinely
+src/main/generated/mojmap/     The same, but Mojmap-schema, for 26.2+ - genuinely
                                 different JSON shape, not just different values (Mojang
                                 restructured worldgen feature configs for 26.2 - see
                                 ModConfiguredFeatures/ModPlacedFeatures). Regenerate via
@@ -127,6 +127,12 @@ src/main/generated-mojmap/     The same, but Mojmap-schema, for 26.2+ - genuinel
                                 the matching side of the split - see CONTRIBUTING.md.
 versions/<target>/             Per-target chiseled output + build directory (generated,
                                 gitignored, never edit here).
+versions/data/<mc-version>/    Checked-in recipe/advancement (and, for two of these
+                                directories, loot-table/tag) JSON, split per format group
+                                rather than per target (1.20.1, 1.21.1, 1.21.11-plus,
+                                1.21.1-plus) since the recipe/advancement/loot-table/tag
+                                schemas each moved at different points across the matrix
+                                - see CONTRIBUTING.md's "Adding/changing recipes" section.
 versions/dependencies/         One <minecraftVersion>.properties per row of the matrix -
                                 Fabric Loader/API version, mapping set (or its absence,
                                 for 26.2+), NeoForge/Forge build. Authoritative source of
@@ -170,7 +176,7 @@ Current package contents:
   blocks like flowers via `BlockRenderLayerMap` - as of 26.1+ this is no longer needed at
   all, vanilla auto-detects cutout from the texture's own transparency, see the class's
   own doc-comment), and `EmeraldIsleFloraDataGenerator` (Fabric-only, drives the checked-
-  in `src/main/generated*` output).
+  in `src/main/generated` output).
 - `net.alternateearth.emeraldisleflora.config` — `ModConfig` (common, a plain
   Gson-backed POJO — add new config fields here) and `ModMenuIntegration` (client-only,
   Fabric + `<26.2` only, see above — builds the Cloth Config screen).
@@ -185,7 +191,7 @@ Current package contents:
   runtime and by `ModWorldGen`'s Fabric biome-injection below).
 - `net.alternateearth.emeraldisleflora.data` — `ModWorldGenerator` (Fabric-only datagen
   provider; serializes `ModConfiguredFeatures`/`ModPlacedFeatures` into the checked-in
-  JSON under `src/main/generated*`).
+  JSON under `src/main/generated`).
 - `net.alternateearth.emeraldisleflora.util` — the bone-meal grow/harvest mechanic,
   split into `ModCommonLogic` (the shared, config-aware grow-or-harvest logic — the
   single source of truth both entry points below call into), `ModBoneMealInteraction`
@@ -331,8 +337,9 @@ or a green `./gradlew build` alone.
   it isn't; use `deployToPrism` instead.
 - Running datagen across multiple **same-mapping-scheme** Fabric targets at once (e.g.
   `chiseledDatagen`, or two Yarn-side `runDatagen` invocations together). They write to
-  the *same* shared `src/main/generated` directory and race on Fabric's own stale-file-
-  cleanup tracking cache — confirmed to actually delete the correct, just-regenerated
+  the *same* shared `src/main/generated/yarn` (or `/mojmap`) directory and race on
+  Fabric's own stale-file-cleanup tracking cache — confirmed to actually delete the
+  correct, just-regenerated
   committed files when run in parallel (`org.gradle.parallel=true` is on for this
   project). Regenerate one target per side of the Yarn/Mojmap split, not the whole
   matrix — see CONTRIBUTING.md.

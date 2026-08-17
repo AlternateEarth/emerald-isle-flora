@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "axis=y": { "model": "emeraldisleflora:block/stripped_yew_wood" },
+    "axis=z": { "model": "emeraldisleflora:block/stripped_yew_wood", "x": 90 },
+    "axis=x": { "model": "emeraldisleflora:block/stripped_yew_wood", "x": 90, "y": 90 }
+  }
+}

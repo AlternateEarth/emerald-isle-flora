@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "decorations",
+  "pattern": [
+    "C C",
+    "###",
+    "###"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:chain"
+    },
+    "#": [
+      {
+        "item": "emeraldisleflora:yew_log"
+      },
+      {
+        "item": "emeraldisleflora:yew_wood"
+      },
+      {
+        "item": "emeraldisleflora:stripped_yew_log"
+      },
+      {
+        "item": "emeraldisleflora:stripped_yew_wood"
+      }
+    ]
+  },
+  "result": {
+    "id": "emeraldisleflora:yew_hanging_sign",
+    "count": 6
+  }
+}

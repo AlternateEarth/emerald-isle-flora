@@ -18,8 +18,9 @@ import net.minecraft.core.registries.Registries;
 
 /**
  * Fabric-only: hooked up via fabric.mod.json's "fabric-datagen" entrypoint. The
- * generated output (src/main/generated) is checked in and shared as plain resources
- * across every loader/version target, so only Fabric needs to be able to regenerate it.
+ * generated output (src/main/generated/yarn or /mojmap, depending on mapping scheme) is
+ * checked in and shared as plain resources across every loader/version target, so only
+ * Fabric needs to be able to regenerate it.
  */
 public class EmeraldIsleFloraDataGenerator implements DataGeneratorEntrypoint {
     @Override

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "#": "emeraldisleflora:yew_planks"
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "id": "emeraldisleflora:yew_pressure_plate"
+  }
+}

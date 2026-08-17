@@ -4,8 +4,8 @@ build/
 out/
 classes/
 bin/
-src/main/generated/.cache
-src/main/generated-mojmap/.cache
+src/main/generated/yarn/.cache
+src/main/generated/mojmap/.cache
 
 # eclipse
 *.launch

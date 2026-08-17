@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building_blocks",
+  "group": "planks",
+  "ingredients": [
+    [
+      {
+        "item": "emeraldisleflora:yew_log"
+      },
+      {
+        "item": "emeraldisleflora:yew_wood"
+      },
+      {
+        "item": "emeraldisleflora:stripped_yew_log"
+      },
+      {
+        "item": "emeraldisleflora:stripped_yew_wood"
+      }
+    ]
+  ],
+  "result": {
+    "id": "emeraldisleflora:yew_planks",
+    "count": 4
+  }
+}

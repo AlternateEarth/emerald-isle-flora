@@ -4,12 +4,16 @@ import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 /*? if <26.2 {*/
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSetType;
 import net.minecraft.block.ComposterBlock;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.FlowerPotBlock;
+import net.minecraft.block.WoodType;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.HangingSignItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.SignItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -23,12 +27,16 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.FlowerBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 */
 /*?}*/
 /*? if forge {*/
@@ -39,6 +47,10 @@ import net.minecraftforge.registries.RegisterEvent;
 /*? if neoforge {*/
 /*import net.neoforged.neoforge.registries.RegisterEvent;
 */
+/*?}*/
+/*? if fabric {*/
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.registry.StrippableBlockRegistry;
 /*?}*/
 
 /*? if <26.2 {*/
@@ -140,6 +152,129 @@ public final class ModBlocks {
             /*?}*/
     );
 
+    //-----------------------------Wood------------------------------
+    public static final Block STRIPPED_YEW_LOG = new ModPillarBlock(AbstractBlock.Settings.copy(STRIPPED_OAK_LOG)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("stripped_yew_log"))*/
+            /*?}*/
+            , 5, 5, null
+    );
+    public static final Block STRIPPED_YEW_WOOD = new ModPillarBlock(AbstractBlock.Settings.copy(STRIPPED_OAK_WOOD)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("stripped_yew_wood"))*/
+            /*?}*/
+            , 5, 5, null
+    );
+    public static final Block YEW_LOG = new ModPillarBlock(AbstractBlock.Settings.copy(OAK_LOG)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_log"))*/
+            /*?}*/
+            , 5, 5, () -> STRIPPED_YEW_LOG
+    );
+    public static final Block YEW_WOOD = new ModPillarBlock(AbstractBlock.Settings.copy(OAK_WOOD)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_wood"))*/
+            /*?}*/
+            , 5, 5, () -> STRIPPED_YEW_WOOD
+    );
+    public static final Block YEW_PLANKS = new ModFlammableBlock(AbstractBlock.Settings.copy(OAK_PLANKS)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_planks"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_LEAVES = new ModLeavesBlock(0.1f, AbstractBlock.Settings.copy(OAK_LEAVES)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_leaves"))*/
+            /*?}*/
+            , 30, 60
+    );
+    public static final Block YEW_SAPLING = new ModSaplingBlock(AbstractBlock.Settings.copy(OAK_SAPLING)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_sapling"))*/
+            /*?}*/
+    );
+    public static final Block YEW_STAIRS = new ModStairsBlock(YEW_PLANKS.getDefaultState(), AbstractBlock.Settings.copy(YEW_PLANKS)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_stairs"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_SLAB = new ModSlabBlock(AbstractBlock.Settings.copy(YEW_PLANKS)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_slab"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_FENCE = new ModFenceBlock(AbstractBlock.Settings.copy(YEW_PLANKS)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_fence"))*/
+            /*?}*/
+            , 5, 20
+    );
+
+    // Shared by the fence gate/door/trapdoor/pressure plate/button/sign below - reuses
+    // vanilla OAK's BlockSetType (interaction sounds only, purely cosmetic) rather than
+    // building a custom one. Properly registered via ModWoodTypes (see its own doc
+    // comment) rather than just constructed, so signs' 3D post model can find its wood
+    // texture too, not just the other blocks' interaction sounds.
+    public static final WoodType YEW_WOOD_TYPE = ModWoodTypes.register("yew");
+
+    public static final Block YEW_FENCE_GATE = new ModFenceGateBlock(YEW_WOOD_TYPE, AbstractBlock.Settings.copy(YEW_PLANKS)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_fence_gate"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_DOOR = new ModDoorBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(OAK_DOOR)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_door"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_TRAPDOOR = new ModTrapdoorBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(OAK_TRAPDOOR)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_trapdoor"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_PRESSURE_PLATE = new ModPressurePlateBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(YEW_PLANKS)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_pressure_plate"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_BUTTON = new ModButtonBlock(BlockSetType.OAK, AbstractBlock.Settings.copy(YEW_PLANKS)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_button"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_SIGN = new ModSignBlock(YEW_WOOD_TYPE, AbstractBlock.Settings.copy(OAK_SIGN)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_sign"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_WALL_SIGN = new ModWallSignBlock(YEW_WOOD_TYPE, AbstractBlock.Settings.copy(YEW_SIGN)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_wall_sign"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_HANGING_SIGN = new ModHangingSignBlock(YEW_WOOD_TYPE, AbstractBlock.Settings.copy(OAK_HANGING_SIGN)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_hanging_sign"))*/
+            /*?}*/
+            , 5, 20
+    );
+    public static final Block YEW_WALL_HANGING_SIGN = new ModWallHangingSignBlock(YEW_WOOD_TYPE, AbstractBlock.Settings.copy(YEW_HANGING_SIGN)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("yew_wall_hanging_sign"))*/
+            /*?}*/
+            , 5, 20
+    );
+
     // Minecraft 1.21.11 added a hard requirement that AbstractBlock.Settings/Item.Settings
     // carry a registryKey() before the Block/Item is constructed at all (NullPointerException:
     // "Block id not set" otherwise) - these two helpers are used by the .registryKey(...)
@@ -200,6 +335,49 @@ public final class ModBlocks {
     public static final Block POTTED_GROWN_BLUEBELL = new FlowerPotBlock(GROWN_BLUEBELL, BlockBehaviour.Properties.ofFullCopy(POTTED_BLUEBELL)
             .setId(blockId("potted_grown_bluebell")));
 
+    //-----------------------------Wood------------------------------
+    public static final Block STRIPPED_YEW_LOG = new ModPillarBlock(BlockBehaviour.Properties.ofFullCopy(STRIPPED_OAK_LOG)
+            .setId(blockId("stripped_yew_log")), 5, 5, null);
+    public static final Block STRIPPED_YEW_WOOD = new ModPillarBlock(BlockBehaviour.Properties.ofFullCopy(STRIPPED_OAK_WOOD)
+            .setId(blockId("stripped_yew_wood")), 5, 5, null);
+    public static final Block YEW_LOG = new ModPillarBlock(BlockBehaviour.Properties.ofFullCopy(OAK_LOG)
+            .setId(blockId("yew_log")), 5, 5, () -> STRIPPED_YEW_LOG);
+    public static final Block YEW_WOOD = new ModPillarBlock(BlockBehaviour.Properties.ofFullCopy(OAK_WOOD)
+            .setId(blockId("yew_wood")), 5, 5, () -> STRIPPED_YEW_WOOD);
+    public static final Block YEW_PLANKS = new ModFlammableBlock(BlockBehaviour.Properties.ofFullCopy(OAK_PLANKS)
+            .setId(blockId("yew_planks")), 5, 20);
+    public static final Block YEW_LEAVES = new ModLeavesBlock(0.1f, BlockBehaviour.Properties.ofFullCopy(OAK_LEAVES)
+            .setId(blockId("yew_leaves")), 30, 60);
+    public static final Block YEW_SAPLING = new ModSaplingBlock(BlockBehaviour.Properties.ofFullCopy(OAK_SAPLING)
+            .setId(blockId("yew_sapling")));
+    public static final Block YEW_STAIRS = new ModStairsBlock(YEW_PLANKS.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(YEW_PLANKS)
+            .setId(blockId("yew_stairs")), 5, 20);
+    public static final Block YEW_SLAB = new ModSlabBlock(BlockBehaviour.Properties.ofFullCopy(YEW_PLANKS)
+            .setId(blockId("yew_slab")), 5, 20);
+    public static final Block YEW_FENCE = new ModFenceBlock(BlockBehaviour.Properties.ofFullCopy(YEW_PLANKS)
+            .setId(blockId("yew_fence")), 5, 20);
+
+    public static final WoodType YEW_WOOD_TYPE = ModWoodTypes.register("yew");
+
+    public static final Block YEW_FENCE_GATE = new ModFenceGateBlock(YEW_WOOD_TYPE, BlockBehaviour.Properties.ofFullCopy(YEW_PLANKS)
+            .setId(blockId("yew_fence_gate")), 5, 20);
+    public static final Block YEW_DOOR = new ModDoorBlock(BlockSetType.OAK, BlockBehaviour.Properties.ofFullCopy(OAK_DOOR)
+            .setId(blockId("yew_door")), 5, 20);
+    public static final Block YEW_TRAPDOOR = new ModTrapdoorBlock(BlockSetType.OAK, BlockBehaviour.Properties.ofFullCopy(OAK_TRAPDOOR)
+            .setId(blockId("yew_trapdoor")), 5, 20);
+    public static final Block YEW_PRESSURE_PLATE = new ModPressurePlateBlock(BlockSetType.OAK, BlockBehaviour.Properties.ofFullCopy(YEW_PLANKS)
+            .setId(blockId("yew_pressure_plate")), 5, 20);
+    public static final Block YEW_BUTTON = new ModButtonBlock(BlockSetType.OAK, BlockBehaviour.Properties.ofFullCopy(YEW_PLANKS)
+            .setId(blockId("yew_button")), 5, 20);
+    public static final Block YEW_SIGN = new ModSignBlock(YEW_WOOD_TYPE, BlockBehaviour.Properties.ofFullCopy(OAK_SIGN)
+            .setId(blockId("yew_sign")), 5, 20);
+    public static final Block YEW_WALL_SIGN = new ModWallSignBlock(YEW_WOOD_TYPE, BlockBehaviour.Properties.ofFullCopy(YEW_SIGN)
+            .setId(blockId("yew_wall_sign")), 5, 20);
+    public static final Block YEW_HANGING_SIGN = new ModHangingSignBlock(YEW_WOOD_TYPE, BlockBehaviour.Properties.ofFullCopy(OAK_HANGING_SIGN)
+            .setId(blockId("yew_hanging_sign")), 5, 20);
+    public static final Block YEW_WALL_HANGING_SIGN = new ModWallHangingSignBlock(YEW_WOOD_TYPE, BlockBehaviour.Properties.ofFullCopy(YEW_HANGING_SIGN)
+            .setId(blockId("yew_wall_hanging_sign")), 5, 20);
+
     // Carried forward from the >=1.21.11 requirement that a Block/Item registry id be
     // set via the Settings/Properties builder before construction (NullPointerException/
     // IllegalStateException otherwise, thrown lazily the first time the id is needed -
@@ -237,6 +415,98 @@ public final class ModBlocks {
         register("grown_bluebell", GROWN_BLUEBELL, true);
         register("potted_bluebell", POTTED_BLUEBELL, false);
         register("potted_grown_bluebell", POTTED_GROWN_BLUEBELL, false);
+
+        register("yew_log", YEW_LOG, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_LOG, 5, 5);
+
+        register("yew_wood", YEW_WOOD, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_WOOD, 5, 5);
+
+        register("stripped_yew_log", STRIPPED_YEW_LOG, true);
+        FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_YEW_LOG, 5, 5);
+        StrippableBlockRegistry.register(YEW_LOG, STRIPPED_YEW_LOG);
+
+        register("stripped_yew_wood", STRIPPED_YEW_WOOD, true);
+        FlammableBlockRegistry.getDefaultInstance().add(STRIPPED_YEW_WOOD, 5, 5);
+        StrippableBlockRegistry.register(YEW_WOOD, STRIPPED_YEW_WOOD);
+
+        register("yew_planks", YEW_PLANKS, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_PLANKS, 5, 20);
+
+        register("yew_leaves", YEW_LEAVES, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_LEAVES, 30, 60);
+
+        register("yew_sapling", YEW_SAPLING, true);
+
+        register("yew_stairs", YEW_STAIRS, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_STAIRS, 5, 20);
+
+        register("yew_slab", YEW_SLAB, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_SLAB, 5, 20);
+
+        register("yew_fence", YEW_FENCE, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_FENCE, 5, 20);
+
+        register("yew_fence_gate", YEW_FENCE_GATE, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_FENCE_GATE, 5, 20);
+
+        register("yew_door", YEW_DOOR, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_DOOR, 5, 20);
+
+        register("yew_trapdoor", YEW_TRAPDOOR, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_TRAPDOOR, 5, 20);
+
+        register("yew_pressure_plate", YEW_PRESSURE_PLATE, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_PRESSURE_PLATE, 5, 20);
+
+        register("yew_button", YEW_BUTTON, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_BUTTON, 5, 20);
+
+        // Signs share one item between the standing and wall variants (SignItem knows
+        // both blocks and picks the right one to place based on where you're aiming), so
+        // both blocks are registered with includeItem=false and the SignItem is
+        // registered by hand under the standing sign's own identifier - not the usual
+        // register(name, block, true) helper shape every other block here uses.
+        register("yew_sign", YEW_SIGN, false);
+        register("yew_wall_sign", YEW_WALL_SIGN, false);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_SIGN, 5, 20);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_WALL_SIGN, 5, 20);
+        /*? if <26.2 {*/
+        Registry.register(Registries.ITEM, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(
+                /*? if <1.21.11 {*/
+                new Item.Settings(), YEW_SIGN, YEW_WALL_SIGN
+                /*?} else {*/
+                /*YEW_SIGN, YEW_WALL_SIGN, new Item.Settings().registryKey(itemId("yew_sign")).useBlockPrefixedTranslationKey()*/
+                /*?}*/
+        ));
+        /*?} else {*/
+        /*Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(
+                YEW_SIGN, YEW_WALL_SIGN, new Item.Properties().setId(itemId("yew_sign")).useBlockDescriptionPrefix()
+        ));*/
+        /*?}*/
+
+        // Hanging signs share one item between the standing and wall variants too, via a
+        // dedicated HangingSignItem (not SignItem) - see ModHangingSignBlock's doc
+        // comment. Unlike SignItem, HangingSignItem's Properties argument is last on
+        // every target (confirmed via javap - no <1.21.11/>=1.21.11 flip here).
+        register("yew_hanging_sign", YEW_HANGING_SIGN, false);
+        register("yew_wall_hanging_sign", YEW_WALL_HANGING_SIGN, false);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_HANGING_SIGN, 5, 20);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_WALL_HANGING_SIGN, 5, 20);
+        /*? if <26.2 {*/
+        Registry.register(Registries.ITEM, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(
+                YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN,
+                /*? if <1.21.11 {*/
+                new Item.Settings()
+                /*?} else {*/
+                /*new Item.Settings().registryKey(itemId("yew_hanging_sign")).useBlockPrefixedTranslationKey()*/
+                /*?}*/
+        ));
+        /*?} else {*/
+        /*Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(
+                YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Properties().setId(itemId("yew_hanging_sign")).useBlockDescriptionPrefix()
+        ));*/
+        /*?}*/
 
         registerComposting();
 
@@ -308,6 +578,26 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), GROWN_BLUEBELL);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bluebell"), POTTED_BLUEBELL);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bluebell"), POTTED_GROWN_BLUEBELL);
+
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_log"), YEW_LOG);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wood"), YEW_WOOD);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_log"), STRIPPED_YEW_LOG);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_wood"), STRIPPED_YEW_WOOD);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), YEW_PLANKS);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), YEW_LEAVES);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), YEW_SAPLING);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), YEW_STAIRS);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), YEW_SLAB);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), YEW_FENCE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence_gate"), YEW_FENCE_GATE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_door"), YEW_DOOR);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), YEW_TRAPDOOR);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), YEW_PRESSURE_PLATE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_button"), YEW_BUTTON);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wall_sign"), YEW_WALL_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wall_hanging_sign"), YEW_WALL_HANGING_SIGN);
         });
 
         event.register(ForgeRegistries.Keys.ITEMS, helper -> {
@@ -319,6 +609,27 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_log"), new BlockItem(YEW_LOG, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wood"), new BlockItem(YEW_WOOD, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_log"), new BlockItem(STRIPPED_YEW_LOG, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_wood"), new BlockItem(STRIPPED_YEW_WOOD, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), new BlockItem(YEW_PLANKS, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), new BlockItem(YEW_LEAVES, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), new BlockItem(YEW_SAPLING, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), new BlockItem(YEW_STAIRS, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), new BlockItem(YEW_SLAB, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), new BlockItem(YEW_FENCE, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence_gate"), new BlockItem(YEW_FENCE_GATE, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_door"), new BlockItem(YEW_DOOR, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), new BlockItem(YEW_TRAPDOOR, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), new BlockItem(YEW_PRESSURE_PLATE, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_button"), new BlockItem(YEW_BUTTON, new Item.Settings()));
+            // Shared between the standing and wall sign, registered under the standing
+            // sign's own identifier - see the matching comment on the Fabric path.
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(new Item.Settings(), YEW_SIGN, YEW_WALL_SIGN));
+            // Same sharing pattern for the hanging sign, via HangingSignItem instead of
+            // SignItem - see ModHangingSignBlock's doc comment.
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Settings()));
 
             // registerComposting() must run in here, not after both event.register(...)
             // calls at the outer method level - see the long comment on registerComposting()
@@ -374,6 +685,26 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), GROWN_BLUEBELL);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bluebell"), POTTED_BLUEBELL);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bluebell"), POTTED_GROWN_BLUEBELL);
+
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_log"), YEW_LOG);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wood"), YEW_WOOD);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_log"), STRIPPED_YEW_LOG);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_wood"), STRIPPED_YEW_WOOD);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), YEW_PLANKS);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), YEW_LEAVES);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), YEW_SAPLING);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), YEW_STAIRS);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), YEW_SLAB);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), YEW_FENCE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence_gate"), YEW_FENCE_GATE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_door"), YEW_DOOR);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), YEW_TRAPDOOR);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), YEW_PRESSURE_PLATE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_button"), YEW_BUTTON);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wall_sign"), YEW_WALL_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wall_hanging_sign"), YEW_WALL_HANGING_SIGN);
         });
 
         event.register(RegistryKeys.ITEM, helper -> {
@@ -385,6 +716,23 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_log"), new BlockItem(YEW_LOG, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wood"), new BlockItem(YEW_WOOD, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_log"), new BlockItem(STRIPPED_YEW_LOG, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_wood"), new BlockItem(STRIPPED_YEW_WOOD, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), new BlockItem(YEW_PLANKS, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), new BlockItem(YEW_LEAVES, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), new BlockItem(YEW_SAPLING, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), new BlockItem(YEW_STAIRS, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), new BlockItem(YEW_SLAB, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), new BlockItem(YEW_FENCE, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence_gate"), new BlockItem(YEW_FENCE_GATE, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_door"), new BlockItem(YEW_DOOR, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), new BlockItem(YEW_TRAPDOOR, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), new BlockItem(YEW_PRESSURE_PLATE, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_button"), new BlockItem(YEW_BUTTON, new Item.Settings()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(new Item.Settings(), YEW_SIGN, YEW_WALL_SIGN));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Settings()));
 
             // Must run in here, not after both event.register(...) calls at the outer
             // method level - see the comment on registerComposting() itself.
@@ -418,6 +766,26 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), GROWN_BLUEBELL);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_bluebell"), POTTED_BLUEBELL);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_grown_bluebell"), POTTED_GROWN_BLUEBELL);
+
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_log"), YEW_LOG);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wood"), YEW_WOOD);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_log"), STRIPPED_YEW_LOG);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_wood"), STRIPPED_YEW_WOOD);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), YEW_PLANKS);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), YEW_LEAVES);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), YEW_SAPLING);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), YEW_STAIRS);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), YEW_SLAB);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), YEW_FENCE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence_gate"), YEW_FENCE_GATE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_door"), YEW_DOOR);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), YEW_TRAPDOOR);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), YEW_PRESSURE_PLATE);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_button"), YEW_BUTTON);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wall_sign"), YEW_WALL_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wall_hanging_sign"), YEW_WALL_HANGING_SIGN);
         });
 
         event.register(RegistryKeys.ITEM, helper -> {
@@ -429,6 +797,23 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Settings().registryKey(itemId("grown_bulbous_buttercup")).useBlockPrefixedTranslationKey()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Settings().registryKey(itemId("bluebell")).useBlockPrefixedTranslationKey()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Settings().registryKey(itemId("grown_bluebell")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_log"), new BlockItem(YEW_LOG, new Item.Settings().registryKey(itemId("yew_log")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wood"), new BlockItem(YEW_WOOD, new Item.Settings().registryKey(itemId("yew_wood")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_log"), new BlockItem(STRIPPED_YEW_LOG, new Item.Settings().registryKey(itemId("stripped_yew_log")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "stripped_yew_wood"), new BlockItem(STRIPPED_YEW_WOOD, new Item.Settings().registryKey(itemId("stripped_yew_wood")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), new BlockItem(YEW_PLANKS, new Item.Settings().registryKey(itemId("yew_planks")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), new BlockItem(YEW_LEAVES, new Item.Settings().registryKey(itemId("yew_leaves")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), new BlockItem(YEW_SAPLING, new Item.Settings().registryKey(itemId("yew_sapling")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), new BlockItem(YEW_STAIRS, new Item.Settings().registryKey(itemId("yew_stairs")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), new BlockItem(YEW_SLAB, new Item.Settings().registryKey(itemId("yew_slab")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), new BlockItem(YEW_FENCE, new Item.Settings().registryKey(itemId("yew_fence")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence_gate"), new BlockItem(YEW_FENCE_GATE, new Item.Settings().registryKey(itemId("yew_fence_gate")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_door"), new BlockItem(YEW_DOOR, new Item.Settings().registryKey(itemId("yew_door")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), new BlockItem(YEW_TRAPDOOR, new Item.Settings().registryKey(itemId("yew_trapdoor")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), new BlockItem(YEW_PRESSURE_PLATE, new Item.Settings().registryKey(itemId("yew_pressure_plate")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_button"), new BlockItem(YEW_BUTTON, new Item.Settings().registryKey(itemId("yew_button")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(YEW_SIGN, YEW_WALL_SIGN, new Item.Settings().registryKey(itemId("yew_sign")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Settings().registryKey(itemId("yew_hanging_sign")).useBlockPrefixedTranslationKey()));
 
             // Must run in here, not after both event.register(...) calls at the outer
             // method level - see the comment on registerComposting() itself.
@@ -466,6 +851,26 @@ public final class ModBlocks {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), GROWN_BLUEBELL);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "potted_bluebell"), POTTED_BLUEBELL);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "potted_grown_bluebell"), POTTED_GROWN_BLUEBELL);
+
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_log"), YEW_LOG);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_wood"), YEW_WOOD);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "stripped_yew_log"), STRIPPED_YEW_LOG);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "stripped_yew_wood"), STRIPPED_YEW_WOOD);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_planks"), YEW_PLANKS);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_leaves"), YEW_LEAVES);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sapling"), YEW_SAPLING);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_stairs"), YEW_STAIRS);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_slab"), YEW_SLAB);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_fence"), YEW_FENCE);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_fence_gate"), YEW_FENCE_GATE);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_door"), YEW_DOOR);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), YEW_TRAPDOOR);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), YEW_PRESSURE_PLATE);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_button"), YEW_BUTTON);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_wall_sign"), YEW_WALL_SIGN);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_wall_hanging_sign"), YEW_WALL_HANGING_SIGN);
         });
 
         event.register(Registries.ITEM, helper -> {
@@ -477,6 +882,23 @@ public final class ModBlocks {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), new BlockItem(GROWN_BULBOUS_BUTTERCUP, new Item.Properties().setId(itemId("grown_bulbous_buttercup")).useBlockDescriptionPrefix()));
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bluebell"), new BlockItem(BLUEBELL, new Item.Properties().setId(itemId("bluebell")).useBlockDescriptionPrefix()));
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), new BlockItem(GROWN_BLUEBELL, new Item.Properties().setId(itemId("grown_bluebell")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_log"), new BlockItem(YEW_LOG, new Item.Properties().setId(itemId("yew_log")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_wood"), new BlockItem(YEW_WOOD, new Item.Properties().setId(itemId("yew_wood")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "stripped_yew_log"), new BlockItem(STRIPPED_YEW_LOG, new Item.Properties().setId(itemId("stripped_yew_log")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "stripped_yew_wood"), new BlockItem(STRIPPED_YEW_WOOD, new Item.Properties().setId(itemId("stripped_yew_wood")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_planks"), new BlockItem(YEW_PLANKS, new Item.Properties().setId(itemId("yew_planks")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_leaves"), new BlockItem(YEW_LEAVES, new Item.Properties().setId(itemId("yew_leaves")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sapling"), new BlockItem(YEW_SAPLING, new Item.Properties().setId(itemId("yew_sapling")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_stairs"), new BlockItem(YEW_STAIRS, new Item.Properties().setId(itemId("yew_stairs")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_slab"), new BlockItem(YEW_SLAB, new Item.Properties().setId(itemId("yew_slab")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_fence"), new BlockItem(YEW_FENCE, new Item.Properties().setId(itemId("yew_fence")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_fence_gate"), new BlockItem(YEW_FENCE_GATE, new Item.Properties().setId(itemId("yew_fence_gate")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_door"), new BlockItem(YEW_DOOR, new Item.Properties().setId(itemId("yew_door")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), new BlockItem(YEW_TRAPDOOR, new Item.Properties().setId(itemId("yew_trapdoor")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), new BlockItem(YEW_PRESSURE_PLATE, new Item.Properties().setId(itemId("yew_pressure_plate")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_button"), new BlockItem(YEW_BUTTON, new Item.Properties().setId(itemId("yew_button")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(YEW_SIGN, YEW_WALL_SIGN, new Item.Properties().setId(itemId("yew_sign")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Properties().setId(itemId("yew_hanging_sign")).useBlockDescriptionPrefix()));
 
             // Must run in here, not after both event.register(...) calls at the outer
             // method level - see the comment on registerComposting() itself.

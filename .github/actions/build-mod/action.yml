@@ -31,8 +31,8 @@ runs:
     - name: Verify generated worldgen data is up to date
       # Regenerates each checked-in worldgen-JSON tree from one representative Fabric
       # target on its own side of the Yarn/Mojmap split (see build.gradle.kts'
-      # modSettings.generatedResources comment) - src/main/generated from a Yarn target,
-      # src/main/generated-mojmap from a Mojmap-only (26.2+) one. Deliberately NOT
+      # modSettings.generatedResources comment) - src/main/generated/yarn from a Yarn
+      # target, src/main/generated/mojmap from a Mojmap-only (26.2+) one. Deliberately NOT
       # `chiseledDatagen` (every target at once): that runs multiple same-schema Fabric
       # targets' datagen in parallel against the *same* shared output directory, and their
       # independent Fabric-side stale-file-cleanup passes race on the same tracking cache
@@ -48,23 +48,24 @@ runs:
 
         # Recipe/advancement JSON (ModRecipeProvider) also comes out of these same two
         # runs, but can't be git-diffed in place like worldgen's - each format group
-        # lives in its own permanently-separate directory (see CONTRIBUTING.md's
-        # "Adding/changing recipes" section for why), not src/main/generated(-mojmap)
-        # itself. Compare each run's fresh output against its committed copy, then
-        # remove the fresh copy so it doesn't pollute the worldgen git diff below.
-        diff -r src/main/generated/data/emeraldisleflora/recipes src/main/generated-recipes-1.20.1/data/emeraldisleflora/recipes && \
-        diff -r src/main/generated/data/emeraldisleflora/advancements src/main/generated-recipes-1.20.1/data/emeraldisleflora/advancements || (
-          echo "::error::Generated recipe data doesn't match what's committed in src/main/generated-recipes-1.20.1. See CONTRIBUTING.md's 'Adding/changing recipes' section and commit the result." && exit 1
+        # lives in its own permanently-separate directory under versions/data/ (see
+        # CONTRIBUTING.md's "Adding/changing recipes" section for why), not
+        # src/main/generated/{yarn,mojmap} itself. Compare each run's fresh output
+        # against its committed copy, then remove the fresh copy so it doesn't pollute
+        # the worldgen git diff below.
+        diff -r src/main/generated/yarn/data/emeraldisleflora/recipes versions/data/1.20.1/src/main/resources/data/emeraldisleflora/recipes && \
+        diff -r src/main/generated/yarn/data/emeraldisleflora/advancements versions/data/1.20.1/src/main/resources/data/emeraldisleflora/advancements || (
+          echo "::error::Generated recipe data doesn't match what's committed in versions/data/1.20.1. See CONTRIBUTING.md's 'Adding/changing recipes' section and commit the result." && exit 1
         )
-        rm -rf src/main/generated/data/emeraldisleflora/recipes src/main/generated/data/emeraldisleflora/advancements
+        rm -rf src/main/generated/yarn/data/emeraldisleflora/recipes src/main/generated/yarn/data/emeraldisleflora/advancements
 
-        diff -r src/main/generated-mojmap/data/emeraldisleflora/recipe src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora/recipe && \
-        diff -r src/main/generated-mojmap/data/emeraldisleflora/advancement src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora/advancement || (
-          echo "::error::Generated recipe data doesn't match what's committed in src/main/generated-recipes-1.21.11-plus. See CONTRIBUTING.md's 'Adding/changing recipes' section and commit the result." && exit 1
+        diff -r src/main/generated/mojmap/data/emeraldisleflora/recipe versions/data/1.21.11-plus/src/main/resources/data/emeraldisleflora/recipe && \
+        diff -r src/main/generated/mojmap/data/emeraldisleflora/advancement versions/data/1.21.11-plus/src/main/resources/data/emeraldisleflora/advancement || (
+          echo "::error::Generated recipe data doesn't match what's committed in versions/data/1.21.11-plus. See CONTRIBUTING.md's 'Adding/changing recipes' section and commit the result." && exit 1
         )
-        rm -rf src/main/generated-mojmap/data/emeraldisleflora/recipe src/main/generated-mojmap/data/emeraldisleflora/advancement
+        rm -rf src/main/generated/mojmap/data/emeraldisleflora/recipe src/main/generated/mojmap/data/emeraldisleflora/advancement
 
-        git diff --exit-code -- src/main/generated src/main/generated-mojmap || (
+        git diff --exit-code -- src/main/generated || (
           echo "::error::Generated worldgen data doesn't match what's committed. Run './gradlew :1.20.1-fabric:runDatagen :26.2-fabric:runDatagen' locally and commit the result." && exit 1
         )
 

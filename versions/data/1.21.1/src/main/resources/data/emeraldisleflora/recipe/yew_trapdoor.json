@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "emeraldisleflora:yew_planks"
+    }
+  },
+  "result": {
+    "id": "emeraldisleflora:yew_trapdoor",
+    "count": 2
+  }
+}

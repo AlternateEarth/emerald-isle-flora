@@ -116,8 +116,8 @@ same pattern:
    separate commands:
 
    ```bash
-   ./gradlew :1.20.1-fabric:runDatagen   # -> src/main/generated (any Yarn target works)
-   ./gradlew :26.2-fabric:runDatagen     # -> src/main/generated-mojmap
+   ./gradlew :1.20.1-fabric:runDatagen   # -> src/main/generated/yarn (any Yarn target works)
+   ./gradlew :26.2-fabric:runDatagen     # -> src/main/generated/mojmap
    ```
 
    **Don't** run `chiseledDatagen` (every target at once) or two same-side Fabric
@@ -126,8 +126,8 @@ same pattern:
    deleted correct, already-committed files when this was tried. One command per side,
    run sequentially, is both sufficient (the JSON only depends on which side of the
    Yarn/Mojmap split ran, not the exact game version within a side) and safe.
-4. `git diff -- src/main/generated src/main/generated-mojmap` after regenerating — if
-   it's non-empty, commit the diff alongside your Java changes. CI checks this (see
+4. `git diff -- src/main/generated` after regenerating — if it's non-empty, commit the
+   diff alongside your Java changes. CI checks this (see
    `.github/actions/build-mod/action.yml`'s `verify-datagen` step) and will fail the
    build if they've drifted apart.
 
@@ -164,26 +164,25 @@ as normal and then relocating just the recipe output out into its own directory:
 
 ```bash
 ./gradlew :1.20.1-fabric:runDatagen
-rm -rf src/main/generated-recipes-1.20.1/data/emeraldisleflora/{recipes,advancements}
-mkdir -p src/main/generated-recipes-1.20.1/data/emeraldisleflora
-mv src/main/generated/data/emeraldisleflora/recipes src/main/generated-recipes-1.20.1/data/emeraldisleflora/recipes
-mv src/main/generated/data/emeraldisleflora/advancements src/main/generated-recipes-1.20.1/data/emeraldisleflora/advancements
+rm -rf versions/data/1.20.1/src/main/resources/data/emeraldisleflora/{recipes,advancements}
+mkdir -p versions/data/1.20.1/src/main/resources/data/emeraldisleflora
+mv src/main/generated/yarn/data/emeraldisleflora/recipes versions/data/1.20.1/src/main/resources/data/emeraldisleflora/recipes
+mv src/main/generated/yarn/data/emeraldisleflora/advancements versions/data/1.20.1/src/main/resources/data/emeraldisleflora/advancements
 
 ./gradlew :26.2-fabric:runDatagen
-rm -rf src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora/{recipe,advancement}
-mkdir -p src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora
-mv src/main/generated-mojmap/data/emeraldisleflora/recipe src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora/recipe
-mv src/main/generated-mojmap/data/emeraldisleflora/advancement src/main/generated-recipes-1.21.11-plus/data/emeraldisleflora/advancement
+rm -rf versions/data/1.21.11-plus/src/main/resources/data/emeraldisleflora/{recipe,advancement}
+mkdir -p versions/data/1.21.11-plus/src/main/resources/data/emeraldisleflora
+mv src/main/generated/mojmap/data/emeraldisleflora/recipe versions/data/1.21.11-plus/src/main/resources/data/emeraldisleflora/recipe
+mv src/main/generated/mojmap/data/emeraldisleflora/advancement versions/data/1.21.11-plus/src/main/resources/data/emeraldisleflora/advancement
 ```
 
-`src/main/generated`/`-mojmap` should end up containing only `data/emeraldisleflora/worldgen`
-afterward - if `recipes`/`recipe`/etc. are still sitting there, a move step above didn't
-run (or ran against the wrong directory) and needs to be redone before committing, or
-you'll end up committing the same directory's worldgen output twice pointlessly
-(harmless, but a sign the step was skipped). `git diff -- src/main/generated
-src/main/generated-mojmap src/main/generated-recipes-1.20.1
-src/main/generated-recipes-1.21.11-plus` after regenerating — commit the diff alongside
-your Java changes.
+`src/main/generated/yarn`/`mojmap` should end up containing only
+`data/emeraldisleflora/worldgen` afterward - if `recipes`/`recipe`/etc. are still sitting
+there, a move step above didn't run (or ran against the wrong directory) and needs to be
+redone before committing, or you'll end up committing the same directory's worldgen
+output twice pointlessly (harmless, but a sign the step was skipped). `git diff --
+src/main/generated versions/data/1.20.1 versions/data/1.21.11-plus` after regenerating —
+commit the diff alongside your Java changes.
 
 **1.21.1/1.21.11-fabric's `runDatagen` crashes** on a real, reproduced-on-two-
 independent-machines Fabric API bug, not a sandbox artifact - confirmed via the full
@@ -194,8 +193,8 @@ confirmed to affect real installs. No newer Fabric API release exists for 1.21.1
 instead (`0.116.15+1.21.1` is already latest); 1.21.11 hits the same class of bug.
 
 For those two, this was worked around by hand-deriving their directories
-(`src/main/generated-recipes-1.21.1`, and the `>=1.21.11` half of
-`src/main/generated-recipes-1.21.11-plus`) directly from a real, verified run's output
+(`versions/data/1.21.1`, and the `>=1.21.11` half of
+`versions/data/1.21.11-plus`) directly from a real, verified run's output
 (1.20.1's for 1.21.1; 26.2's for 1.21.11, since their schemas are identical - confirmed,
 not assumed) — not by guessing the format, since every change applied was already
 independently confirmed against the real target codecs before `ModRecipeProvider` was

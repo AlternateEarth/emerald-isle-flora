@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/door_top_left",
+  "textures": {
+    "bottom": "emeraldisleflora:block/yew_door_bottom",
+    "top": "emeraldisleflora:block/yew_door_top"
+  },
+  "render_type": "cutout"
+}
