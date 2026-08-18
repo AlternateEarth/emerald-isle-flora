@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -61,22 +62,16 @@ public final class ModItemGroups {
 			Registries.CREATIVE_MODE_TAB, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "emerald_isle_flora"));*/
 	/*?}*/
 
-	// 26.2: vanilla's own CreativeModeTabs.NATURAL_BLOCKS field is private - this
-	// reconstructs the same ResourceKey by hand (ResourceKey instances are interned by
-	// registry+id, so this is the same key vanilla itself uses internally, just built
-	// from outside the class instead of read off its private field).
-	/*? if >=26.2 {*/
-	/*private static final ResourceKey<CreativeModeTab> NATURAL_BLOCKS = ResourceKey.create(
-			Registries.CREATIVE_MODE_TAB, Identifier.withDefaultNamespace("natural_blocks"));*/
-	/*?}*/
-
 	/** Fabric-only: registers directly. Forge instead uses {@link #onRegisterCreativeTab} / {@link #onBuildCreativeTabContents}. */
 	public static void register() {
 		/*? if fabric {*/
 		EmeraldIsleFlora.LOGGER.info("Registering Item Groups for " + EmeraldIsleFlora.MOD_ID);
 
 		registerToCustomGroup();
+		registerToBuildingBlocks();
 		registerToNaturalBlocks();
+		registerToFunctionalBlocks();
+		registerToFoodAndDrinkBlocks();
 
 		EmeraldIsleFlora.LOGGER.info("Finished registering Item Groups for " + EmeraldIsleFlora.MOD_ID);
 		/*?}*/
@@ -108,6 +103,9 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.STRIPPED_YEW_WOOD);
 					entries.add(ModBlocks.YEW_PLANKS);
 					entries.add(ModBlocks.YEW_LEAVES);
+					/*? if <1.21 {*/
+					entries.add(ModItems.YEW_BERRY);
+					/*?}*/
 					entries.add(ModBlocks.YEW_SAPLING);
 					entries.add(ModBlocks.YEW_STAIRS);
 					entries.add(ModBlocks.YEW_SLAB);
@@ -161,6 +159,47 @@ public final class ModItemGroups {
 		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Custom Group for " + EmeraldIsleFlora.MOD_ID);
 	}
 
+	private static void registerToBuildingBlocks() {
+		EmeraldIsleFlora.LOGGER.info("Registering Items in Building Blocks Item Group for " + EmeraldIsleFlora.MOD_ID);
+
+		/*? if <26.2 {*/
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(content -> {
+			content.addAfter(Blocks.WARPED_BUTTON, ModBlocks.YEW_LOG);
+			content.addAfter(ModBlocks.YEW_LOG, ModBlocks.YEW_WOOD);
+			content.addAfter(ModBlocks.YEW_WOOD, ModBlocks.STRIPPED_YEW_LOG);
+			content.addAfter(ModBlocks.STRIPPED_YEW_LOG, ModBlocks.STRIPPED_YEW_WOOD);
+			content.addAfter(ModBlocks.STRIPPED_YEW_WOOD, ModBlocks.YEW_PLANKS);
+			content.addAfter(ModBlocks.YEW_PLANKS, ModBlocks.YEW_STAIRS);
+			content.addAfter(ModBlocks.YEW_STAIRS, ModBlocks.YEW_SLAB);
+			content.addAfter(ModBlocks.YEW_SLAB, ModBlocks.YEW_FENCE);
+			content.addAfter(ModBlocks.YEW_FENCE, ModBlocks.YEW_FENCE_GATE);
+			content.addAfter(ModBlocks.YEW_FENCE_GATE, ModBlocks.YEW_DOOR);
+			content.addAfter(ModBlocks.YEW_DOOR, ModBlocks.YEW_TRAPDOOR);
+			content.addAfter(ModBlocks.YEW_TRAPDOOR, ModBlocks.YEW_PRESSURE_PLATE);
+			content.addAfter(ModBlocks.YEW_PRESSURE_PLATE, ModBlocks.YEW_BUTTON);
+
+		});
+		/*?} else {*/
+		/*CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register(content -> {
+			content.insertAfter(Blocks.WARPED_BUTTON, ModBlocks.YEW_PLANKS);
+			content.insertAfter(ModBlocks.YEW_LOG, ModBlocks.YEW_WOOD);
+			content.insertAfter(ModBlocks.YEW_WOOD, ModBlocks.STRIPPED_YEW_LOG);
+			content.insertAfter(ModBlocks.STRIPPED_YEW_LOG, ModBlocks.STRIPPED_YEW_WOOD);
+			content.insertAfter(ModBlocks.STRIPPED_YEW_WOOD, ModBlocks.YEW_PLANKS);
+			content.insertAfter(ModBlocks.YEW_PLANKS, ModBlocks.YEW_STAIRS);
+			content.insertAfter(ModBlocks.YEW_STAIRS, ModBlocks.YEW_SLAB);
+			content.insertAfter(ModBlocks.YEW_SLAB, ModBlocks.YEW_FENCE);
+			content.insertAfter(ModBlocks.YEW_FENCE, ModBlocks.YEW_FENCE_GATE);
+			content.insertAfter(ModBlocks.YEW_FENCE_GATE, ModBlocks.YEW_DOOR);
+			content.insertAfter(ModBlocks.YEW_DOOR, ModBlocks.YEW_TRAPDOOR);
+			content.insertAfter(ModBlocks.YEW_TRAPDOOR, ModBlocks.YEW_PRESSURE_PLATE);
+			content.insertAfter(ModBlocks.YEW_PRESSURE_PLATE, ModBlocks.YEW_BUTTON);
+		});*/
+		/*?}*/
+
+		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Building Blocks Item Group for " + EmeraldIsleFlora.MOD_ID);
+	}
+
 	private static void registerToNaturalBlocks() {
 		EmeraldIsleFlora.LOGGER.info("Registering Items in Natural Blocks Item Group for " + EmeraldIsleFlora.MOD_ID);
 
@@ -174,9 +213,12 @@ public final class ModItemGroups {
 			content.addAfter(ModBlocks.GROWN_BOG_ROSEMARY, ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 			content.addAfter(ModBlocks.GROWN_BULBOUS_BUTTERCUP, ModBlocks.BLUEBELL);
 			content.addAfter(ModBlocks.BLUEBELL, ModBlocks.GROWN_BLUEBELL);
+			content.addAfter(Blocks.WARPED_STEM, ModBlocks.YEW_LOG);
+			content.addAfter(Blocks.FLOWERING_AZALEA_LEAVES, ModBlocks.YEW_LEAVES);
+			content.addAfter(Blocks.FLOWERING_AZALEA, ModBlocks.YEW_SAPLING);
 		});
 		/*?} else {*/
-		/*CreativeModeTabEvents.modifyOutputEvent(NATURAL_BLOCKS).register(content -> {
+		/*CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.NATURAL_BLOCKS).register(content -> {
 			content.insertAfter(Blocks.WITHER_ROSE, ModBlocks.BELLS_OF_IRELAND);
 			content.insertAfter(ModBlocks.BELLS_OF_IRELAND, ModBlocks.BOG_ROSEMARY);
 			content.insertAfter(ModBlocks.BOG_ROSEMARY, ModBlocks.BULBOUS_BUTTERCUP);
@@ -185,10 +227,47 @@ public final class ModItemGroups {
 			content.insertAfter(ModBlocks.GROWN_BOG_ROSEMARY, ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 			content.insertAfter(ModBlocks.GROWN_BULBOUS_BUTTERCUP, ModBlocks.BLUEBELL);
 			content.insertAfter(ModBlocks.BLUEBELL, ModBlocks.GROWN_BLUEBELL);
+			content.insertAfter(Blocks.WARPED_STEM, ModBlocks.YEW_LOG);
+			content.insertAfter(Blocks.FLOWERING_AZALEA_LEAVES, ModBlocks.YEW_LEAVES);
+			content.insertAfter(Blocks.FLOWERING_AZALEA, ModBlocks.YEW_SAPLING);
 		});*/
 		/*?}*/
 
 		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Natural Blocks Item Group for " + EmeraldIsleFlora.MOD_ID);
+	}
+	
+	private static void registerToFunctionalBlocks() {
+		EmeraldIsleFlora.LOGGER.info("Registering Items in Functional Blocks Item Group for " + EmeraldIsleFlora.MOD_ID);
+
+		/*? if <26.2 {*/
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(content -> {
+			content.addAfter(Blocks.WARPED_HANGING_SIGN, ModBlocks.YEW_SIGN);
+			content.addAfter(ModBlocks.YEW_SIGN, ModBlocks.YEW_HANGING_SIGN);
+		});
+		/*?} else {*/
+		/*CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FUNCTIONAL_BLOCKS).register(content -> {
+			content.insertAfter(Blocks.WARPED_HANGING_SIGN, ModBlocks.YEW_SIGN);
+			content.insertAfter(ModBlocks.YEW_SIGN, ModBlocks.YEW_HANGING_SIGN);
+		});*/
+		/*?}*/
+
+		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Functional Blocks Item Group for " + EmeraldIsleFlora.MOD_ID);
+	}
+
+	private static void registerToFoodAndDrinkBlocks() {
+		EmeraldIsleFlora.LOGGER.info("Registering Items in Food and Drink Item Group for " + EmeraldIsleFlora.MOD_ID);
+
+		/*? if <26.2 {*/
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(content -> {
+			content.addAfter(Items.BEETROOT, ModItems.YEW_BERRY);
+		});
+		/*?} else {*/
+		/*CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(content -> {
+			content.insertAfter(Items.BEETROOT, ModItems.YEW_BERRY);
+		});*/
+		/*?}*/
+
+		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Food and Drink Item Group for " + EmeraldIsleFlora.MOD_ID);
 	}
 	/*?}*/
 

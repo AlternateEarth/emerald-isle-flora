@@ -41,6 +41,8 @@
 	"block.emeraldisleflora.yew_sign": "Yew Sign",
 	"block.emeraldisleflora.yew_hanging_sign": "Yew Hanging Sign",
 
+	"item.emeraldisleflora.yew_berry": "Yew Berries",
+
 	"config.emeraldisleflora.title": "Emerald Isle Flora Configuration",
 	"config.emeraldisleflora.category.general": "General",
 	"config.emeraldisleflora.enableGrownFlowering": "Enable Flowers Growing",
