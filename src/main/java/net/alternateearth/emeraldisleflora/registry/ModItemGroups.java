@@ -31,7 +31,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 */
 /*?}*/
 /*? if forge {*/
@@ -103,9 +105,7 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.STRIPPED_YEW_WOOD);
 					entries.add(ModBlocks.YEW_PLANKS);
 					entries.add(ModBlocks.YEW_LEAVES);
-					/*? if <1.21 {*/
 					entries.add(ModItems.YEW_BERRY);
-					/*?}*/
 					entries.add(ModBlocks.YEW_SAPLING);
 					entries.add(ModBlocks.YEW_STAIRS);
 					entries.add(ModBlocks.YEW_SLAB);
@@ -152,6 +152,7 @@ public final class ModItemGroups {
 					entries.accept(ModBlocks.YEW_BUTTON);
 					entries.accept(ModBlocks.YEW_SIGN);
 					entries.accept(ModBlocks.YEW_HANGING_SIGN);
+					entries.accept(ModItems.YEW_BERRY);
 				})
 				.build());*/
 		/*?}*/
@@ -181,7 +182,7 @@ public final class ModItemGroups {
 		});
 		/*?} else {*/
 		/*CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.BUILDING_BLOCKS).register(content -> {
-			content.insertAfter(Blocks.WARPED_BUTTON, ModBlocks.YEW_PLANKS);
+			content.insertAfter(Blocks.WARPED_BUTTON, ModBlocks.YEW_LOG);
 			content.insertAfter(ModBlocks.YEW_LOG, ModBlocks.YEW_WOOD);
 			content.insertAfter(ModBlocks.YEW_WOOD, ModBlocks.STRIPPED_YEW_LOG);
 			content.insertAfter(ModBlocks.STRIPPED_YEW_LOG, ModBlocks.STRIPPED_YEW_WOOD);
@@ -304,6 +305,7 @@ public final class ModItemGroups {
 						entries.add(ModBlocks.YEW_BUTTON);
 						entries.add(ModBlocks.YEW_SIGN);
 						entries.add(ModBlocks.YEW_HANGING_SIGN);
+						entries.add(ModItems.YEW_BERRY);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.getValue(), group);
@@ -344,6 +346,7 @@ public final class ModItemGroups {
 						entries.accept(ModBlocks.YEW_BUTTON);
 						entries.accept(ModBlocks.YEW_SIGN);
 						entries.accept(ModBlocks.YEW_HANGING_SIGN);
+						entries.accept(ModItems.YEW_BERRY);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.identifier(), group);
@@ -355,23 +358,27 @@ public final class ModItemGroups {
 	/*? if forge {*/
 	/*
 	// Adds this mod's flowers into vanilla's existing "Natural Blocks" tab, the Forge
-	// equivalent of Fabric's ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).
+	// equivalent of Fabric's ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL) - and
+	// Yew Berry into "Food and Drink", the equivalent for ItemGroups.FOOD_AND_DRINK.
 	// Forge's BuildCreativeModeTabContentsEvent adds its own accept(Supplier) helper on
 	// top of vanilla's ItemGroup.Entries - NeoForge's equivalent event doesn't have it,
 	// see the neoforge branch below for the vanilla ItemGroup.Entries#add() equivalent.
 	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
-		if (event.getTabKey() != ItemGroups.NATURAL) {
+		if (event.getTabKey() == ItemGroups.NATURAL) {
+			event.accept(() -> ModBlocks.BELLS_OF_IRELAND);
+			event.accept(() -> ModBlocks.BOG_ROSEMARY);
+			event.accept(() -> ModBlocks.BULBOUS_BUTTERCUP);
+			event.accept(() -> ModBlocks.BLUEBELL);
+			event.accept(() -> ModBlocks.GROWN_BELLS_OF_IRELAND);
+			event.accept(() -> ModBlocks.GROWN_BOG_ROSEMARY);
+			event.accept(() -> ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+			event.accept(() -> ModBlocks.GROWN_BLUEBELL);
 			return;
 		}
 
-		event.accept(() -> ModBlocks.BELLS_OF_IRELAND);
-		event.accept(() -> ModBlocks.BOG_ROSEMARY);
-		event.accept(() -> ModBlocks.BULBOUS_BUTTERCUP);
-		event.accept(() -> ModBlocks.BLUEBELL);
-		event.accept(() -> ModBlocks.GROWN_BELLS_OF_IRELAND);
-		event.accept(() -> ModBlocks.GROWN_BOG_ROSEMARY);
-		event.accept(() -> ModBlocks.GROWN_BULBOUS_BUTTERCUP);
-		event.accept(() -> ModBlocks.GROWN_BLUEBELL);
+		if (event.getTabKey() == ItemGroups.FOOD_AND_DRINK) {
+			event.accept(() -> ModItems.YEW_BERRY);
+		}
 	}
 	*/
 	/*?}*/
@@ -383,18 +390,21 @@ public final class ModItemGroups {
 	// the same add(ItemConvertible) vanilla default method as the Fabric/Forge
 	// entries.add(...) calls above.
 	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
-		if (event.getTabKey() != ItemGroups.NATURAL) {
+		if (event.getTabKey() == ItemGroups.NATURAL) {
+			event.add(ModBlocks.BELLS_OF_IRELAND);
+			event.add(ModBlocks.BOG_ROSEMARY);
+			event.add(ModBlocks.BULBOUS_BUTTERCUP);
+			event.add(ModBlocks.BLUEBELL);
+			event.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
+			event.add(ModBlocks.GROWN_BOG_ROSEMARY);
+			event.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+			event.add(ModBlocks.GROWN_BLUEBELL);
 			return;
 		}
 
-		event.add(ModBlocks.BELLS_OF_IRELAND);
-		event.add(ModBlocks.BOG_ROSEMARY);
-		event.add(ModBlocks.BULBOUS_BUTTERCUP);
-		event.add(ModBlocks.BLUEBELL);
-		event.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
-		event.add(ModBlocks.GROWN_BOG_ROSEMARY);
-		event.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
-		event.add(ModBlocks.GROWN_BLUEBELL);
+		if (event.getTabKey() == ItemGroups.FOOD_AND_DRINK) {
+			event.add(ModItems.YEW_BERRY);
+		}
 	}
 	*/
 	/*?}*/
@@ -404,19 +414,25 @@ public final class ModItemGroups {
 	// implements) uses accept(ItemLike) as its own standard default method - not add(...)
 	// (that was a Yarn-specific name on the older ItemGroup.Entries interface) - so this
 	// is now the same accept(...) call used on every loader/registration path here.
+	// NATURAL_BLOCKS/FOOD_AND_DRINKS referenced via CreativeModeTabs directly - both are
+	// real public fields on the real jar (confirmed via javap), matching the same class
+	// this file's own >=26.2 register() methods already reference.
 	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
-		if (event.getTabKey() != NATURAL_BLOCKS) {
+		if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
+			event.accept(ModBlocks.BELLS_OF_IRELAND);
+			event.accept(ModBlocks.BOG_ROSEMARY);
+			event.accept(ModBlocks.BULBOUS_BUTTERCUP);
+			event.accept(ModBlocks.BLUEBELL);
+			event.accept(ModBlocks.GROWN_BELLS_OF_IRELAND);
+			event.accept(ModBlocks.GROWN_BOG_ROSEMARY);
+			event.accept(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+			event.accept(ModBlocks.GROWN_BLUEBELL);
 			return;
 		}
 
-		event.accept(ModBlocks.BELLS_OF_IRELAND);
-		event.accept(ModBlocks.BOG_ROSEMARY);
-		event.accept(ModBlocks.BULBOUS_BUTTERCUP);
-		event.accept(ModBlocks.BLUEBELL);
-		event.accept(ModBlocks.GROWN_BELLS_OF_IRELAND);
-		event.accept(ModBlocks.GROWN_BOG_ROSEMARY);
-		event.accept(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
-		event.accept(ModBlocks.GROWN_BLUEBELL);
+		if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
+			event.accept(ModItems.YEW_BERRY);
+		}
 	}
 	*/
 	/*?}*/
