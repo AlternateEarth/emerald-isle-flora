@@ -4,8 +4,10 @@ import net.alternateearth.emeraldisleflora.config.ModConfig;
 import net.alternateearth.emeraldisleflora.registry.ModBlockEntities;
 import net.alternateearth.emeraldisleflora.registry.ModBlocks;
 import net.alternateearth.emeraldisleflora.registry.ModItemGroups;
+import net.alternateearth.emeraldisleflora.registry.ModItems;
 import net.alternateearth.emeraldisleflora.registry.ModWorldGen;
 import net.alternateearth.emeraldisleflora.util.ModBoneMealInteraction;
+import net.alternateearth.emeraldisleflora.util.ModBrewing;
 import net.alternateearth.emeraldisleflora.util.ModDispenserBehavior;
 /*? if fabric {*/
 import net.fabricmc.api.ModInitializer;
@@ -61,12 +63,14 @@ public class EmeraldIsleFlora implements ModInitializer {
 		var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(ModBlocks::onRegister);
 		modEventBus.addListener(ModBlockEntities::onRegister);
+		modEventBus.addListener(ModItems::onRegister);
 		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterRenderers);
 		modEventBus.addListener(ModItemGroups::onRegisterCreativeTab);
 		modEventBus.addListener(ModItemGroups::onBuildCreativeTabContents);
 		MinecraftForge.EVENT_BUS.addListener(ModBoneMealInteraction::onRightClickBlock);
 
 		ModBoneMealInteraction.register();
+		ModBrewing.register();
 		ModDispenserBehavior.register();
 		ModWorldGen.register();
 
@@ -81,10 +85,12 @@ public class EmeraldIsleFlora implements ModInitializer {
 
 		modEventBus.addListener(ModBlocks::onRegister);
 		modEventBus.addListener(ModBlockEntities::onRegister);
+		modEventBus.addListener(ModItems::onRegister);
 		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterRenderers);
 		modEventBus.addListener(ModItemGroups::onRegisterCreativeTab);
 		modEventBus.addListener(ModItemGroups::onBuildCreativeTabContents);
 		NeoForge.EVENT_BUS.addListener(ModBoneMealInteraction::onRightClickBlock);
+		NeoForge.EVENT_BUS.addListener(ModBrewing::onRegisterBrewingRecipes);
 
 		ModBoneMealInteraction.register();
 		ModDispenserBehavior.register();
@@ -103,6 +109,8 @@ public class EmeraldIsleFlora implements ModInitializer {
 		ModItemGroups.register();
 		ModBlocks.register();
 		ModBlockEntities.register();
+		ModItems.register();
+		ModBrewing.register();
 		ModBoneMealInteraction.register();
 		ModDispenserBehavior.register();
 		ModWorldGen.register();
