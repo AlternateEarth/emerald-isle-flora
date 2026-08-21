@@ -13,14 +13,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /^*
- * Hanging-sign counterpart to {@link SignBlockEntityRendererMixin} - see that class's doc
- * comment for the full root-cause explanation (vanilla's {@code Identifier.ofVanilla(...)}
- * mishandling a {@code WoodType} name that already contains a colon). This class exists
- * separately because {@code HangingSignBlockEntityRenderer} overrides {@code getTextureId}
- * with its own method body (confirmed via {@code javap}) rather than inheriting
- * {@code SignBlockEntityRenderer}'s, calling
- * {@code TexturedRenderLayers#createHangingSignTextureId} instead of
- * {@code createSignTextureId} - same bug, different (and separately mixin-able) call site.
+ * Hanging-sign counterpart to {@link SignBlockEntityRendererMixin} (same root cause) -
+ * needs its own mixin since {@code HangingSignBlockEntityRenderer} overrides
+ * {@code getTextureId} with its own method body rather than inheriting it.
  ^/
 @Mixin(HangingSignBlockEntityRenderer.class)
 public class HangingSignBlockEntityRendererMixin {

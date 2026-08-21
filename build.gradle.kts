@@ -60,13 +60,8 @@ val tagResources: String = if (mod.minecraftVersion == "1.20.1") {
     "versions/data/1.21.1-plus/src/main/resources"
 }
 
-// 26.2 moved sign/hanging-sign rendering off the entity renderer entirely onto ordinary
-// blockstate + block-model JSON parented to vanilla's own template_*_sign_rot_N models
-// (confirmed via a real jar teardown, not assumed) - every earlier version still renders
-// signs via a dedicated BlockEntityRenderer with a model-less block model, so this overrides
-// the shared, model-less blockstate/model this mod ships under src/main/resources for every
-// other version, the same "override by directory priority" pattern lootTableResources/
-// tagResources already rely on.
+// 26.2 moved sign rendering onto ordinary blockstate + block-model JSON; this overrides the
+// shared, model-less blockstate/model used by every earlier version.
 val signBlockAssetResources: String? = if (mod.minecraftVersion == "26.2") {
     "versions/data/26.2-plus/src/main/resources"
 } else {
@@ -112,12 +107,8 @@ listOfNotNull(recipeGeneratedResources, lootTableResources, tagResources, signBl
     }
 }
 
-// signBlockAssetResources (26.2 only) deliberately overrides files that also exist under
-// src/main/resources at the same relative path (the old model-less sign blockstates/models,
-// still needed as-is for every version below 26.2) - processResources already resolves that
-// by srcDir order (last one copied wins) with no configuration needed, but sourcesJar hits a
-// hard "duplicate entry" failure on the same overlap without an explicit strategy, since
-// Copy-family tasks don't all default to the same duplicate handling.
+// signBlockAssetResources overrides files at the same path as src/main/resources; sourcesJar
+// needs an explicit duplicates strategy for that overlap (processResources handles it fine by default).
 tasks.named<Jar>("sourcesJar") {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
