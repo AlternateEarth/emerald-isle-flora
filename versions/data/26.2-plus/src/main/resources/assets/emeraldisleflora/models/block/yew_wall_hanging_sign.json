@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_wall_hanging_sign",
+  "textures": {
+    "all": "emeraldisleflora:block/yew_hanging_sign",
+    "particle": "emeraldisleflora:block/stripped_yew_log"
+  }
+}

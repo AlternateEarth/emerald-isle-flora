@@ -60,6 +60,19 @@ val tagResources: String = if (mod.minecraftVersion == "1.20.1") {
     "versions/data/1.21.1-plus/src/main/resources"
 }
 
+// 26.2 moved sign/hanging-sign rendering off the entity renderer entirely onto ordinary
+// blockstate + block-model JSON parented to vanilla's own template_*_sign_rot_N models
+// (confirmed via a real jar teardown, not assumed) - every earlier version still renders
+// signs via a dedicated BlockEntityRenderer with a model-less block model, so this overrides
+// the shared, model-less blockstate/model this mod ships under src/main/resources for every
+// other version, the same "override by directory priority" pattern lootTableResources/
+// tagResources already rely on.
+val signBlockAssetResources: String? = if (mod.minecraftVersion == "26.2") {
+    "versions/data/26.2-plus/src/main/resources"
+} else {
+    null
+}
+
 // Deal with incompatibility between 26.2+ Mojmap-only targets (no yarn_mappings) and cloth-config-fabric's 26.2 build
 val clothConfigDependsLine = if (hasYarnMappings) ",\n\t\t\"cloth-config\": \"*\"" else ""
 tasks.named<ProcessResources>("processResources") {
@@ -93,10 +106,20 @@ if (mod.isFabric) {
 // directory value here rather than merging the three into one variable, so each stays
 // independently renamable if a future Minecraft version ever splits these at different
 // points again.
-listOfNotNull(recipeGeneratedResources, lootTableResources, tagResources).distinct().forEach {
+listOfNotNull(recipeGeneratedResources, lootTableResources, tagResources, signBlockAssetResources).distinct().forEach {
     sourceSets.main {
         resources.srcDir(rootProject.layout.projectDirectory.dir(it))
     }
+}
+
+// signBlockAssetResources (26.2 only) deliberately overrides files that also exist under
+// src/main/resources at the same relative path (the old model-less sign blockstates/models,
+// still needed as-is for every version below 26.2) - processResources already resolves that
+// by srcDir order (last one copied wins) with no configuration needed, but sourcesJar hits a
+// hard "duplicate entry" failure on the same overlap without an explicit strategy, since
+// Copy-family tasks don't all default to the same duplicate handling.
+tasks.named<Jar>("sourcesJar") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks.named<Jar>("jar") {

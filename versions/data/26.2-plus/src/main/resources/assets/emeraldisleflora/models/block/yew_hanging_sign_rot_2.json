@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_hanging_sign_rot_2",
+  "textures": {
+    "all": "emeraldisleflora:block/yew_hanging_sign",
+    "particle": "emeraldisleflora:block/stripped_yew_log"
+  }
+}
