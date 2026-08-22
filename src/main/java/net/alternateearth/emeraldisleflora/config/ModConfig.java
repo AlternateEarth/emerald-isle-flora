@@ -21,14 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * A small, hand-rolled JSON config, saved to config/emerald-isle-flora.json.
- * <p>
- * This is deliberately simple (a POJO + Gson) rather than routed through a config
- * framework, so it works with or without Cloth Config / Mod Menu installed. The Cloth
- * Config screen in the client sourceset just reads and writes the fields on this class.
- * <p>
- * Add new fields here as you add new config options, then wire each one up to a matching
- * entry in client.ModMenuIntegration.
+ * A small, hand-rolled JSON config (POJO + Gson, no config framework), saved to config/emerald-isle-flora.json.
+ * Add new fields here, then wire each up to a matching entry in client.ModMenuIntegration.
  */
 public class ModConfig {
 
@@ -43,19 +37,13 @@ public class ModConfig {
 	/*?}*/
 
 	/**
-	 * When true (default), using bone meal on an already-grown flower (Grown Bells of
-	 * Ireland or its potted variant) drops an extra flower item without reverting the
-	 * block - a small renewable flower source. When false, that specific interaction
-	 * does nothing. Growing a base Bells of Ireland into its grown variant is
-	 * unaffected either way - this only gates the repeatable-harvest half of the
-	 * mechanic, not the initial grow transition. See util.ModCommonLogic.
+	 * When true (default), bone meal on an already-grown flower drops an extra item without reverting the block. See util.ModCommonLogic.
 	 */
 	public boolean enableGrownFlowerHarvesting = true;
 
 	/**
-	 * When true (default), using bone meal on a flower (Bells of Ireland or its potted 
-	 * variant) will cause it to grow into its grown variant. When false, that specific 
-	 * interaction does nothing. See util.ModCommonLogic.
+	 * When true (default), bone meal on a flower (Bells of Ireland or its potted variant) grows
+	 * it into its grown variant; when false, nothing happens. See util.ModCommonLogic.
 	 */
 	public boolean enableGrownFlowering = true;
 

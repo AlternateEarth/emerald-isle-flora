@@ -29,18 +29,10 @@ import net.minecraft.world.level.block.state.properties.WoodType;*/
 /*?}*/
 
 /**
- * The wall hanging sign block, with flammability wired for every loader - see
- * {@link ModPillarBlock}'s doc comment for the general "why". No axe-stripping.
- * <p>
- * Unlike {@link ModHangingSignBlock}'s base class, {@code WallHangingSignBlock} keeps the
- * exact same name on both Yarn and Mojmap (confirmed via {@code javap} against every real
- * target jar) - only the standing/"ceiling" variant gets renamed
- * ({@code HangingSignBlock} -> {@code CeilingHangingSignBlock}). Same constructor
- * parameter-order flip (Settings-first at 1.20.1, WoodType-first from 1.21.1 on) as
- * {@link ModHangingSignBlock}, also confirmed via {@code javap} rather than assumed.
- * <p>
- * Returns a {@link ModHangingSignBlockEntity} from {@code createBlockEntity} rather than
- * vanilla's own {@code HangingSignBlockEntity} - see that class's doc comment for why.
+ * The wall hanging sign block, with flammability wired for every loader. Unlike
+ * {@link ModHangingSignBlock}'s base class, {@code WallHangingSignBlock} keeps the same
+ * name on Yarn and Mojmap; uses {@link ModHangingSignBlockEntity} instead of vanilla's
+ * entity - see that class for why.
  */
 /*? if <26.2 {*/
 public class ModWallHangingSignBlock extends WallHangingSignBlock {

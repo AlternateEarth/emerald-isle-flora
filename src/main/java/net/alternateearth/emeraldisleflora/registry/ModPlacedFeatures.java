@@ -179,17 +179,8 @@ public class ModPlacedFeatures {
     }
     /*?} else {*/
     /*
-    // 26.2: same shape, Mojmap names - the old tries=64/xzSpread=6/ySpread=4 that used to
-    // live on RandomPatchFeatureConfig (see ModConfiguredFeatures) is now expressed here
-    // as two extra placement modifiers appended to the chain: CountPlacement.of(64) for
-    // "tries", RandomOffsetPlacement.ofTriangle(6, 4) for "xzSpread, ySpread" - confirmed
-    // via javap that ofTriangle(n, m) is exactly of(TrapezoidInt.triangle(n),
-    // TrapezoidInt.triangle(m)), and TrapezoidInt.triangle(n) is exactly of(-n, n, 0),
-    // i.e. the same +/-spread semantics the old config had. This mirrors vanilla's own
-    // real, shipped conversion of an equivalent flower patch (placed_feature/
-    // flower_plain.json: count 64, random_offset xz [-6,6] y [-2,2] trapezoid) - same
-    // count value (64) as this mod already used, only the xz/y spread differ per-feature
-    // as they did before.
+    // 26.2: tries=64/xzSpread=6/ySpread=4 (previously on RandomPatchFeatureConfig) is now
+    // two extra placement modifiers: CountPlacement.of(64) and RandomOffsetPlacement.ofTriangle(6, 4).
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         var configuredFeatureRegistryEntryLookup = context.lookup(Registries.CONFIGURED_FEATURE);
 

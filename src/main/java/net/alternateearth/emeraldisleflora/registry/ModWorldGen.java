@@ -28,11 +28,8 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 public final class ModWorldGen {
 
     /**
-     * Fabric-only body: Forge has no equivalent Java API for this - it adds features to
-     * biomes via data-driven JSON instead (see
-     * data/emeraldisleflora/forge/biome_modifier/*.json), which needs no registration
-     * call at all. Still called uniformly from both loaders' entrypoints; it's just a
-     * no-op on Forge.
+     * Fabric-only: Forge adds features via data-driven JSON instead
+     * (data/emeraldisleflora/forge/biome_modifier/*.json), so this is a no-op there.
      */
     public static void register() {
         /*? if fabric {*/
@@ -66,11 +63,8 @@ public final class ModWorldGen {
         /*?}*/
     }
 
-    // Everything that differs between the two mapping sets - RegistryKey vs ResourceKey,
-    // RegistryKeys vs Registries, Identifier.of vs Identifier.fromNamespaceAndPath,
-    // GenerationStep.Feature vs GenerationStep.Decoration - lives only here, confirmed
-    // via javap against the real jars for both mapping sets. register() just passes a
-    // biome key and a placed-feature id.
+    // Mapping differences (RegistryKey vs ResourceKey, etc.) are isolated here;
+    // register() just passes a biome key and a placed-feature id.
 
     /*? if fabric && <26.2 {*/
     private static void addFeature(RegistryKey<Biome> biome, String featureId) {

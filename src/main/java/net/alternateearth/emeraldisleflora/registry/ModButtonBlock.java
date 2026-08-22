@@ -19,16 +19,8 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;*/
 /*?}*/
 
 /**
- * A button block with flammability wired for every loader - see {@link ModPillarBlock}'s
- * doc comment for the general "why". No axe-stripping.
- * <p>
- * Vanilla's constructor is protected, and - like PressurePlateBlock - lost a parameter
- * at 1.21.1+: 1.20.1 is {@code (Settings, BlockSetType, int tickDelay, boolean
- * sensitiveToProjectiles)}; 1.21.1+ drops the boolean entirely, {@code (BlockSetType, int
- * tickDelay, Settings)}. Confirmed via decompiling vanilla's own
- * {@code Blocks.createWoodenButtonBlock}/{@code createStoneButtonBlock} bytecode on
- * 1.20.1 (not assumed): wood buttons use tickDelay=30 and sensitive=true; stone buttons
- * use tickDelay=20 and sensitive=false - so 30/true is what's passed here on 1.20.1.
+ * Button block with per-block flammability. Vanilla's protected constructor drops the
+ * {@code sensitiveToProjectiles} boolean at 1.21.1+; wood buttons use tickDelay=30, sensitive=true.
  */
 /*? if <26.2 {*/
 public class ModButtonBlock extends ButtonBlock {

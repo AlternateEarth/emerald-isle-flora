@@ -76,31 +76,15 @@ tasks.named<ProcessResources>("processResources") {
     }
 }
 
-// Stonecraft only auto-adds generatedResources to the resources source set for
-// ForgeLike targets (see Java.kt); Fabric needs it added explicitly or datagen output
-// silently drops out of the built jar. Doing this unconditionally for ForgeLike too
-// double-registers the same srcDir and breaks sourcesJar with a duplicate-entry error.
+// Stonecraft only auto-adds generatedResources for ForgeLike targets; Fabric needs it added explicitly or datagen output drops out of the built jar.
 if (mod.isFabric) {
     sourceSets.main {
         resources.srcDir(modSettings.generatedResources)
     }
 }
 
-// recipeGeneratedResources/lootTableResources/tagResources aren't covered by Stonecraft's
-// own ForgeLike auto-add (that only applies to modSettings.generatedResources itself), so
-// every loader needs them added explicitly here - unlike that block, there's no Fabric/
-// ForgeLike split to worry about, since these are plain project directories, not something
-// Stonecraft already wires in for one loader family. They do, however, frequently resolve
-// to the *same* directory as each other (all three currently split only at the
-// 1.20.1/1.21.1+-ish boundaries, just not identically-named boundaries) - e.g. 1.20.1's
-// recipeGeneratedResources and lootTableResources are both "versions/data/1.20.1/...".
-// Registering the same directory twice as separate srcDirs hits the exact "double-
-// registers the same srcDir" sourcesJar duplicate-entry error the comment above warns
-// about for generatedResources, just on whichever loader's sourcesJar task doesn't have
-// Loom's own dedup (plain Forge/NeoForge, not Fabric's remapSourcesJar) - deduplicated by
-// directory value here rather than merging the three into one variable, so each stays
-// independently renamable if a future Minecraft version ever splits these at different
-// points again.
+// These aren't covered by Stonecraft's ForgeLike auto-add, so every loader needs them added explicitly.
+// Deduplicated by directory value since they often resolve to the same path, which would otherwise double-register a srcDir and break sourcesJar.
 listOfNotNull(recipeGeneratedResources, lootTableResources, tagResources, signBlockAssetResources).distinct().forEach {
     sourceSets.main {
         resources.srcDir(rootProject.layout.projectDirectory.dir(it))

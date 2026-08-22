@@ -17,11 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;*/
 /*?}*/
 
 /**
- * A slab block with flammability wired for every loader - see {@link ModPillarBlock}'s
- * doc comment for the general "why". No axe-stripping (not applicable to slabs).
- * Vanilla's SlabBlock constructor is public on every version (unlike Stairs/Sapling's
- * protected ones, confirmed via javap) and keeps the same class name throughout, so this
- * subclass exists purely for the flammability override, not to expose a constructor.
+ * A slab block with flammability wired for every loader; the subclass exists purely for the
+ * flammability override, since SlabBlock's constructor is already public on every version.
  */
 /*? if <26.2 {*/
 public class ModSlabBlock extends SlabBlock {

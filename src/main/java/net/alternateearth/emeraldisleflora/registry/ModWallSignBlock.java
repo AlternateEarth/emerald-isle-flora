@@ -29,14 +29,9 @@ import net.minecraft.world.level.block.state.properties.WoodType;*/
 /*?}*/
 
 /**
- * The wall sign block, with flammability wired for every loader - see
- * {@link ModPillarBlock}'s doc comment for the general "why". No axe-stripping.
- * <p>
- * Unlike {@link ModSignBlock}'s base class, {@code WallSignBlock} stays public and
- * concrete on every version including 26.2 (confirmed via javap - the SignBlock ->
- * StandingSignBlock split at 26.2 only affected the standing variant), so no extra
- * abstract methods to worry about here. Still has the same 1.20.1-&gt;1.21.1+
- * constructor parameter-order flip as the other wood interactables.
+ * The wall sign block, with flammability wired for every loader - see {@link ModPillarBlock}'s
+ * doc comment for the general "why". Unlike {@link ModSignBlock}'s base class, {@code WallSignBlock}
+ * stays public and concrete through 26.2. Same constructor argument-order flip as the other wood blocks.
  */
 /*? if <26.2 {*/
 public class ModWallSignBlock extends WallSignBlock {
@@ -68,8 +63,7 @@ public class ModWallSignBlock extends WallSignBlock {
         return burnChance;
     }
 
-    // Fixes a real "Block entity ... invalid for ticking" bug (confirmed from a launch
-    // log) - see ModBlockEntities' doc comment for the full "why".
+    // Fixes a "Block entity ... invalid for ticking" bug - see ModBlockEntities' doc comment.
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new SignBlockEntity(ModBlockEntities.YEW_SIGN, pos, state);
@@ -106,8 +100,7 @@ public class ModWallSignBlock extends WallSignBlock {
         return burnChance;
     }
 
-    // Fixes a real "Block entity ... invalid for ticking" bug (confirmed from a launch
-    // log) - see ModBlockEntities' doc comment for the full "why".
+    // Fixes a "Block entity ... invalid for ticking" bug - see ModBlockEntities' doc comment.
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new SignBlockEntity(ModBlockEntities.YEW_SIGN, pos, state);

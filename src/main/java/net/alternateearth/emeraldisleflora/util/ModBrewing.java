@@ -40,22 +40,10 @@ import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 /*?}*/
 
 /**
- * Registers Yew Berry as an additional brewing-stand ingredient for vanilla's own Potion
- * of Poison: Awkward Potion + Yew Berry -> Potion of Poison, alongside vanilla's existing
- * Awkward Potion + Spider Eye recipe (confirmed via decompiling vanilla's real
- * BrewingRecipeRegistry/PotionBrewing bootstrap that Spider Eye, not Fermented Spider Eye,
- * is the real vanilla ingredient here - Fermented Spider Eye is only used for
- * potion-reversal mixes).
- * <p>
- * Fabric's brewing-registry API reshapes twice across this mod's version range: a plain
- * static call at 1.20.1 (FabricBrewingRecipeRegistry), a BUILD-event Builder from 1.21.1
- * (FabricBrewingRecipeRegistryBuilder), then a Mojmap rename at 26.2
- * (FabricPotionBrewingBuilder) - confirmed via javap against the real resolved jar for
- * each target, not assumed. Forge (1.20.1 only in this project's matrix) and NeoForge
- * (1.21.1+) don't share an API at all: Forge's BrewingRecipeRegistry is a plain static
- * call with no registry-freeze event, NeoForge instead fires RegisterBrewingRecipesEvent
- * on NeoForge.EVENT_BUS (the game bus, not the mod bus) handing you the same vanilla
- * PotionBrewing.Builder/BrewingRecipeRegistry.Builder Fabric's BUILD callback also uses.
+ * Registers Yew Berry as an additional brewing-stand ingredient for vanilla's Potion of
+ * Poison (Awkward Potion + Yew Berry), alongside vanilla's own Spider Eye recipe.
+ * Fabric's brewing-registry API and Forge/NeoForge's registration mechanism both differ
+ * across this mod's version range - see the per-branch comments below.
  */
 public final class ModBrewing {
 
@@ -80,11 +68,8 @@ public final class ModBrewing {
 
         /*? if forge {*/
         /*
-        // Forge's BrewingRecipeRegistry.addRecipe(Ingredient, Ingredient, ItemStack)
-        // matches by generic item-stack predicate, not by potion type specifically - a
-        // custom IBrewingRecipe reading the real potion type off the input stack (via
-        // PotionUtil, vanilla's NBT-backed potion accessor at this version) is used
-        // instead, so this only ever matches an actual Awkward Potion, not any potion.
+        // Forge's addRecipe matches by generic item-stack predicate, not potion type, so a
+        // custom IBrewingRecipe reads the real potion off the stack via PotionUtil instead.
         BrewingRecipeRegistry.addRecipe(new IBrewingRecipe() {
             @Override
             public boolean isInput(ItemStack stack) {
@@ -110,11 +95,8 @@ public final class ModBrewing {
         EmeraldIsleFlora.LOGGER.info("Finished registering Brewing Recipes for " + EmeraldIsleFlora.MOD_ID);
     }
 
-    // The builder's own registration method is renamed between Yarn and Mojmap -
-    // registerPotionRecipe(RegistryEntry<Potion>, Item, RegistryEntry<Potion>) on Yarn's
-    // BrewingRecipeRegistry.Builder, addMix(Holder<Potion>, Item, Holder<Potion>) on
-    // Mojmap's PotionBrewing.Builder - confirmed via javap against the real jar for each,
-    // not assumed (this rename is exactly the kind this project's docs warn about).
+    // The builder's registration method is renamed: registerPotionRecipe on Yarn's
+    // BrewingRecipeRegistry.Builder, addMix on Mojmap's PotionBrewing.Builder.
     /*? if neoforge && <26.2 {*/
     /*public static void onRegisterBrewingRecipes(RegisterBrewingRecipesEvent event) {
         event.getBuilder().registerPotionRecipe(Potions.AWKWARD, ModItems.YEW_BERRY, Potions.POISON);

@@ -42,14 +42,7 @@ import net.minecraftforge.registries.RegisterEvent;
 /**
  * First plain (non-BlockItem) item in this mod - see ModBlocks for the block-registration
  * shape this mirrors. Yew Berry reuses vanilla's own POISONOUS_POTATO food/consumable
- * constants directly rather than hand-rolling hunger/saturation/poison-chance numbers, so
- * its eat behavior is guaranteed identical to a real Poisonous Potato on every version.
- * <p>
- * Food/consumable API genuinely reshapes across this mod's version range: FoodComponent
- * carried both nutrition and status effects directly through 1.21.1, then 1.21.11 split
- * status effects out into a separate ConsumableComponent and changed Item.Settings#food to
- * a two-arg overload - confirmed via javap/tiny-mappings against the real jars for each
- * version, not assumed.
+ * constants so its eat behavior matches a real Poisonous Potato on every version.
  */
 public final class ModItems {
 

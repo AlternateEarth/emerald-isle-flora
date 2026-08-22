@@ -1,10 +1,6 @@
 package net.alternateearth.emeraldisleflora.config;
 
-// Excluded on Mojmap-only targets (26.2+): Cloth Config's currently-published build for
-// those targets ships an access-widener incompatible with Loom's no-remap pipeline, so
-// it isn't a dependency there at all yet - see build.gradle.kts's hasConfigScreenSupport
-// comment. Config-GUI-on-26.2 is an accepted gap for now, same treatment as the
-// pre-existing Forge/NeoForge config-GUI gap.
+// Excluded on 26.2+: Cloth Config's build there isn't compatible with Loom's no-remap pipeline yet, an accepted gap - see build.gradle.kts's hasConfigScreenSupport comment.
 /*? if fabric && <26.2 {*/
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
@@ -17,15 +13,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 
 /**
- * Wires this mod's config into Mod Menu's "config" button, using Cloth Config to build
- * the actual screen. This class is only ever loaded/invoked by Mod Menu itself (via the
- * "modmenu" entrypoint declared in fabric.mod.json), so nothing here runs, and neither
- * Mod Menu nor Cloth Config's screen classes need to load, if Mod Menu isn't installed.
- * <p>
- * Add a new entry here for each new field you add to ModConfig.
- * <p>
- * Client-only (see the note in EmeraldIsleFloraClient about why this is annotated
- * rather than compile-time enforced in this single-source-set project).
+ * Wires this mod's config into Mod Menu's "config" button using Cloth Config; only loaded by Mod
+ * Menu's own entrypoint, so nothing here runs if Mod Menu isn't installed. Add a new entry here for each new field you add to ModConfig.
  */
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {

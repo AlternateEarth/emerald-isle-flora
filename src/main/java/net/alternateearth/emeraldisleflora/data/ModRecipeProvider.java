@@ -1,69 +1,9 @@
 package net.alternateearth.emeraldisleflora.data;
 
 /**
- * Generates this mod's dye-from-flower recipes and its yew wood-set recipes (and their
- * paired recipe-unlock advancements, produced automatically alongside each recipe by
- * offerTo) instead of hand-maintaining static JSON.
- * <p>
- * This exists because Mojang's own recipe/advancement data format genuinely changed
- * twice across this mod's supported version range - the recipe/advancement directory
- * was renamed (recipes/advancements -> recipe/advancement) and the recipe result field
- * was renamed (item -> id) at 1.21, then the ingredient format was flattened from
- * {"item": "x"} objects to bare "x" strings at 1.21.11 - confirmed by decompiling the
- * real game code for each version (ItemStack's result codec, Ingredient's codec,
- * RegistryKeys.RECIPE's registry path) rather than assumed from changelog notes. Hand
- * JSON shared unconditionally across every Stonecutter target broke silently wherever
- * the format had moved on (see issue #17).
- * <p>
- * Covers all four Minecraft versions, split into four full sibling Stonecutter branches
- * - deliberately NOT nested (a `<1.21`/else split inside a `<1.21.11` block corrupted
- * Stonecutter's output the moment a target outside `<1.21.11` needed the whole outer
- * block disabled - a new, previously-unseen failure mode; see AGENTS.md's nesting
- * gotcha, this is the same underlying rule, just tripped a different way) - since the
- * recipe/advancement API genuinely reshapes three times across this range, not just the
- * JSON it emits:
- * <ul>
- *   <li>{@code <1.21}: {@code Consumer<RecipeJsonProvider>}-based, real live datagen
- *       output ({@code versions/data/1.20.1}).
- *   <li>{@code >=1.21 && <1.21.11}: {@code RecipeExporter}-based, same shape otherwise.
- *       Real datagen ({@code :1.21.1-fabric:runDatagen}) crashes on a real, reproduced-
- *       on-two-machines Fabric API bug unrelated to this mod (fabric-mining-level-api-
- *       v1's SwordItemMixin fails to apply in the dev-launch bootstrap sequence for this
- *       exact Minecraft/mappings build) - its output
- *       ({@code versions/data/1.21.1}) was hand-derived once from the
- *       1.20.1 output instead, applying only the schema changes already independently
- *       confirmed against the real 1.21.1 codecs. See build.gradle.kts's
- *       recipeGeneratedResources comment and CONTRIBUTING.md.
- *   <li>{@code >=1.21.11 && <26.2}: real API restructuring, not just a rename -
- *       {@code RecipeGenerator} (registry-lookup-based ingredient/recipe-key creation)
- *       replaces the old {@code RecipeProvider}/{@code Consumer} pattern entirely.
- *       {@code :1.21.11-fabric:runDatagen} hits the same Fabric API dev-launch bug as
- *       1.21.1, so this branch's output was hand-derived the same way, from what this
- *       code would produce (schema confirmed via the real 1.21.11 codecs).
- *   <li>{@code >=26.2}: Mojmap names for the same {@code RecipeGenerator}-shaped API
- *       ({@code RecipeProvider}/{@code RecipeOutput} in Mojmap's own naming).
- *       {@code :26.2-fabric:runDatagen} actually works, so this one's output is real,
- *       verified datagen output, not hand-derived.
- * </ul>
- * The two {@code >=1.21.11} branches also can't rely on the old convenience auto-id path
- * ({@code offerSingleOutputShapelessRecipe}/bare {@code offerTo(exporter)}) the way the
- * two earlier branches safely do: confirmed via decompiling the real Fabric API code for
- * both versions that {@code RecipeExporter}/{@code RecipeOutput}'s write path uses
- * whatever registry key it's given directly, with no namespace-rewriting onto this mod's
- * own ID happening anywhere anymore - a bare/derived id there would silently register
- * under {@code minecraft:}, not this mod's namespace. Every recipe in those two branches
- * is built with an explicit, mod-namespaced key instead.
- * <p>
- * The yew wood-set recipes below mirror vanilla's own oak recipe shapes/counts/groups
- * (planks, stairs, slab, fence, fence gate, door, trapdoor, pressure plate, button, sign,
- * hanging sign) and use explicit mod-namespaced ids throughout, same reasoning as above.
- * Unlike the dye recipes, none of this content could be verified against a real
- * {@code runDatagen} run in the environment this was written in (outbound access to the
- * Fabric/Mojang Maven hosts Loom needs was not available) - the static JSON mirrors under
- * {@code versions/data/*} were hand-derived directly from this class instead
- * of copied from real datagen output. Worth a real {@code runDatagen} diff once a
- * machine with full Maven access is available, same spirit as the 1.21.1/1.21.11 hand-
- * derivations above.
+ * Generates this mod's dye-from-flower and yew wood-set recipes via datagen, since the
+ * recipe API and JSON format reshape at 1.21 and 1.21.11. Split into four full sibling
+ * Stonecutter branches (not nested - see AGENTS.md) since the API itself changes.
  */
 /*? if fabric && <1.21 {*/
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
@@ -87,9 +27,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(Consumer<RecipeJsonProvider> exporter) {
-        // Grown flowers yield 2 dye, not 1 - a real, intentional detail of the original
-        // hand-written recipes (confirmed via git history) that offerSingleOutputShapelessRecipe
-        // (fixed at 1) would silently drop; offerShapelessRecipe takes an explicit count.
+        // Grown flowers yield 2 dye, not 1; offerShapelessRecipe takes an explicit count
+        // where offerSingleOutputShapelessRecipe would silently fix it at 1.
         offerShapelessRecipe(exporter, Items.GREEN_DYE, ModBlocks.BELLS_OF_IRELAND.asItem(), "green_dye", 1);
         offerShapelessRecipe(exporter, Items.GREEN_DYE, ModBlocks.GROWN_BELLS_OF_IRELAND.asItem(), "green_dye", 2);
 
@@ -110,11 +49,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         offerYewWoodSetRecipes(exporter);
     }
 
-    // Not offerSingleOutputShapelessRecipe: that helper only supports a single input
-    // item, but this recipe needs 2 of the base flower - matches the original hand-
-    // written recipes' shape (2 base flowers -> 1 grown flower) and their custom
-    // "_from_flowers" recipe id (convertBetween's auto id would instead produce
-    // "grown_x_from_x", the base flower's own item name, not "flowers").
+    // Not offerSingleOutputShapelessRecipe: it only takes a single input item, but this
+    // recipe needs 2 flowers and a custom "_from_flowers" id.
     private static void offerGrownFromFlowersRecipe(
             Consumer<RecipeJsonProvider> exporter, Block grown, Block flower, String recipeId) {
         ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, grown.asItem())
@@ -123,12 +59,10 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, recipeId));
     }
 
-    // Mirrors vanilla's own oak recipe set - same shapes/counts/groups/recipe-book
-    // categories as oak_planks/oak_stairs/.../oak_hanging_sign.json, just yew-namespaced.
+    // Mirrors vanilla's own oak recipe set (shapes/counts/groups/categories), just yew-namespaced.
     private static void offerYewWoodSetRecipes(Consumer<RecipeJsonProvider> exporter) {
         // Any of the 4 log-family items convert to planks, same as vanilla's per-species
-        // log tag - Ingredient.ofItems (not a mod-namespaced tag) keeps this self-
-        // contained without needing a new tag file just for one recipe's ingredient list.
+        // log tag; uses Ingredient.ofItems instead of a new tag file since it's only used here.
         ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, ModBlocks.YEW_PLANKS.asItem(), 4)
                 .input(Ingredient.ofItems(ModBlocks.YEW_LOG.asItem(), ModBlocks.YEW_WOOD.asItem(),
                         ModBlocks.STRIPPED_YEW_LOG.asItem(), ModBlocks.STRIPPED_YEW_WOOD.asItem()))
@@ -386,10 +320,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         super(output, registriesFuture);
     }
 
-    // <1.21.11's FabricRecipeProvider extended vanilla's own RecipeProvider, whose
-    // getName() was final and returned "Recipes" automatically - the new RecipeGenerator
-    // -based hierarchy (RecipeGenerator.RecipeProvider, which FabricRecipeProvider now
-    // extends) leaves it abstract, so it's ours to implement.
+    // getName() became abstract when FabricRecipeProvider moved onto the new
+    // RecipeGenerator-based hierarchy, so it must be implemented here.
     @Override
     public String getName() {
         return "Recipes";
@@ -406,11 +338,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         }
 
         @Override
-        // public, not the vanilla-declared protected: confirmed via a real compile error
-        // ("attempting to assign weaker access privileges; was public") that Fabric's own
-        // access widener widens this specific method to public on the real classpath,
-        // even though the raw un-widened jar declares it protected - Java requires an
-        // override's access to be the same or wider, never narrower.
+        // public, not the vanilla-declared protected: Fabric's access widener widens this
+        // method to public on the real classpath, and an override can't narrow access.
         public void generate() {
             // Grown flowers yield 2 dye, not 1 - see the <1.21 branch's comment.
             offerDyeRecipe(Items.GREEN_DYE, ModBlocks.BELLS_OF_IRELAND, 1, "green_dye", "green_dye_from_bells_of_ireland");
@@ -433,14 +362,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
             offerYewWoodSetRecipes();
         }
 
-        // Explicit mod-namespaced RegistryKey, not the convertBetween-based auto-id
-        // convenience path (offerSingleOutputShapelessRecipe / bare offerTo(exporter)):
-        // confirmed via decompiling both this version's and 26.2's real Fabric API code
-        // that RecipeExporter.accept(...) uses the RegistryKey's own namespace directly
-        // with no rewriting onto this mod's namespace happening anywhere in the write
-        // path anymore (unlike this class's <1.21.11 branches' getRecipeIdentifier
-        // behavior) - a bare/auto-derived id here would silently register under
-        // "minecraft:", not this mod's namespace.
+        // Explicit mod-namespaced RegistryKey: RecipeExporter writes under whatever
+        // namespace it's given, so an auto-derived id would register under "minecraft:".
         private void offerDyeRecipe(Item dye, Block flower, int dyeCount, String group, String recipeId) {
             createShapeless(RecipeCategory.MISC, dye, dyeCount)
                     .input(flower.asItem())
@@ -533,11 +456,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .criterion(hasItem(ModBlocks.YEW_PLANKS.asItem()), conditionsFromItem(ModBlocks.YEW_PLANKS.asItem()))
                     .offerTo(this.exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign")));
 
-            // Items.CHAIN was renamed Items.IRON_CHAIN at some point between 1.21.1 and
-            // 1.21.11 (confirmed via javap - present as CHAIN on the real 1.21.1 jar,
-            // gone from 1.21.11's Items class entirely, replaced by IRON_CHAIN alongside
-            // new COPPER_CHAINS variants) - a real rename, not assumed to land on the
-            // same boundary as this file's other >=1.21.11 splits.
+            // Items.CHAIN was renamed to Items.IRON_CHAIN between 1.21.1 and 1.21.11.
             createShaped(RecipeCategory.DECORATIONS, ModBlocks.YEW_HANGING_SIGN.asItem(), 6)
                     .pattern("C C")
                     .pattern("###")
@@ -600,10 +519,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         // public, not the vanilla-declared protected - see the >=1.21.11 sibling
         // branch's generate() comment, same access-widener reasoning.
         public void buildRecipes() {
-            // 26.2: individual per-color dye item constants (Items.GREEN_DYE etc.) are
-            // gone entirely - confirmed via javap against the real 26.2 client jar, only
-            // Items.DYE (a ColorCollection<Item>, a new grouping abstraction also used
-            // for DYED_TERRACOTTA/DYED_SHULKER_BOX/etc.) exists now, picked by DyeColor.
+            // 26.2: per-color dye constants (Items.GREEN_DYE etc.) are gone; only
+            // Items.DYE (a ColorCollection<Item>) exists now, picked by DyeColor.
             // Grown flowers yield 2 dye, not 1 - see the <1.21 branch's comment.
             offerDyeRecipe(Items.DYE.pick(DyeColor.GREEN), ModBlocks.BELLS_OF_IRELAND, 1, "green_dye", "green_dye_from_bells_of_ireland");
             offerDyeRecipe(Items.DYE.pick(DyeColor.GREEN), ModBlocks.GROWN_BELLS_OF_IRELAND, 2, "green_dye", "green_dye_from_grown_bells_of_ireland");
@@ -625,11 +542,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
             offerYewWoodSetRecipes();
         }
 
-        // Explicit mod-namespaced ResourceKey, not the getConversionRecipeName-based
-        // auto-id convenience path (oneToOneConversionRecipe / bare save(output) alone):
-        // confirmed via decompiling this version's real Fabric API code that
-        // RecipeOutput.accept(...) uses the ResourceKey's own namespace directly, with no
-        // rewriting onto this mod's namespace happening anywhere in the write path.
+        // Explicit mod-namespaced ResourceKey, not the auto-id convenience path:
+        // RecipeOutput.accept(...) writes under whatever namespace it's given.
         private void offerDyeRecipe(Item dye, Block flower, int dyeCount, String group, String recipeId) {
             shapeless(RecipeCategory.MISC, dye, dyeCount)
                     .requires(flower.asItem())
@@ -722,8 +636,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .unlockedBy(getHasName(ModBlocks.YEW_PLANKS.asItem()), has(ModBlocks.YEW_PLANKS.asItem()))
                     .save(this.output, ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign")));
 
-            // Same Items.CHAIN -> Items.IRON_CHAIN rename as the >=1.21.11 branch above -
-            // confirmed still IRON_CHAIN (not reverted) on the real 26.2 jar via javap.
+            // Same Items.CHAIN -> Items.IRON_CHAIN rename as the >=1.21.11 branch above.
             shaped(RecipeCategory.DECORATIONS, ModBlocks.YEW_HANGING_SIGN.asItem(), 6)
                     .pattern("C C")
                     .pattern("###")

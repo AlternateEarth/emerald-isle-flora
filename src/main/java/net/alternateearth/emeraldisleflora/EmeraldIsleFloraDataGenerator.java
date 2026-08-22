@@ -39,11 +39,7 @@ public class EmeraldIsleFloraDataGenerator implements DataGeneratorEntrypoint {
     }
     /*?} else {*/
     /*
-    // 26.2: Fabric API's own DataGeneratorEntrypoint#buildRegistry parameter type
-    // changed from vanilla's old RegistryBuilder to vanilla's own (Mojmap)
-    // RegistrySetBuilder, and its addRegistry(...) method was itself renamed to just
-    // add(...) - confirmed via javap against the real Fabric API 26.2 jar's
-    // fabric-data-generation-api-v1 submodule and the real 26.2 client jar.
+    // 26.2: buildRegistry's parameter changed to Mojmap's RegistrySetBuilder, and addRegistry(...) was renamed to add(...).
     @Override
     public void buildRegistry(RegistrySetBuilder registryBuilder) {
         registryBuilder.add(Registries.CONFIGURED_FEATURE, ModConfiguredFeatures::bootstrap);

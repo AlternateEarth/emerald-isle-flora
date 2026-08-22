@@ -48,11 +48,8 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 /*?}*/
 
 /**
- * A single, currently-empty creative inventory tab for this mod's future items and
- * blocks. Registered on startup by EmeraldIsleFlora#onInitialize.
- * <p>
- * To add items/blocks to the tab, register them (usually in their own registry class,
- * e.g. ModItems / ModBlocks) and then add them inside the entries() callback below.
+ * A creative inventory tab for this mod's items/blocks, registered on startup by
+ * EmeraldIsleFlora#onInitialize. Add new items via the entries() callbacks below.
  */
 public final class ModItemGroups {
 
@@ -357,12 +354,9 @@ public final class ModItemGroups {
 
 	/*? if forge {*/
 	/*
-	// Adds this mod's flowers into vanilla's existing "Natural Blocks" tab, the Forge
-	// equivalent of Fabric's ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL) - and
-	// Yew Berry into "Food and Drink", the equivalent for ItemGroups.FOOD_AND_DRINK.
-	// Forge's BuildCreativeModeTabContentsEvent adds its own accept(Supplier) helper on
-	// top of vanilla's ItemGroup.Entries - NeoForge's equivalent event doesn't have it,
-	// see the neoforge branch below for the vanilla ItemGroup.Entries#add() equivalent.
+	// Forge equivalent of Fabric's ItemGroupEvents.modifyEntriesEvent, adding this mod's
+	// flowers to "Natural Blocks" and Yew Berry to "Food and Drink" via
+	// BuildCreativeModeTabContentsEvent's accept(Supplier) helper.
 	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
 		if (event.getTabKey() == ItemGroups.NATURAL) {
 			event.accept(() -> ModBlocks.BELLS_OF_IRELAND);
@@ -385,10 +379,8 @@ public final class ModItemGroups {
 
 	/*? if neoforge && <26.2 {*/
 	/*
-	// NeoForge's BuildCreativeModeTabContentsEvent implements vanilla's
-	// ItemGroup.Entries directly (no Forge-style accept(Supplier) helper), so this uses
-	// the same add(ItemConvertible) vanilla default method as the Fabric/Forge
-	// entries.add(...) calls above.
+	// NeoForge's event implements vanilla's ItemGroup.Entries directly (no Forge-style
+	// accept(Supplier) helper), so this uses the plain add(ItemConvertible) method instead.
 	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
 		if (event.getTabKey() == ItemGroups.NATURAL) {
 			event.add(ModBlocks.BELLS_OF_IRELAND);
@@ -410,13 +402,8 @@ public final class ModItemGroups {
 	/*?}*/
 	/*? if neoforge && >=26.2 {*/
 	/*
-	// 26.2: vanilla's CreativeModeTab.Output (what BuildCreativeModeTabContentsEvent
-	// implements) uses accept(ItemLike) as its own standard default method - not add(...)
-	// (that was a Yarn-specific name on the older ItemGroup.Entries interface) - so this
-	// is now the same accept(...) call used on every loader/registration path here.
-	// NATURAL_BLOCKS/FOOD_AND_DRINKS referenced via CreativeModeTabs directly - both are
-	// real public fields on the real jar (confirmed via javap), matching the same class
-	// this file's own >=26.2 register() methods already reference.
+	// 26.2: CreativeModeTab.Output's standard method is accept(ItemLike), not Yarn's
+	// add(...), so this matches the accept(...) calls used elsewhere in this file.
 	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
 		if (event.getTabKey() == CreativeModeTabs.NATURAL_BLOCKS) {
 			event.accept(ModBlocks.BELLS_OF_IRELAND);
