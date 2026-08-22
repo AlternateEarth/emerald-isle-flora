@@ -60,6 +60,14 @@ val tagResources: String = if (mod.minecraftVersion == "1.20.1") {
     "versions/data/1.21.1-plus/src/main/resources"
 }
 
+// 26.2 moved sign rendering onto ordinary blockstate + block-model JSON; this overrides the
+// shared, model-less blockstate/model used by every earlier version.
+val signBlockAssetResources: String? = if (mod.minecraftVersion == "26.2") {
+    "versions/data/26.2-plus/src/main/resources"
+} else {
+    null
+}
+
 // Deal with incompatibility between 26.2+ Mojmap-only targets (no yarn_mappings) and cloth-config-fabric's 26.2 build
 val clothConfigDependsLine = if (hasYarnMappings) ",\n\t\t\"cloth-config\": \"*\"" else ""
 tasks.named<ProcessResources>("processResources") {
@@ -93,10 +101,16 @@ if (mod.isFabric) {
 // directory value here rather than merging the three into one variable, so each stays
 // independently renamable if a future Minecraft version ever splits these at different
 // points again.
-listOfNotNull(recipeGeneratedResources, lootTableResources, tagResources).distinct().forEach {
+listOfNotNull(recipeGeneratedResources, lootTableResources, tagResources, signBlockAssetResources).distinct().forEach {
     sourceSets.main {
         resources.srcDir(rootProject.layout.projectDirectory.dir(it))
     }
+}
+
+// signBlockAssetResources overrides files at the same path as src/main/resources; sourcesJar
+// needs an explicit duplicates strategy for that overlap (processResources handles it fine by default).
+tasks.named<Jar>("sourcesJar") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks.named<Jar>("jar") {

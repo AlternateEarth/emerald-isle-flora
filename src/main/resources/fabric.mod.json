@@ -33,6 +33,7 @@
 		"minecraft": "~${minecraftVersion}",
 		"java": ">=17"@CLOTH_CONFIG_DEPENDS_LINE@
 	},
+	"mixins": ["emeraldisleflora.mixins.json"],
 	"suggests": {
 		"modmenu": "*"
 	}

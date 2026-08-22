@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "emeraldisleflora:block/yew_wall_sign",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "emeraldisleflora:block/yew_wall_sign",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "emeraldisleflora:block/yew_wall_sign"
+    },
+    "facing=west": {
+      "model": "emeraldisleflora:block/yew_wall_sign",
+      "y": 90
+    }
+  }
+}

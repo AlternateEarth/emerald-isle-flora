@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_wall_sign",
+  "textures": {
+    "all": "emeraldisleflora:block/yew_sign",
+    "particle": "emeraldisleflora:block/yew_planks"
+  }
+}

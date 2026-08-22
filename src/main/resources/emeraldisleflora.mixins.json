@@ -1,0 +1,16 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "net.alternateearth.emeraldisleflora.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BlockEntityTypeMixin"
+  ],
+  "client": [
+    "client.SignBlockEntityRendererMixin",
+    "client.HangingSignBlockEntityRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}

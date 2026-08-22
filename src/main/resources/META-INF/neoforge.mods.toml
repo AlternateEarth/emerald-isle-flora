@@ -3,6 +3,9 @@ loaderVersion = "*"
 issueTrackerURL = "https://github.com/AlternateEarth/emerald-isle-flora/issues"
 license = "MIT"
 
+[[mixins]]
+config = "emeraldisleflora.mixins.json"
+
 [[mods]]
 modId = "${id}"
 version = "${version}"
