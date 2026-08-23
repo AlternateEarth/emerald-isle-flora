@@ -45,10 +45,8 @@ public class GrowableFlower extends FlowerBlock {
     }
     /*?} else {*/
     /*
-    // 26.2: Yarn's canMobSpawnInside(BlockState) doesn't exist anymore - confirmed via
-    // javap across the whole BlockBehaviour/VegetationBlock/FlowerBlock hierarchy (not a
-    // repackage, genuinely gone from there). The real method with this exact behavior
-    // moved to Block itself under a new name: isPossibleToRespawnInThis(BlockState).
+    // 26.2: Yarn's canMobSpawnInside(BlockState) was renamed and moved to Block itself as
+    // isPossibleToRespawnInThis(BlockState).
     @Override
     public boolean isPossibleToRespawnInThis(BlockState state) {
         return true;

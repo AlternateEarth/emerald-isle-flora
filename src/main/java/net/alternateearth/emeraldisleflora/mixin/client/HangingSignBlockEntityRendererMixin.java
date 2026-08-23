@@ -13,9 +13,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /^*
- * Hanging-sign counterpart to {@link SignBlockEntityRendererMixin} (same root cause) -
- * needs its own mixin since {@code HangingSignBlockEntityRenderer} overrides
- * {@code getTextureId} with its own method body rather than inheriting it.
+ * Hanging-sign counterpart to {@link SignBlockEntityRendererMixin} needs its own mixin since 
+ * {@code HangingSignBlockEntityRenderer} overrides {@code getTextureId} with its own method body.
  ^/
 @Mixin(HangingSignBlockEntityRenderer.class)
 public class HangingSignBlockEntityRendererMixin {

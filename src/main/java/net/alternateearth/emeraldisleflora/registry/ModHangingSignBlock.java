@@ -29,20 +29,9 @@ import net.minecraft.world.level.block.state.properties.WoodType;*/
 /*?}*/
 
 /**
- * The standing/"ceiling" hanging sign block, with flammability wired for every loader -
- * see {@link ModPillarBlock}'s doc comment for the general "why". No axe-stripping.
- * <p>
- * Vanilla calls this class plain {@code HangingSignBlock} on Yarn (every target through
- * 1.21.11) but {@code CeilingHangingSignBlock} on Mojmap (26.2) - confirmed via
- * {@code javap} against the real jar for each, not assumed from naming parity with the
- * regular {@link ModSignBlock}'s base class. The constructor parameter order flip
- * (Settings-first at 1.20.1, WoodType-first from 1.21.1 on) mirrors {@link ModSignBlock}'s
- * own {@code <1.21}/{@code >=1.21} split exactly - also confirmed via {@code javap}, not
- * assumed to land on the same boundary just because {@code SignBlock} did.
- * <p>
- * Returns a {@link ModHangingSignBlockEntity} from {@code createBlockEntity} rather than
- * vanilla's own {@code HangingSignBlockEntity} - see that class's doc comment for why
- * vanilla's version can't be reused here.
+ * The standing/"ceiling" hanging sign block, with flammability wired for every loader.
+ * Named {@code HangingSignBlock} on Yarn but {@code CeilingHangingSignBlock} on Mojmap
+ * (26.2); uses {@link ModHangingSignBlockEntity} instead of vanilla's entity.
  */
 /*? if <26.2 {*/
 public class ModHangingSignBlock extends HangingSignBlock {
@@ -81,7 +70,6 @@ public class ModHangingSignBlock extends HangingSignBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        // See ModSignBlock's matching override for why this isn't a plain checkType call.
         return /*? if <1.21 {*/ checkType /*?} else {*/ /*validateTicker*/ /*?}*/ (type, ModBlockEntities.YEW_HANGING_SIGN, SignBlockEntity::tick);
     }
 }

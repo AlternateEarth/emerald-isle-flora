@@ -30,33 +30,9 @@ import net.minecraft.world.level.block.state.BlockState;*/
 import java.util.function.Supplier;
 
 /**
- * A log/wood-shaped pillar block with flammability and axe-stripping wired for every
- * loader, not just Fabric. Fabric has registry-based APIs for both
- * (FlammableBlockRegistry/StrippableBlockRegistry, see ModBlocks.register()), but
- * Forge/NeoForge only expose these as per-block-instance overrides
- * (IForgeBlock/IBlockExtension's getFlammability/isFlammable/getFireSpreadSpeed/
- * getToolModifiedState - confirmed via javap/decompiled source against the real jars,
- * vanilla's own FireBlock/AxeItem maps backing those defaults are private/protected
- * with no public registration point), which is why a plain PillarBlock/RotatedPillarBlock
- * isn't enough on those loaders.
- * <p>
- * The flammability methods below deliberately use only plain vanilla types (no
- * IForgeBlock/IBlockExtension import, no {@code @Override}) so the exact same method
- * bodies compile - and are silently inert - on Fabric too, without needing a further
- * per-loader Stonecutter split: Forge/NeoForge's Block class implements the extension
- * interface (confirmed via javap - "Block ... implements ... IForgeBlock" / "...
- * IBlockExtension"), so a same-signature method on this subclass is picked up by normal
- * Java polymorphism regardless of whether {@code @Override} is present; on Fabric, Block
- * doesn't implement that interface, so the method is simply never called.
- * <p>
- * getToolModifiedState needs the loader's own tool-action type (ToolAction on Forge,
- * ItemAbility on NeoForge) in its signature, so it can't be written loader-agnostically
- * the same way - it's nested inside the (always real, uncommented) {@code <26.2} branch
- * below, safe per AGENTS.md's Stonecutter-nesting guidance. NeoForge on 26.2 doesn't get
- * this override (would require nesting a loader marker inside the already comment-wrapped
- * Mojmap branch, the exact pattern that has corrupted this file before elsewhere in this
- * codebase) - it still gets flammability parity, just not stripping parity; stripping
- * stays Fabric-registry-only there.
+ * A log/wood-shaped pillar block with flammability and axe-stripping wired for every loader.
+ * Stripping methods use plain vanilla types with no {@code @Override}, picked up via polymorphism
+ * on Forge/NeoForge and inert on Fabric; NeoForge 26.2 only gets flammability, not stripping.
  */
 /*? if <26.2 {*/
 public class ModPillarBlock extends PillarBlock {

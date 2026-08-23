@@ -17,13 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;*/
 /*?}*/
 
 /**
- * A plain block with flammability wired for every loader - see {@link ModPillarBlock}'s
- * doc comment for the full "why" (Forge/NeoForge only expose this as a per-block-instance
- * override, no registry API, unlike Fabric's FlammableBlockRegistry). No axe-stripping
- * here, unlike ModPillarBlock - this is for flammable blocks that aren't a log/wood
- * pillar (planks, etc). Since it needs no loader-specific type (unlike
- * getToolModifiedState's ToolAction/ItemAbility split), it needs no per-loader nesting
- * and works identically - including on 26.2-neoforge - across the whole matrix.
+ * A plain flammable block for every loader, with no axe-stripping (used for planks and similar non-pillar blocks).
  */
 /*? if <26.2 {*/
 public class ModFlammableBlock extends Block {

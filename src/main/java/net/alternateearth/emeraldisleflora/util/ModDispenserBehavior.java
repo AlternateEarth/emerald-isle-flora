@@ -51,8 +51,7 @@ public final class ModDispenserBehavior {
                     return stack;
                 }
 
-                // Vanilla fallback: fertilizing crops, growing grass/saplings from
-                // dispensed-on-ground bone meal, etc. - see the javadoc above.
+                // Vanilla fallback: fertilizing crops, growing grass/saplings from dispensed-on-ground bone meal, etc. - see the javadoc above.
                 if (!BoneMealItem.useOnFertilizable(stack, world, targetPos)
                         && !BoneMealItem.useOnGround(stack, world, targetPos, (Direction) null)) {
                     this.setSuccess(false);
@@ -68,17 +67,8 @@ public final class ModDispenserBehavior {
         });
         /*?} else {*/
         /*
-        // 26.2: FallibleItemDispenserBehavior doesn't exist anymore - its equivalent
-        // (still has setSuccess/isSuccess) is OptionalDispenseItemBehavior, one level up
-        // the hierarchy from the more basic DefaultDispenseItemBehavior. BoneMealItem's
-        // own API changed too:
-        // useOnFertilizable(...)/useOnGround(...) were replaced by growCrop(...) (the
-        // generic BonemealableBlock-interface dispatch - despite the name, this is what
-        // grows grass/saplings/etc., not just crops) and growWaterPlant(...) (seagrass
-        // specifically). growWaterPlant dereferences its Direction argument (calls
-        // .getAxis() on it), so - unlike the old useOnGround call, which tolerated a null
-        // direction - passing null here would NPE; use the dispenser's own facing instead,
-        // which we already have on hand for computing targetPos.
+        // 26.2: FallibleItemDispenserBehavior is now OptionalDispenseItemBehavior, and useOnFertilizable/useOnGround became 
+        // growCrop/growWaterPlant. growWaterPlant dereferences its Direction, so pass the dispenser's facing instead of null.
         DispenserBlock.registerBehavior(Items.BONE_MEAL, new OptionalDispenseItemBehavior() {
             @Override
             protected ItemStack execute(BlockSource pointer, ItemStack stack) {

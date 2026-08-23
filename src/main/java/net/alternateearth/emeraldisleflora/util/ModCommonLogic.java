@@ -30,9 +30,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 public final class ModCommonLogic {
 
-    // One row per flower: the plain block, its grown form, and the potted version of
-    // each. Adding a new flower to the mod means adding one row here - growOrHarvest()
-    // and isModManaged() below are driven entirely off this table, no per-flower branches.
+    // One row per flower: plain block, grown form, and potted versions of each. Adding a
+    // flower means adding a row here - growOrHarvest()/isModManaged() read off this table.
     private record FlowerVariants(Block plain, Block grown, Block pottedPlain, Block pottedGrown) {}
 
     private static final FlowerVariants[] FLOWERS = {
@@ -60,17 +59,14 @@ public final class ModCommonLogic {
         }
     }
 
-    /** Whether this state is one of this mod's flower blocks, in any growth/potted state. */
+    // Whether this state is one of this mod's flower blocks, in any growth/potted state.
     public static boolean isModManaged(BlockState state) {
         Block block = state.getBlock();
         return GROW_TARGETS.containsKey(block) || HARVEST_SOURCES.containsKey(block);
     }
 
-    // The world-facing plumbing (setting block state, dropping items, sound/particles)
-    // is genuinely different per mapping, so - like the rest of this codebase - it's
-    // duplicated per branch below. Unlike the old growOrHarvest, this duplication no
-    // longer scales with the number of flowers: it's a fixed cost paid once, and the
-    // flower-specific logic above (FLOWERS/GROW_TARGETS/HARVEST_SOURCES) is shared.
+    // World-facing plumbing (block state, item drops, sound/particles) differs per mapping,
+    // so it's duplicated per branch below; the flower table above stays shared.
     /*? if <26.2 {*/
     private static void itemSoundAndParticles(ServerWorld world, BlockPos pos){
         world.playSound(null, pos, SoundEvents.ITEM_BONE_MEAL_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);

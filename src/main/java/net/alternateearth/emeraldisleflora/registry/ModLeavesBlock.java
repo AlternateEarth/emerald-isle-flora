@@ -26,20 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;*/
 /*?}*/
 
 /**
- * A leaves block with flammability wired for every loader - see {@link ModPillarBlock}'s
- * doc comment for the general "why". No axe-stripping (not applicable to leaves).
- * <p>
- * LeavesBlock itself changed shape at 1.21.11 - confirmed via javap against the real
- * jars, not assumed: on 1.20.1/1.21.1 it's a concrete class taking just
- * {@code AbstractBlock.Settings}; at 1.21.11 it became <b>abstract</b> (gained a
- * {@code leafParticleChance} float constructor param and an abstract particle-spawn
- * method), with vanilla's own oak/spruce/etc. leaves now built on a new concrete
- * subclass, {@code TintedParticleLeavesBlock(float, Settings)} - carried through
- * unchanged (same shape, Mojmap names) to 26.2. Written as three full sibling
- * Stonecutter branches (not nested) for the same reason {@code ModRecipeProvider} and
- * this file's own NeoForge {@code onRegister} split are - nesting a further version
- * split inside an already loader/version-disabled comment block has corrupted files in
- * this codebase before (see AGENTS.md's Stonecutter gotchas).
+ * A leaves block with flammability wired for every loader. LeavesBlock became abstract at 1.21.11,
+ * so vanilla leaves now build on the concrete {@code TintedParticleLeavesBlock(float, Settings)} subclass instead.
  */
 /*? if <1.21.11 {*/
 public class ModLeavesBlock extends LeavesBlock {

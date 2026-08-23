@@ -19,14 +19,8 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;*/
 /*?}*/
 
 /**
- * A trapdoor block with flammability wired for every loader - see
- * {@link ModPillarBlock}'s doc comment for the general "why". No axe-stripping.
- * <p>
- * Vanilla's constructor is protected (needs a subclass, like Door/Stairs/Sapling), its
- * parameter order flips between 1.20.1 and 1.21.1+ same as Door/FenceGate, and the class
- * itself is renamed {@code TrapdoorBlock} (Yarn) -&gt; {@code TrapDoorBlock} (Mojmap,
- * capital D) at 26.2 - all confirmed via javap independently, not assumed from the
- * Door/FenceGate pattern.
+ * Trapdoor block with per-block flammability; same constructor argument-order flip as Door/FenceGate.
+ * Also renamed {@code TrapdoorBlock} (Yarn) -&gt; {@code TrapDoorBlock} (Mojmap) at 26.2.
  */
 /*? if <26.2 {*/
 public class ModTrapdoorBlock extends TrapdoorBlock {

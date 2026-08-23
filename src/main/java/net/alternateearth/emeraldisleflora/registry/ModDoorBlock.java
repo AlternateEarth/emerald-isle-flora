@@ -19,13 +19,8 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;*/
 /*?}*/
 
 /**
- * A door block with flammability wired for every loader - see {@link ModPillarBlock}'s
- * doc comment for the general "why". No axe-stripping.
- * <p>
- * Vanilla's constructor is protected (confirmed via javap - needs a subclass just to
- * construct, like Stairs/Sapling), and its parameter *order* flipped between 1.20.1
- * ({@code (Settings, BlockSetType)}) and 1.21.1+ ({@code (BlockSetType, Settings)}) - the
- * same swap FenceGateBlock has, confirmed independently rather than assumed to match.
+ * Door block with per-block flammability. Vanilla's {@code (BlockSetType, Settings)} constructor
+ * argument order flipped between 1.20.1 and 1.21.1+.
  */
 /*? if <26.2 {*/
 public class ModDoorBlock extends DoorBlock {

@@ -28,16 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main (common) entrypoint. Runs on both the client and the dedicated server.
- * <p>
- * See registry.ModItemGroups for the creative tab, and config.ModConfig for the config
- * options.
- * <p>
- * Block/item registration timing differs by loader: Fabric registers directly here;
- * Forge defers to its own RegisterEvent (see ModBlocks#onRegister /
- * ModItemGroups#onRegisterCreativeTab), which is why this class's two loader bodies
- * don't share a single "commonInit" helper - the two loaders genuinely don't call the
- * same registration methods at the same point in startup.
+ * Main (common) entrypoint, running on both client and dedicated server. Registration timing
+ * differs by loader (Fabric registers directly, Forge/NeoForge defer to RegisterEvent), so the loader bodies aren't shared.
  */
 /*? if forgeLike {*/
 /*@Mod(EmeraldIsleFlora.MOD_ID)*/
@@ -120,8 +112,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 	/*?}*/
 
 	/**
-	 * The loaded config instance. Available after mod init has run, which every loader
-	 * guarantees happens before any other mod's client/server code runs.
+	 * The loaded config instance. Available after mod init has run.
 	 */
 	public static ModConfig getConfig() {
 		return config;

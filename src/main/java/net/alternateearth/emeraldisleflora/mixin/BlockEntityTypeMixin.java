@@ -17,10 +17,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Widens vanilla's hardcoded {@code BlockEntityType.HANGING_SIGN} block-set check (which
- * otherwise crashes on any modded block) to also accept {@link ModBlocks#YEW_HANGING_SIGN}/
- * {@link ModBlocks#YEW_WALL_HANGING_SIGN}. Method is {@code supports} on Yarn, {@code isValid}
- * on Mojmap; missing on 1.20.1, tolerated via the mixin config's {@code "required": false}.
+ * Widens vanilla's hardcoded {@code BlockEntityType.HANGING_SIGN} block-set check to also accept 
+ * {@link ModBlocks#YEW_HANGING_SIGN}/{@link ModBlocks#YEW_WALL_HANGING_SIGN}. Method is {@code supports} on Yarn, 
+ * {@code isValid} on Mojmap; missing on 1.20.1, tolerated via the mixin config's {@code "required": false}.
  */
 /*? if <26.2 {*/
 @Mixin(BlockEntityType.class)

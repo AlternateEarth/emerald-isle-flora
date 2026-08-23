@@ -17,15 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;*/
 /*?}*/
 
 /**
- * A stairs block with flammability wired for every loader - see {@link ModPillarBlock}'s
- * doc comment for the general "why". No axe-stripping (not applicable to stairs).
- * <p>
- * Vanilla's own class is {@code protected}-constructor-only (confirmed via javap - can't
- * be instantiated directly from outside its package), and was renamed
- * {@code StairsBlock} (Yarn, &lt;26.2) -&gt; {@code StairBlock} (Mojmap, 26.2, singular) -
- * confirmed, not assumed, matching this codebase's general Yarn/Mojmap divergence
- * pattern. The constructor shape itself ({@code (BlockState baseState, Settings)}) is
- * otherwise identical across all 4 versions.
+ * A stairs block with flammability wired for every loader. Vanilla's {@code StairsBlock} (Yarn)
+ * was renamed to {@code StairBlock} (Mojmap) at 26.2; the constructor shape is otherwise unchanged.
  */
 /*? if <26.2 {*/
 public class ModStairsBlock extends StairsBlock {

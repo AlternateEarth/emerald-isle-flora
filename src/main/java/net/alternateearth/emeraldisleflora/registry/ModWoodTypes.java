@@ -30,29 +30,10 @@ import net.minecraft.world.level.block.state.properties.WoodType;*/
 /*?}*/
 
 /**
- * Registers a real (not just constructed) {@link WoodType} - needed so a sign's actual
- * 3D post model can find its wood texture at all (vanilla's sign renderer looks the
- * WoodType up in an internal registered-instances set at texture-atlas-stitch time, not
- * just by reading its fields). Every other wood block (fence gate, door, trapdoor,
- * pressure plate, button) only needs {@link WoodType#setType()} for interaction sounds,
- * which works fine on a plain unregistered instance - this class exists specifically so
- * signs get the real thing too.
- * <p>
- * Vanilla's own {@code WoodType.register(WoodType)} is private with no public API on
- * Fabric, but confirmed via javap against the real jars to be widened to <b>public</b> by
- * both Forge's and NeoForge's own access transformers (permanently baked into their
- * patched jars, not something this mod needs its own access widener for) - so
- * Forge/NeoForge can call it directly on every version.
- * <p>
- * Fabric has no such transformer for external mods; Fabric API instead ships its own
- * access widener scoped to its own compiled classes, exposed to the rest of us via
- * {@code WoodTypeRegistry.register(Identifier, BlockSetType)} - but that class was
- * removed starting at the 1.21.1 Fabric API build actually used by this project
- * (confirmed against the real jars: present at 0.92.x/1.20.1, absent from 0.116.x/1.21.1
- * onward including 1.21.11 and 26.2), replaced by a differently-shaped builder,
- * {@code WoodTypeBuilder}, for every Fabric target from 1.21.1 on - so the real boundary
- * here is {@code <1.21}, not the {@code <26.2}/{@code >=26.2} split most of this mod's
- * other Yarn/Mojmap API changes land on.
+ * Registers a {@link WoodType} so a sign's 3D post model can find its wood texture - other wood blocks only 
+ * need an unregistered instance for interaction sounds. Forge/NeoForge widen {@code WoodType.register} to 
+ * public via their access transformers; Fabric instead needs Fabric API's own registration helper, which
+ * changed shape from {@code WoodTypeRegistry} to {@code WoodTypeBuilder} at 1.21.
  */
 public final class ModWoodTypes {
 

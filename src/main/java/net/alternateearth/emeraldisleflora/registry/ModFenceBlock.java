@@ -17,10 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;*/
 /*?}*/
 
 /**
- * A fence block with flammability wired for every loader - see {@link ModPillarBlock}'s
- * doc comment for the general "why". No axe-stripping. Vanilla's FenceBlock constructor
- * is public and keeps the same class name/shape across every version (confirmed via
- * javap), so this subclass exists purely for the flammability override.
+ * A fence block with flammability wired for every loader; the subclass exists purely for the
+ * flammability override, since FenceBlock's constructor is already public on every version.
  */
 /*? if <26.2 {*/
 public class ModFenceBlock extends FenceBlock {

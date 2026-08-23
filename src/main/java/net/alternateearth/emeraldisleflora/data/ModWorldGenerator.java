@@ -17,7 +17,6 @@ import net.minecraft.core.registries.Registries;
 */
 /*?}*/
 
-// Fabric-only: see EmeraldIsleFloraDataGenerator for why.
 public class ModWorldGenerator extends FabricDynamicRegistryProvider {
 
     /*? if <26.2 {*/
@@ -37,13 +36,7 @@ public class ModWorldGenerator extends FabricDynamicRegistryProvider {
     }
     /*?} else {*/
     /*
-    // 26.2: Fabric API's own FabricDataOutput was renamed FabricPackOutput (per-version
-    // rename, not just a repackage - confirmed via javap against the real Fabric API
-    // 26.2 jar's fabric-data-generation-api-v1 submodule); RegistryWrapper.WrapperLookup
-    // doesn't exist in Mojmap at all - it's vanilla's own core.HolderLookup.Provider,
-    // and the entries.addAll(...) call now needs a HolderLookup.RegistryLookup<T>
-    // (obtained via registries.lookupOrThrow(ResourceKey), not the Provider itself)
-    // rather than the Provider directly.
+    // 26.2: FabricDataOutput -> FabricPackOutput, and RegistryWrapper.WrapperLookup -> HolderLookup.Provider (via lookupOrThrow).
     public ModWorldGenerator(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }

@@ -146,15 +146,8 @@ public class ModConfiguredFeatures {
     }
     /*?} else {*/
     /*
-    // 26.2: Feature.FLOWER/RandomPatchFeatureConfig don't exist anymore - Mojang
-    // restructured "patch of scattered single blocks" world-gen away from a
-    // feature-config-level tries/spread wrapper into placement-modifier-level tries/
-    // spread (see ModPlacedFeatures for the CountPlacement/RandomOffsetPlacement side of
-    // this). What's left at the configured-feature level is just Feature.SIMPLE_BLOCK +
-    // SimpleBlockConfiguration wrapping a state provider - confirmed against vanilla's
-    // own real (shipped, unmodified) 26.2 configured_feature/flower_default.json and
-    // .../sunflower.json, both now just {"type": "minecraft:simple_block", "config":
-    // {"to_place": ...}}, no tries/spread present at this level at all anymore.
+    // 26.2: Feature.FLOWER/RandomPatchFeatureConfig are gone. Tries/spread moved to
+    // placement modifiers, leaving just Feature.SIMPLE_BLOCK + SimpleBlockConfiguration here.
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         register(
             context,
@@ -214,10 +207,8 @@ public class ModConfiguredFeatures {
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
 
-    // DataPool was renamed to WeightedPool between 1.21.1 and 1.21.11 (same shape
-    // otherwise), then to WeightedList (a vanilla-core class, not a "Data"/"Weighted"
-    // pool anymore) for 26.2, alongside the tries/spread restructuring above - isolated
-    // into its own helper so the call sites above don't need a version conditional each.
+    // DataPool -> WeightedPool (1.21.11) -> WeightedList (26.2), same shape each time.
+    // Isolated here so call sites above don't need a version conditional each.
     /*? if <1.21.11 {*/
     private static DataPool.Builder<BlockState> statePool() {
         return DataPool.builder();

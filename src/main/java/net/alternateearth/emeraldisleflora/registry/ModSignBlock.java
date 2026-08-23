@@ -29,18 +29,8 @@ import net.minecraft.world.level.block.state.properties.WoodType;*/
 /*?}*/
 
 /**
- * The standing sign block, with flammability wired for every loader - see
- * {@link ModPillarBlock}'s doc comment for the general "why". No axe-stripping.
- * <p>
- * Vanilla's class is public and concrete through 1.21.11, with the same constructor
- * parameter-order flip 1.20.1-&gt;1.21.1+ as Door/Trapdoor/FenceGate/PressurePlate/Button.
- * At 26.2 it became <b>abstract</b> (renamed the concrete standing-sign class to
- * {@code StandingSignBlock}, with {@code SignBlock} left as the shared base for both
- * standing and wall signs) - confirmed via javap (two abstract methods, {@code codec()}
- * and {@code getYRotationDegrees}, both already implemented by
- * {@code StandingSignBlock}), the same kind of split LeavesBlock went through, but at a
- * different version boundary (26.2 here, vs. 1.21.11 for Leaves) - checked independently
- * rather than assumed to land on the same version.
+ * The standing sign block, with flammability wired for every loader. At 26.2 vanilla's
+ * {@code SignBlock} became abstract, replaced by concrete {@code StandingSignBlock}.
  */
 /*? if <26.2 {*/
 public class ModSignBlock extends SignBlock {
@@ -72,8 +62,7 @@ public class ModSignBlock extends SignBlock {
         return burnChance;
     }
 
-    // Fixes a real "Block entity ... invalid for ticking" bug (confirmed from a launch
-    // log) - see ModBlockEntities' doc comment for the full "why".
+    // Fixes a "Block entity ... invalid for ticking" bug - see ModBlockEntities' doc comment.
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new SignBlockEntity(ModBlockEntities.YEW_SIGN, pos, state);
@@ -81,10 +70,7 @@ public class ModSignBlock extends SignBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        // BlockWithEntity's helper was renamed checkType -> validateTicker starting at
-        // 1.21 (confirmed via javap - still checkType at 1.20.1, already validateTicker
-        // at 1.21.1 and 1.21.11) - a real, version-boundary rename this project's own
-        // build caught, not assumed to land on the same boundary as other renames here.
+        // BlockWithEntity's helper was renamed checkType -> validateTicker starting at 1.21.
         return /*? if <1.21 {*/ checkType /*?} else {*/ /*validateTicker*/ /*?}*/ (type, ModBlockEntities.YEW_SIGN, SignBlockEntity::tick);
     }
 }
@@ -113,8 +99,6 @@ public class ModSignBlock extends StandingSignBlock {
         return burnChance;
     }
 
-    // Fixes a real "Block entity ... invalid for ticking" bug (confirmed from a launch
-    // log) - see ModBlockEntities' doc comment for the full "why".
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new SignBlockEntity(ModBlockEntities.YEW_SIGN, pos, state);
