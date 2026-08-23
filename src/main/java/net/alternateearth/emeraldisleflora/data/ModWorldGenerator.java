@@ -17,7 +17,6 @@ import net.minecraft.core.registries.Registries;
 */
 /*?}*/
 
-// Fabric-only: see EmeraldIsleFloraDataGenerator for why.
 public class ModWorldGenerator extends FabricDynamicRegistryProvider {
 
     /*? if <26.2 {*/

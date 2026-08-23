@@ -21,8 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * A small, hand-rolled JSON config (POJO + Gson, no config framework), saved to config/emerald-isle-flora.json.
- * Add new fields here, then wire each up to a matching entry in client.ModMenuIntegration.
+ * A small, hand-rolled JSON config, saved to config/emerald-isle-flora.json.
  */
 public class ModConfig {
 
@@ -37,21 +36,22 @@ public class ModConfig {
 	/*?}*/
 
 	/**
-	 * When true (default), bone meal on an already-grown flower drops an extra item without reverting the block. See util.ModCommonLogic.
+	 * When true (default), bone meal on an already-grown flower drops an extra item without reverting the block.
 	 */
 	public boolean enableGrownFlowerHarvesting = true;
 
 	/**
-	 * When true (default), bone meal on a flower (Bells of Ireland or its potted variant) grows
-	 * it into its grown variant; when false, nothing happens. See util.ModCommonLogic.
+	 * When true (default), bone meal on a flower grows it into its grown variant; when false, nothing happens.
 	 */
 	public boolean enableGrownFlowering = true;
 
 	public static ModConfig load() {
+		EmeraldIsleFlora.LOGGER.info("Loading config from {}", CONFIG_PATH);
 		if (Files.exists(CONFIG_PATH)) {
 			try (Reader reader = Files.newBufferedReader(CONFIG_PATH, StandardCharsets.UTF_8)) {
 				ModConfig loaded = GSON.fromJson(reader, ModConfig.class);
 				if (loaded != null) {
+					EmeraldIsleFlora.LOGGER.info("Loaded config from {}", CONFIG_PATH);
 					return loaded;
 				}
 			} catch (IOException e) {
@@ -60,6 +60,7 @@ public class ModConfig {
 			}
 		}
 
+		EmeraldIsleFlora.LOGGER.info("Config file {} does not exist, creating default config", CONFIG_PATH.getFileName());
 		ModConfig defaults = new ModConfig();
 		defaults.save();
 		return defaults;

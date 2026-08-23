@@ -63,9 +63,7 @@ public final class ModWorldGen {
         /*?}*/
     }
 
-    // Mapping differences (RegistryKey vs ResourceKey, etc.) are isolated here;
-    // register() just passes a biome key and a placed-feature id.
-
+    // Mapping differences (RegistryKey vs ResourceKey, etc.) are isolated here.
     /*? if fabric && <26.2 {*/
     private static void addFeature(RegistryKey<Biome> biome, String featureId) {
         BiomeModifications.addFeature(

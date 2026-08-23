@@ -39,11 +39,6 @@ import net.minecraftforge.registries.RegisterEvent;
 */
 /*?}*/
 
-/**
- * First plain (non-BlockItem) item in this mod - see ModBlocks for the block-registration
- * shape this mirrors. Yew Berry reuses vanilla's own POISONOUS_POTATO food/consumable
- * constants so its eat behavior matches a real Poisonous Potato on every version.
- */
 public final class ModItems {
 
     /*? if <26.2 {*/
@@ -64,8 +59,7 @@ public final class ModItems {
             .food(Foods.POISONOUS_POTATO, Consumables.POISONOUS_POTATO));*/
     /*?}*/
 
-    // Same >=1.21.11 registry-id requirement ModBlocks.itemId() exists for - see its doc
-    // comment. Duplicated here rather than reused from ModBlocks since that one's private.
+    // >=1.21.11 registry-id requirement
     /*? if <26.2 {*/
     /*? if >=1.21.11 {*/
     /*private static RegistryKey<Item> itemId(String name) {

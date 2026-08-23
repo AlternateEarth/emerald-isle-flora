@@ -99,7 +99,6 @@ public class ModSignBlock extends StandingSignBlock {
         return burnChance;
     }
 
-    // Fixes a "Block entity ... invalid for ticking" bug - see ModBlockEntities' doc comment.
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new SignBlockEntity(ModBlockEntities.YEW_SIGN, pos, state);

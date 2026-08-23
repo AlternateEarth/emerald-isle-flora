@@ -30,12 +30,10 @@ import net.minecraft.world.level.block.state.properties.WoodType;*/
 /*?}*/
 
 /**
- * Registers a real (not just constructed) {@link WoodType} so a sign's 3D post model can
- * find its wood texture - other wood blocks only need an unregistered instance for
- * interaction sounds. Forge/NeoForge widen {@code WoodType.register} to public via their
- * access transformers; Fabric instead needs Fabric API's own registration helper, which
- * changed shape from {@code WoodTypeRegistry} to {@code WoodTypeBuilder} at 1.21 - a
- * different version boundary than most of this mod's other Yarn/Mojmap splits.
+ * Registers a {@link WoodType} so a sign's 3D post model can find its wood texture - other wood blocks only 
+ * need an unregistered instance for interaction sounds. Forge/NeoForge widen {@code WoodType.register} to 
+ * public via their access transformers; Fabric instead needs Fabric API's own registration helper, which
+ * changed shape from {@code WoodTypeRegistry} to {@code WoodTypeBuilder} at 1.21.
  */
 public final class ModWoodTypes {
 

@@ -76,7 +76,8 @@ tasks.named<ProcessResources>("processResources") {
     }
 }
 
-// Stonecraft only auto-adds generatedResources for ForgeLike targets; Fabric needs it added explicitly or datagen output drops out of the built jar.
+// Stonecraft only auto-adds generatedResources for ForgeLike targets; Fabric needs it added explicitly or datagen output 
+// drops out of the built jar.
 if (mod.isFabric) {
     sourceSets.main {
         resources.srcDir(modSettings.generatedResources)
@@ -84,7 +85,7 @@ if (mod.isFabric) {
 }
 
 // These aren't covered by Stonecraft's ForgeLike auto-add, so every loader needs them added explicitly.
-// Deduplicated by directory value since they often resolve to the same path, which would otherwise double-register a srcDir and break sourcesJar.
+// Deduplicated by directory value since they often resolve to the same path.
 listOfNotNull(recipeGeneratedResources, lootTableResources, tagResources, signBlockAssetResources).distinct().forEach {
     sourceSets.main {
         resources.srcDir(rootProject.layout.projectDirectory.dir(it))

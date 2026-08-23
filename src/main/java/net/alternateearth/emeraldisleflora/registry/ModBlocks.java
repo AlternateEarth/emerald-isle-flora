@@ -214,7 +214,6 @@ public final class ModBlocks {
     );
 
     // Shared BlockSetType for the blocks below (cosmetic sounds only, reuses OAK's).
-    // Registered via ModWoodTypes so signs' 3D post model can find its wood texture.
     public static final WoodType YEW_WOOD_TYPE = ModWoodTypes.register("yew");
 
     public static final Block YEW_FENCE_GATE = new ModFenceGateBlock(YEW_WOOD_TYPE, AbstractBlock.Settings.copy(YEW_PLANKS)
@@ -451,8 +450,7 @@ public final class ModBlocks {
         register("yew_button", YEW_BUTTON, true);
         FlammableBlockRegistry.getDefaultInstance().add(YEW_BUTTON, 5, 20);
 
-        // Signs share one SignItem between the standing and wall variants, registered by
-        // hand under the standing sign's id (hence includeItem=false above).
+        // Signs share one SignItem between the standing and wall variants.
         register("yew_sign", YEW_SIGN, false);
         register("yew_wall_sign", YEW_WALL_SIGN, false);
         FlammableBlockRegistry.getDefaultInstance().add(YEW_SIGN, 5, 20);
@@ -471,8 +469,7 @@ public final class ModBlocks {
         ));*/
         /*?}*/
 
-        // Same sharing pattern for hanging signs, via HangingSignItem instead of SignItem
-        // - see ModHangingSignBlock's doc comment.
+        // Hanging Signs share one HangingSignItem between the standing and wall variants.
         register("yew_hanging_sign", YEW_HANGING_SIGN, false);
         register("yew_wall_hanging_sign", YEW_WALL_HANGING_SIGN, false);
         FlammableBlockRegistry.getDefaultInstance().add(YEW_HANGING_SIGN, 5, 20);
@@ -532,8 +529,6 @@ public final class ModBlocks {
 
     /*? if forge {*/
     /*
-    // Forge: same block/item instances as Fabric, registered via RegisterEvent instead
-    // of direct Registry.register since Forge's registries aren't open until this fires.
     public static void onRegister(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.BLOCKS, helper -> {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "bells_of_ireland"), BELLS_OF_IRELAND);
@@ -601,15 +596,12 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_trapdoor"), new BlockItem(YEW_TRAPDOOR, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_pressure_plate"), new BlockItem(YEW_PRESSURE_PLATE, new Item.Settings()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_button"), new BlockItem(YEW_BUTTON, new Item.Settings()));
-            // Shared between the standing and wall sign, registered under the standing
-            // sign's own identifier - see the matching comment on the Fabric path.
+            // Signs share one SignItem between the standing and wall variants.
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(new Item.Settings(), YEW_SIGN, YEW_WALL_SIGN));
-            // Same sharing pattern for the hanging sign, via HangingSignItem instead of
-            // SignItem - see ModHangingSignBlock's doc comment.
+            // Hanging Signs share one HangingSignItem between the standing and wall variants.
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Settings()));
 
-            // Must run in here, not after both event.register(...) calls at the outer
-            // method level - see the comment on registerComposting() itself for why.
+            // Must run in here, not after both event.register(...) calls at the outer method level.
             registerComposting();
         });
 
@@ -618,8 +610,6 @@ public final class ModBlocks {
     */
     /*?}*/
 
-    // NeoForge: same shape as Forge's onRegister, but via vanilla RegistryKeys.BLOCK/ITEM.
-    // Split into flat version variants since a nested Stonecutter marker isn't visible inside a disabled block comment.
     /*? if neoforge && <1.21.11 {*/
     /*
     public static void onRegister(RegisterEvent event) {
@@ -784,8 +774,6 @@ public final class ModBlocks {
     /*?}*/
     /*? if neoforge && >=26.2 {*/
     /*
-    // 26.2: same shape as the >=1.21.11 variant, Mojmap names. Registries here is the
-    // key-constants class (Mojmap's Registries == Yarn's RegistryKeys, not Yarn's Registries).
     public static void onRegister(RegisterEvent event) {
         event.register(Registries.BLOCK, helper -> {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bells_of_ireland"), BELLS_OF_IRELAND);
@@ -868,10 +856,6 @@ public final class ModBlocks {
 
     // Fabric/Forge 1.20.1 read composting values from this vanilla field; NeoForge ignores it and
     // uses its own compostables data map instead, so the .put() calls below are harmless no-ops there.
-    // Values must be keyed by .asItem(), not the Block, and on Forge/NeoForge that call must happen
-    // inside the ITEMS RegisterEvent dispatch (not the outer method): .asItem() lazily caches its
-    // result on first call, and onRegister runs once per registry, so calling it earlier permanently
-    // caches the wrong (air) item.
     private static void registerComposting() {
         /*? if <26.2 {*/
         ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.put(BELLS_OF_IRELAND.asItem(), 0.65f);
@@ -897,9 +881,7 @@ public final class ModBlocks {
     }
 
     // ForgeLike's FlowerPotBlock.addPlant() auto-registration keys on the content block's registry id
-    // at construction time, but our blocks are static fields built before ids are registered, so it
-    // silently captures nothing; this redoes it explicitly once the real ids are known. Split into
-    // flat version variants since a nested Stonecutter marker isn't visible inside a disabled block comment.
+    // at construction time. This fixes the issue of the potted variants not being registered in time for the auto-registration to work.
     /*? if forgeLike && <26.2 {*/
     /*private static void registerFlowerPotPlants() {
         // Key is the held item's (plain flower's) registry id; the supplier must return

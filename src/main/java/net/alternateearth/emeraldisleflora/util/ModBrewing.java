@@ -39,16 +39,10 @@ import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 */
 /*?}*/
 
-/**
- * Registers Yew Berry as an additional brewing-stand ingredient for vanilla's Potion of
- * Poison (Awkward Potion + Yew Berry), alongside vanilla's own Spider Eye recipe.
- * Fabric's brewing-registry API and Forge/NeoForge's registration mechanism both differ
- * across this mod's version range - see the per-branch comments below.
- */
 public final class ModBrewing {
 
-    /** Fabric/Forge: registers directly (neither needs a registry-freeze event at this
-     * version). NeoForge instead uses {@link #onRegisterBrewingRecipes}. */
+    /** Fabric/Forge: registers directly (neither needs a registry-freeze event at this version). 
+     *  NeoForge instead uses {@link #onRegisterBrewingRecipes}. */
     public static void register() {
         EmeraldIsleFlora.LOGGER.info("Registering Brewing Recipes for " + EmeraldIsleFlora.MOD_ID);
 

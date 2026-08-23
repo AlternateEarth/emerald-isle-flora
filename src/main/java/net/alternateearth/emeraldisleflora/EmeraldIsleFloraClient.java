@@ -44,7 +44,8 @@ import net.minecraft.client.renderer.blockentity.StandingSignRenderer;*/
 
 /**
  * Client-only setup; runs only on the physical client, never on a dedicated server. This project
- * uses an unsplit source set, so {@code @Environment(EnvType.CLIENT)} below is just a hint - real safety comes from only Fabric's client entrypoint and Mod Menu ever touching these classes.
+ * uses an unsplit source set, so {@code @Environment(EnvType.CLIENT)} below is just a hint - real 
+ * safety comes from only Fabric's client entrypoint and Mod Menu ever touching these classes.
  */
 /*? if fabric {*/
 @Environment(EnvType.CLIENT)
@@ -84,11 +85,10 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 		// Reuses vanilla's own sign renderer, which is generic by WoodType/attachment, not hardcoded to vanilla's sign blocks.
 		/*? if <26.2 {*/
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SIGN, SignBlockEntityRenderer::new);
-		// Hanging signs need their own renderer class (chain+board model); it handles both standing and wall variants internally.
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_HANGING_SIGN, HangingSignBlockEntityRenderer::new);
 		/*?} else {*/
 		/*
-		// 26.2: SignBlockEntityRenderer was replaced by StandingSignRenderer; it still handles both standing and wall signs internally.
+		// 26.2: SignBlockEntityRenderer was replaced by StandingSignRenderer.
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SIGN, StandingSignRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_HANGING_SIGN, HangingSignRenderer::new);
 		*/
@@ -115,7 +115,7 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 /*public final class EmeraldIsleFloraClient {
 	private EmeraldIsleFloraClient() { }
 
-	// EntityRenderersEvent.RegisterRenderers is Forge/NeoForge's equivalent client-only extension point.
+	// Forge/NeoForge's equivalent client-only extension point.
 	public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(ModBlockEntities.YEW_SIGN, SignBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntities.YEW_HANGING_SIGN, HangingSignBlockEntityRenderer::new);

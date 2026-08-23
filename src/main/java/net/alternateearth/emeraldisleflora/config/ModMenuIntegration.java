@@ -1,6 +1,6 @@
 package net.alternateearth.emeraldisleflora.config;
 
-// Excluded on 26.2+: Cloth Config's build there isn't compatible with Loom's no-remap pipeline yet, an accepted gap - see build.gradle.kts's hasConfigScreenSupport comment.
+// Excluded on 26.2+: Cloth Config's build there isn't compatible with Loom's no-remap pipeline yet.
 /*? if fabric && <26.2 {*/
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
@@ -13,8 +13,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 
 /**
- * Wires this mod's config into Mod Menu's "config" button using Cloth Config; only loaded by Mod
- * Menu's own entrypoint, so nothing here runs if Mod Menu isn't installed. Add a new entry here for each new field you add to ModConfig.
+ * Wires this mod's config into Mod Menu's "config" button, so nothing here runs if Mod Menu isn't installed.
  */
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {

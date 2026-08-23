@@ -1,9 +1,7 @@
 package net.alternateearth.emeraldisleflora.data;
 
 /**
- * Generates this mod's dye-from-flower and yew wood-set recipes via datagen, since the
- * recipe API and JSON format reshape at 1.21 and 1.21.11. Split into four full sibling
- * Stonecutter branches (not nested - see AGENTS.md) since the API itself changes.
+ * Generates this mod's dye-from-flower and yew wood-set recipes via datagen.
  */
 /*? if fabric && <1.21 {*/
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
@@ -27,8 +25,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(Consumer<RecipeJsonProvider> exporter) {
-        // Grown flowers yield 2 dye, not 1; offerShapelessRecipe takes an explicit count
-        // where offerSingleOutputShapelessRecipe would silently fix it at 1.
         offerShapelessRecipe(exporter, Items.GREEN_DYE, ModBlocks.BELLS_OF_IRELAND.asItem(), "green_dye", 1);
         offerShapelessRecipe(exporter, Items.GREEN_DYE, ModBlocks.GROWN_BELLS_OF_IRELAND.asItem(), "green_dye", 2);
 
@@ -49,8 +45,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         offerYewWoodSetRecipes(exporter);
     }
 
-    // Not offerSingleOutputShapelessRecipe: it only takes a single input item, but this
-    // recipe needs 2 flowers and a custom "_from_flowers" id.
     private static void offerGrownFromFlowersRecipe(
             Consumer<RecipeJsonProvider> exporter, Block grown, Block flower, String recipeId) {
         ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, grown.asItem())
@@ -59,10 +53,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, recipeId));
     }
 
-    // Mirrors vanilla's own oak recipe set (shapes/counts/groups/categories), just yew-namespaced.
     private static void offerYewWoodSetRecipes(Consumer<RecipeJsonProvider> exporter) {
-        // Any of the 4 log-family items convert to planks, same as vanilla's per-species
-        // log tag; uses Ingredient.ofItems instead of a new tag file since it's only used here.
+        // Any of the 4 log-family items convert to planks, same as vanilla's per-species log tag.
         ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, ModBlocks.YEW_PLANKS.asItem(), 4)
                 .input(Ingredient.ofItems(ModBlocks.YEW_LOG.asItem(), ModBlocks.YEW_WOOD.asItem(),
                         ModBlocks.STRIPPED_YEW_LOG.asItem(), ModBlocks.STRIPPED_YEW_WOOD.asItem()))
@@ -176,7 +168,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void generate(RecipeExporter exporter) {
-        // Grown flowers yield 2 dye, not 1 - see the <1.21 sibling branch's comment.
         offerShapelessRecipe(exporter, Items.GREEN_DYE, ModBlocks.BELLS_OF_IRELAND.asItem(), "green_dye", 1);
         offerShapelessRecipe(exporter, Items.GREEN_DYE, ModBlocks.GROWN_BELLS_OF_IRELAND.asItem(), "green_dye", 2);
 
@@ -204,7 +195,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, recipeId));
     }
 
-    // Mirrors vanilla's own oak recipe set - see the <1.21 sibling branch's comment.
     private static void offerYewWoodSetRecipes(RecipeExporter exporter) {
         ShapelessRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, ModBlocks.YEW_PLANKS.asItem(), 4)
                 .input(Ingredient.ofItems(ModBlocks.YEW_LOG.asItem(), ModBlocks.YEW_WOOD.asItem(),
@@ -338,10 +328,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         }
 
         @Override
-        // public, not the vanilla-declared protected: Fabric's access widener widens this
-        // method to public on the real classpath, and an override can't narrow access.
         public void generate() {
-            // Grown flowers yield 2 dye, not 1 - see the <1.21 branch's comment.
             offerDyeRecipe(Items.GREEN_DYE, ModBlocks.BELLS_OF_IRELAND, 1, "green_dye", "green_dye_from_bells_of_ireland");
             offerDyeRecipe(Items.GREEN_DYE, ModBlocks.GROWN_BELLS_OF_IRELAND, 2, "green_dye", "green_dye_from_grown_bells_of_ireland");
 
@@ -379,7 +366,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .offerTo(this.exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(EmeraldIsleFlora.MOD_ID, recipeId)));
         }
 
-        // Mirrors vanilla's own oak recipe set - see the <1.21 sibling branch's comment.
         private void offerYewWoodSetRecipes() {
             createShapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.YEW_PLANKS.asItem(), 4)
                     .input(Ingredient.ofItems(ModBlocks.YEW_LOG.asItem(), ModBlocks.YEW_WOOD.asItem(),
@@ -498,8 +484,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         super(output, registriesFuture);
     }
 
-    // See the >=1.21.11 sibling branch's getName() comment - same reasoning, Mojmap
-    // naming (RecipeProvider.Runner here instead of RecipeGenerator.RecipeProvider).
     @Override
     public String getName() {
         return "Recipes";
@@ -516,12 +500,9 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         }
 
         @Override
-        // public, not the vanilla-declared protected - see the >=1.21.11 sibling
-        // branch's generate() comment, same access-widener reasoning.
         public void buildRecipes() {
             // 26.2: per-color dye constants (Items.GREEN_DYE etc.) are gone; only
             // Items.DYE (a ColorCollection<Item>) exists now, picked by DyeColor.
-            // Grown flowers yield 2 dye, not 1 - see the <1.21 branch's comment.
             offerDyeRecipe(Items.DYE.pick(DyeColor.GREEN), ModBlocks.BELLS_OF_IRELAND, 1, "green_dye", "green_dye_from_bells_of_ireland");
             offerDyeRecipe(Items.DYE.pick(DyeColor.GREEN), ModBlocks.GROWN_BELLS_OF_IRELAND, 2, "green_dye", "green_dye_from_grown_bells_of_ireland");
 
@@ -559,7 +540,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .save(this.output, ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, recipeId)));
         }
 
-        // Mirrors vanilla's own oak recipe set - see the <1.21 sibling branch's comment.
         private void offerYewWoodSetRecipes() {
             shapeless(RecipeCategory.BUILDING_BLOCKS, ModBlocks.YEW_PLANKS.asItem(), 4)
                     .requires(Ingredient.of(ModBlocks.YEW_LOG.asItem(), ModBlocks.YEW_WOOD.asItem(),
@@ -636,7 +616,6 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .unlockedBy(getHasName(ModBlocks.YEW_PLANKS.asItem()), has(ModBlocks.YEW_PLANKS.asItem()))
                     .save(this.output, ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign")));
 
-            // Same Items.CHAIN -> Items.IRON_CHAIN rename as the >=1.21.11 branch above.
             shaped(RecipeCategory.DECORATIONS, ModBlocks.YEW_HANGING_SIGN.asItem(), 6)
                     .pattern("C C")
                     .pattern("###")

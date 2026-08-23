@@ -59,7 +59,7 @@ public final class ModCommonLogic {
         }
     }
 
-    /** Whether this state is one of this mod's flower blocks, in any growth/potted state. */
+    // Whether this state is one of this mod's flower blocks, in any growth/potted state.
     public static boolean isModManaged(BlockState state) {
         Block block = state.getBlock();
         return GROW_TARGETS.containsKey(block) || HARVEST_SOURCES.containsKey(block);

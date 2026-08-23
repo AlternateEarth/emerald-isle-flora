@@ -112,8 +112,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 	/*?}*/
 
 	/**
-	 * The loaded config instance. Available after mod init has run, which every loader
-	 * guarantees happens before any other mod's client/server code runs.
+	 * The loaded config instance. Available after mod init has run.
 	 */
 	public static ModConfig getConfig() {
 		return config;

@@ -49,10 +49,7 @@ import net.minecraftforge.registries.RegisterEvent;
 public final class ModBlockEntities {
     private ModBlockEntities() { }
 
-    // Construction differs by mapping scheme and loader: Yarn's BlockEntityType.Builder is
-    // gone at 1.21.11, so Fabric needs FabricBlockEntityTypeBuilder while NeoForge's access
-    // transformer lets it construct BlockEntityType directly; Mojmap's constructor (26.2)
-    // is public for both loaders.
+    // Construction differs by mapping scheme and loader.
     /*? if <1.21.11 {*/
     public static final BlockEntityType<SignBlockEntity> YEW_SIGN = BlockEntityType.Builder
             .create((pos, state) -> new SignBlockEntity(ModBlockEntities.YEW_SIGN, pos, state), ModBlocks.YEW_SIGN, ModBlocks.YEW_WALL_SIGN)
@@ -72,10 +69,6 @@ public final class ModBlockEntities {
             (pos, state) -> new SignBlockEntity(ModBlockEntities.YEW_SIGN, pos, state), Set.of(ModBlocks.YEW_SIGN, ModBlocks.YEW_WALL_SIGN));*/
     /*?}*/
 
-    // Same shape as YEW_SIGN above, but for the hanging sign - see
-    // ModHangingSignBlockEntity's doc comment for why it needs its own subclass. The
-    // create(...) calls need an explicit <SignBlockEntity> witness or javac infers the
-    // lambda's own subtype instead, which can't assign to this field's declared type.
     /*? if <1.21.11 {*/
     public static final BlockEntityType<SignBlockEntity> YEW_HANGING_SIGN = BlockEntityType.Builder
             .<SignBlockEntity>create((pos, state) -> new ModHangingSignBlockEntity(pos, state), ModBlocks.YEW_HANGING_SIGN, ModBlocks.YEW_WALL_HANGING_SIGN)
@@ -119,9 +112,6 @@ public final class ModBlockEntities {
     */
     /*?}*/
 
-    // NeoForge: split the same way ModBlocks#onRegister is split - this whole method is
-    // one big disabled block comment when neoforge is inactive, so a nested Stonecutter
-    // marker inside it would be invisible to the scanner.
     /*? if neoforge && <26.2 {*/
     /*
     public static void onRegister(RegisterEvent event) {

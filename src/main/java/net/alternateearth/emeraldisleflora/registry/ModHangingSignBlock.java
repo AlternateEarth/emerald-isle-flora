@@ -31,8 +31,7 @@ import net.minecraft.world.level.block.state.properties.WoodType;*/
 /**
  * The standing/"ceiling" hanging sign block, with flammability wired for every loader.
  * Named {@code HangingSignBlock} on Yarn but {@code CeilingHangingSignBlock} on Mojmap
- * (26.2); uses {@link ModHangingSignBlockEntity} instead of vanilla's entity - see that
- * class for why.
+ * (26.2); uses {@link ModHangingSignBlockEntity} instead of vanilla's entity.
  */
 /*? if <26.2 {*/
 public class ModHangingSignBlock extends HangingSignBlock {
@@ -71,7 +70,6 @@ public class ModHangingSignBlock extends HangingSignBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        // See ModSignBlock's matching override for why this isn't a plain checkType call.
         return /*? if <1.21 {*/ checkType /*?} else {*/ /*validateTicker*/ /*?}*/ (type, ModBlockEntities.YEW_HANGING_SIGN, SignBlockEntity::tick);
     }
 }

@@ -51,8 +51,7 @@ public final class ModDispenserBehavior {
                     return stack;
                 }
 
-                // Vanilla fallback: fertilizing crops, growing grass/saplings from
-                // dispensed-on-ground bone meal, etc. - see the javadoc above.
+                // Vanilla fallback: fertilizing crops, growing grass/saplings from dispensed-on-ground bone meal, etc. - see the javadoc above.
                 if (!BoneMealItem.useOnFertilizable(stack, world, targetPos)
                         && !BoneMealItem.useOnGround(stack, world, targetPos, (Direction) null)) {
                     this.setSuccess(false);
@@ -68,9 +67,8 @@ public final class ModDispenserBehavior {
         });
         /*?} else {*/
         /*
-        // 26.2: FallibleItemDispenserBehavior is now OptionalDispenseItemBehavior, and
-        // useOnFertilizable/useOnGround became growCrop/growWaterPlant. growWaterPlant
-        // dereferences its Direction, so pass the dispenser's facing instead of null.
+        // 26.2: FallibleItemDispenserBehavior is now OptionalDispenseItemBehavior, and useOnFertilizable/useOnGround became 
+        // growCrop/growWaterPlant. growWaterPlant dereferences its Direction, so pass the dispenser's facing instead of null.
         DispenserBlock.registerBehavior(Items.BONE_MEAL, new OptionalDispenseItemBehavior() {
             @Override
             protected ItemStack execute(BlockSource pointer, ItemStack stack) {
