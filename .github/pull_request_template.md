@@ -18,6 +18,6 @@
 
 ## Checklist
 
-- [] Reveiwed Code
+- [] Reviewed Code
 - [] Confirmed Build Works
 - [] Confirmed 1.20.1, 1.21.1, 1.21.11 and 26.2 launched
