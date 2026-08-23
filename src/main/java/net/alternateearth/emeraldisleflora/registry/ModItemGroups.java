@@ -102,7 +102,6 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.STRIPPED_YEW_WOOD);
 					entries.add(ModBlocks.YEW_PLANKS);
 					entries.add(ModBlocks.YEW_LEAVES);
-					entries.add(ModItems.YEW_BERRY);
 					entries.add(ModBlocks.YEW_SAPLING);
 					entries.add(ModBlocks.YEW_STAIRS);
 					entries.add(ModBlocks.YEW_SLAB);
@@ -114,6 +113,7 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.YEW_BUTTON);
 					entries.add(ModBlocks.YEW_SIGN);
 					entries.add(ModBlocks.YEW_HANGING_SIGN);
+					entries.add(ModItems.YEW_BERRY);
 				})
 				.build());
 		/*?} else {*/
@@ -367,6 +367,32 @@ public final class ModItemGroups {
 			event.accept(() -> ModBlocks.GROWN_BOG_ROSEMARY);
 			event.accept(() -> ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 			event.accept(() -> ModBlocks.GROWN_BLUEBELL);
+			event.accept(() -> ModBlocks.YEW_LOG);
+			event.accept(() -> ModBlocks.YEW_LEAVES);
+			event.accept(() -> ModBlocks.YEW_SAPLING);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.BUILDING_BLOCKS) {
+			event.accept(() -> ModBlocks.YEW_LOG);
+			event.accept(() -> ModBlocks.YEW_WOOD);
+			event.accept(() -> ModBlocks.STRIPPED_YEW_LOG);
+			event.accept(() -> ModBlocks.STRIPPED_YEW_WOOD);
+			event.accept(() -> ModBlocks.YEW_PLANKS);
+			event.accept(() -> ModBlocks.YEW_STAIRS);
+			event.accept(() -> ModBlocks.YEW_SLAB);
+			event.accept(() -> ModBlocks.YEW_FENCE);
+			event.accept(() -> ModBlocks.YEW_FENCE_GATE);
+			event.accept(() -> ModBlocks.YEW_DOOR);
+			event.accept(() -> ModBlocks.YEW_TRAPDOOR);
+			event.accept(() -> ModBlocks.YEW_PRESSURE_PLATE);
+			event.accept(() -> ModBlocks.YEW_BUTTON);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.FUNCTIONAL) {
+			event.accept(() -> ModBlocks.YEW_SIGN);
+			event.accept(() -> ModBlocks.YEW_HANGING_SIGN);
 			return;
 		}
 
@@ -391,6 +417,32 @@ public final class ModItemGroups {
 			event.add(ModBlocks.GROWN_BOG_ROSEMARY);
 			event.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 			event.add(ModBlocks.GROWN_BLUEBELL);
+			event.add(ModBlocks.YEW_LOG);
+			event.add(ModBlocks.YEW_LEAVES);
+			event.add(ModBlocks.YEW_SAPLING);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.BUILDING_BLOCKS) {
+			event.add(ModBlocks.YEW_LOG);
+			event.add(ModBlocks.YEW_WOOD);
+			event.add(ModBlocks.STRIPPED_YEW_LOG);
+			event.add(ModBlocks.STRIPPED_YEW_WOOD);
+			event.add(ModBlocks.YEW_PLANKS);
+			event.add(ModBlocks.YEW_STAIRS);
+			event.add(ModBlocks.YEW_SLAB);
+			event.add(ModBlocks.YEW_FENCE);
+			event.add(ModBlocks.YEW_FENCE_GATE);
+			event.add(ModBlocks.YEW_DOOR);
+			event.add(ModBlocks.YEW_TRAPDOOR);
+			event.add(ModBlocks.YEW_PRESSURE_PLATE);
+			event.add(ModBlocks.YEW_BUTTON);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.FUNCTIONAL) {
+			event.add(ModBlocks.YEW_SIGN);
+			event.add(ModBlocks.YEW_HANGING_SIGN);
 			return;
 		}
 
@@ -414,6 +466,32 @@ public final class ModItemGroups {
 			event.accept(ModBlocks.GROWN_BOG_ROSEMARY);
 			event.accept(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
 			event.accept(ModBlocks.GROWN_BLUEBELL);
+			event.accept(ModBlocks.YEW_LOG);
+			event.accept(ModBlocks.YEW_LEAVES);
+			event.accept(ModBlocks.YEW_SAPLING);
+			return;
+		}
+
+		if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
+			event.accept(ModBlocks.YEW_LOG);
+			event.accept(ModBlocks.YEW_WOOD);
+			event.accept(ModBlocks.STRIPPED_YEW_LOG);
+			event.accept(ModBlocks.STRIPPED_YEW_WOOD);
+			event.accept(ModBlocks.YEW_PLANKS);
+			event.accept(ModBlocks.YEW_STAIRS);
+			event.accept(ModBlocks.YEW_SLAB);
+			event.accept(ModBlocks.YEW_FENCE);
+			event.accept(ModBlocks.YEW_FENCE_GATE);
+			event.accept(ModBlocks.YEW_DOOR);
+			event.accept(ModBlocks.YEW_TRAPDOOR);
+			event.accept(ModBlocks.YEW_PRESSURE_PLATE);
+			event.accept(ModBlocks.YEW_BUTTON);
+			return;
+		}
+
+		if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+			event.accept(ModBlocks.YEW_SIGN);
+			event.accept(ModBlocks.YEW_HANGING_SIGN);
 			return;
 		}
 
