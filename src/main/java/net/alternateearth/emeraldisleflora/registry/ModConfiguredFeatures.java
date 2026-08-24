@@ -7,6 +7,8 @@ import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.trunk.StraightTrunkPlacer;
+import net.minecraft.util.math.intprovider.ConstantIntProvider;
 /*? if <1.21.11 {*/
 import net.minecraft.util.collection.DataPool;
 /*?} else {*/
@@ -18,6 +20,9 @@ import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.PlacedFeatures;
 import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
 import net.minecraft.world.gen.feature.SimpleBlockFeatureConfig;
+import net.minecraft.world.gen.feature.TreeFeatureConfig;
+import net.minecraft.world.gen.feature.size.TwoLayersFeatureSize;
+import net.minecraft.world.gen.foliage.BlobFoliagePlacer;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.WeightedBlockStateProvider;
 /*?} else {*/
@@ -43,12 +48,14 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BOG_ROSEMARY_KEY = registerKey("patch_blended_bog_rosemary");
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");
     /*?} else {*/
     /*public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BELLS_OF_IRELAND_KEY = registerKey("patch_bells_of_ireland");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BOG_ROSEMARY_KEY = registerKey("patch_bog_rosemary");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BOG_ROSEMARY_KEY = registerKey("patch_blended_bog_rosemary");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");*/
+    public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -142,6 +149,24 @@ public class ModConfiguredFeatures {
                         BlockStateProvider.of(ModBlocks.BLUEBELL)
                     )
                 ))
+        );
+
+        register(
+            context,
+            YEW_TREE_TALL_NARROW_KEY,
+            Feature.TREE,
+            new TreeFeatureConfig.Builder(
+                // Base height = 7, random height 1 = 0-3, random height 2 = 0-2, total height = 7-12
+                BlockStateProvider.of(ModBlocks.YEW_LOG),
+                new StraightTrunkPlacer(8, 3, 2),
+                BlockStateProvider.of(ModBlocks.YEW_LEAVES),
+                new BlobFoliagePlacer(
+                    ConstantIntProvider.create(2),
+                    ConstantIntProvider.create(0),
+                    5
+                ),
+                new TwoLayersFeatureSize(1, 0, 1)
+            ).build()
         );
     }
     /*?} else {*/

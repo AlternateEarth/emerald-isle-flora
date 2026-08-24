@@ -28,11 +28,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;*/
 /*?}*/
 
-/**
- * A sapling that's deliberately inert - it plants but never grows via bonemeal or naturally; real
- * tree growth is deferred to a separate branch. SaplingGenerator was renamed TreeGrower at 26.2,
- * alongside a Fertilizable -> BonemealableBlock rename.
- */
 /*? if <26.2 {*/
 /*? if <1.21 {*/
 public class ModSaplingBlock extends SaplingBlock {
@@ -41,24 +36,24 @@ public class ModSaplingBlock extends SaplingBlock {
         super(new SaplingGenerator() {
             @Override
             protected RegistryKey<ConfiguredFeature<?, ?>> getTreeFeature(Random random, boolean bees) {
-                throw new UnsupportedOperationException("Yew tree growth isn't implemented yet - see ModSaplingBlock");
+                return ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY;
             }
         }, settings);
     }
 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        // Inert for now - see this class's javadoc.
+        super.randomTick(state, world, pos, random);
     }
 
     @Override
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state, boolean isClient) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return false;
+        return true;
     }
 }
 /*?} else {*/

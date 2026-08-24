@@ -9,10 +9,13 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.gen.blockpredicate.BlockPredicate;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.gen.feature.PlacedFeatures;
 import net.minecraft.world.gen.placementmodifier.BiomePlacementModifier;
+import net.minecraft.world.gen.placementmodifier.BlockFilterPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 import net.minecraft.world.gen.placementmodifier.RarityFilterPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
@@ -48,6 +51,8 @@ public class ModPlacedFeatures {
 
     public static final RegistryKey<PlacedFeature> PATCH_BLUEBELL_FOREST_KEY = registerKey("patch_bluebell_forest");
     public static final RegistryKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");
+
+    public static final RegistryKey<PlacedFeature> YEW_TREE_TALL_NARROW_CHECKED_KEY = registerKey("yew_tree_tall_narrow_checked");
     /*?} else {*/
     /*public static final ResourceKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_MEADOW_KEY = registerKey("patch_bells_of_ireland_meadow");
     public static final ResourceKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_PLAINS_KEY = registerKey("patch_bells_of_ireland_plains");
@@ -60,7 +65,9 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> PATCH_BULBOUS_BUTTERCUP_MEADOW_KEY = registerKey("patch_bulbous_buttercup_meadow");
 
     public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FOREST_KEY = registerKey("patch_bluebell_forest");
-    public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");*/
+    public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");
+    
+    public static final ResourceKey<PlacedFeature> YEW_TREE_TALL_NARROW_CHECKED_KEY = registerKey("yew_tree_tall_narrow_checked");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -174,6 +181,17 @@ public class ModPlacedFeatures {
                 SquarePlacementModifier.of(),
                 PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of()
+            )
+        );
+
+        register(
+            context,
+            YEW_TREE_TALL_NARROW_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY),
+            List.of(
+                BlockFilterPlacementModifier.of(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.getDefaultState(), BlockPos.ORIGIN)
+                )
             )
         );
     }
