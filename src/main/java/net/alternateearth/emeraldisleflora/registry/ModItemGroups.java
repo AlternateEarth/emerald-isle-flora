@@ -114,6 +114,8 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.YEW_SIGN);
 					entries.add(ModBlocks.YEW_HANGING_SIGN);
 					entries.add(ModItems.YEW_BERRY);
+					entries.add(ModItems.YEW_BOAT);
+					entries.add(ModItems.YEW_CHEST_BOAT);
 				})
 				.build());
 		/*?} else {*/
@@ -150,6 +152,8 @@ public final class ModItemGroups {
 					entries.accept(ModBlocks.YEW_SIGN);
 					entries.accept(ModBlocks.YEW_HANGING_SIGN);
 					entries.accept(ModItems.YEW_BERRY);
+					entries.accept(ModItems.YEW_BOAT);
+					entries.accept(ModItems.YEW_CHEST_BOAT);
 				})
 				.build());*/
 		/*?}*/
@@ -303,6 +307,8 @@ public final class ModItemGroups {
 						entries.add(ModBlocks.YEW_SIGN);
 						entries.add(ModBlocks.YEW_HANGING_SIGN);
 						entries.add(ModItems.YEW_BERRY);
+						entries.add(ModItems.YEW_BOAT);
+						entries.add(ModItems.YEW_CHEST_BOAT);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.getValue(), group);
@@ -344,6 +350,8 @@ public final class ModItemGroups {
 						entries.accept(ModBlocks.YEW_SIGN);
 						entries.accept(ModBlocks.YEW_HANGING_SIGN);
 						entries.accept(ModItems.YEW_BERRY);
+						entries.accept(ModItems.YEW_BOAT);
+						entries.accept(ModItems.YEW_CHEST_BOAT);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.identifier(), group);

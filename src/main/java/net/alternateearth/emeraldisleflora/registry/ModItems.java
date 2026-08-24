@@ -16,6 +16,7 @@ import net.minecraft.item.FoodComponents;
 /*? if >=1.21.11 {*/
 /*import net.minecraft.component.type.ConsumableComponents;
 import net.minecraft.component.type.FoodComponents;
+import net.minecraft.item.BoatItem;
 import net.minecraft.registry.RegistryKey;*/
 /*?}*/
 /*?} else {*/
@@ -25,6 +26,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.Foods;
+import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.component.Consumables;
 */
@@ -59,6 +61,24 @@ public final class ModItems {
             .food(Foods.POISONOUS_POTATO, Consumables.POISONOUS_POTATO));*/
     /*?}*/
 
+    /*
+     * <1.21.11: our own BoatItem/BoatEntity stand-ins, since vanilla's are hardcoded to its
+     * own nine-value Type enum. >=1.21.11: vanilla's own BoatItem, which now just holds an
+     * EntityType reference - see ModEntities' doc-comment.
+     */
+    /*? if <1.21.11 {*/
+    public static final Item YEW_BOAT = new ModBoatItem(false, new Item.Settings().maxCount(1));
+    public static final Item YEW_CHEST_BOAT = new ModBoatItem(true, new Item.Settings().maxCount(1));
+    /*?}*/
+    /*? if >=1.21.11 && <26.2 {*/
+    /*public static final Item YEW_BOAT = new BoatItem(ModEntities.YEW_BOAT, new Item.Settings().registryKey(itemId("yew_boat")).maxCount(1));
+    public static final Item YEW_CHEST_BOAT = new BoatItem(ModEntities.YEW_CHEST_BOAT, new Item.Settings().registryKey(itemId("yew_chest_boat")).maxCount(1));*/
+    /*?}*/
+    /*? if >=26.2 {*/
+    /*public static final Item YEW_BOAT = new BoatItem(ModEntities.YEW_BOAT, new Item.Properties().setId(itemId("yew_boat")).stacksTo(1));
+    public static final Item YEW_CHEST_BOAT = new BoatItem(ModEntities.YEW_CHEST_BOAT, new Item.Properties().setId(itemId("yew_chest_boat")).stacksTo(1));*/
+    /*?}*/
+
     // >=1.21.11 registry-id requirement
     /*? if <26.2 {*/
     /*? if >=1.21.11 {*/
@@ -79,8 +99,12 @@ public final class ModItems {
 
         /*? if <26.2 {*/
         Registry.register(Registries.ITEM, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY);
+        Registry.register(Registries.ITEM, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_boat"), YEW_BOAT);
+        Registry.register(Registries.ITEM, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_chest_boat"), YEW_CHEST_BOAT);
         /*?} else {*/
-        /*Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY);*/
+        /*Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY);
+        Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_boat"), YEW_BOAT);
+        Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_chest_boat"), YEW_CHEST_BOAT);*/
         /*?}*/
 
         EmeraldIsleFlora.LOGGER.info("Finished registering Items for " + EmeraldIsleFlora.MOD_ID);
@@ -89,21 +113,30 @@ public final class ModItems {
 
     /*? if forge {*/
     /*public static void onRegister(RegisterEvent event) {
-        event.register(ForgeRegistries.Keys.ITEMS, helper ->
-            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY));
+        event.register(ForgeRegistries.Keys.ITEMS, helper -> {
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_boat"), YEW_BOAT);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_chest_boat"), YEW_CHEST_BOAT);
+        });
     }*/
     /*?}*/
 
     /*? if neoforge && <26.2 {*/
     /*public static void onRegister(RegisterEvent event) {
-        event.register(RegistryKeys.ITEM, helper ->
-            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY));
+        event.register(RegistryKeys.ITEM, helper -> {
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_boat"), YEW_BOAT);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_chest_boat"), YEW_CHEST_BOAT);
+        });
     }*/
     /*?}*/
     /*? if neoforge && >=26.2 {*/
     /*public static void onRegister(RegisterEvent event) {
-        event.register(Registries.ITEM, helper ->
-            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY));
+        event.register(Registries.ITEM, helper -> {
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_berry"), YEW_BERRY);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_boat"), YEW_BOAT);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_chest_boat"), YEW_CHEST_BOAT);
+        });
     }*/
     /*?}*/
 }
