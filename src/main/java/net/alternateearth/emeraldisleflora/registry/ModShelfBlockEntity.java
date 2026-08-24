@@ -7,11 +7,6 @@ import net.minecraft.world.level.block.entity.ShelfBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;*/
 /*?}*/
 
-/**
- * A {@link ShelfBlockEntity} subclass that swaps in this mod's own {@link BlockEntityType} via
- * {@code getType()} - same reason and pattern as {@link ModHangingSignBlockEntity}: vanilla's own
- * {@code BlockEntityTypes.SHELF} only validates against vanilla's own shelf blocks.
- */
 /*? if >=26.2 {*/
 /*public class ModShelfBlockEntity extends ShelfBlockEntity {
 
@@ -22,6 +17,11 @@ import net.minecraft.world.level.block.state.BlockState;*/
     @Override
     public BlockEntityType<?> getType() {
         return ModBlockEntities.YEW_SHELF;
+    }
+
+    @Override
+    public boolean isValidBlockState(BlockState state) {
+        return this.getType().isValid(state);
     }
 }*/
 /*?}*/

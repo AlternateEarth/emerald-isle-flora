@@ -5,6 +5,7 @@ package net.alternateearth.emeraldisleflora.registry;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.ShelfBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;*/
 /*?}*/
@@ -31,6 +32,11 @@ import net.minecraft.world.level.block.state.BlockState;*/
 
     public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return burnChance;
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ModShelfBlockEntity(pos, state);
     }
 }*/
 /*?}*/
