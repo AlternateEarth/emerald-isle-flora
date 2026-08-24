@@ -138,10 +138,8 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_HANGING_SIGN, HangingSignBlockEntityRenderer::new);
 		/*?} else {*/
 		/*
-		// 26.2: SignBlockEntityRenderer was replaced by StandingSignRenderer.
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SIGN, StandingSignRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_HANGING_SIGN, HangingSignRenderer::new);
-		// Real-world 26.2 feature (see ModShelfBlock's doc-comment) - doesn't exist on earlier versions.
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SHELF, ShelfRenderer::new);
 		*/
 		/*?}*/

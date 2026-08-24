@@ -368,8 +368,6 @@ public final class ModBlocks {
             .setId(blockId("yew_hanging_sign")), 5, 20);
     public static final Block YEW_WALL_HANGING_SIGN = new ModWallHangingSignBlock(YEW_WOOD_TYPE, BlockBehaviour.Properties.ofFullCopy(YEW_HANGING_SIGN)
             .setId(blockId("yew_wall_hanging_sign")), 5, 20);
-
-    // Real-world 26.2 feature (see ModShelfBlock's doc-comment) - doesn't exist on earlier versions.
     public static final Block YEW_SHELF = new ModShelfBlock(BlockBehaviour.Properties.ofFullCopy(OAK_SHELF)
             .setId(blockId("yew_shelf")), 5, 20);
 

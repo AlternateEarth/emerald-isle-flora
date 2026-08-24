@@ -152,6 +152,7 @@ public final class ModItemGroups {
 					entries.accept(ModBlocks.YEW_BUTTON);
 					entries.accept(ModBlocks.YEW_SIGN);
 					entries.accept(ModBlocks.YEW_HANGING_SIGN);
+					entries.accept(ModBlocks.YEW_SHELF);
 					entries.accept(ModItems.YEW_BERRY);
 					entries.accept(ModItems.YEW_BOAT);
 					entries.accept(ModItems.YEW_CHEST_BOAT);
@@ -197,7 +198,6 @@ public final class ModItemGroups {
 			content.insertAfter(ModBlocks.YEW_DOOR, ModBlocks.YEW_TRAPDOOR);
 			content.insertAfter(ModBlocks.YEW_TRAPDOOR, ModBlocks.YEW_PRESSURE_PLATE);
 			content.insertAfter(ModBlocks.YEW_PRESSURE_PLATE, ModBlocks.YEW_BUTTON);
-			// Real-world 26.2 feature (see ModShelfBlock's doc-comment) - doesn't exist on earlier versions.
 			content.insertAfter(ModBlocks.YEW_BUTTON, ModBlocks.YEW_SHELF);
 		});*/
 		/*?}*/
@@ -370,6 +370,7 @@ public final class ModItemGroups {
 						entries.accept(ModBlocks.YEW_BUTTON);
 						entries.accept(ModBlocks.YEW_SIGN);
 						entries.accept(ModBlocks.YEW_HANGING_SIGN);
+						entries.accept(ModBlocks.YEW_SHELF);
 						entries.accept(ModItems.YEW_BERRY);
 						entries.accept(ModItems.YEW_BOAT);
 						entries.accept(ModItems.YEW_CHEST_BOAT);

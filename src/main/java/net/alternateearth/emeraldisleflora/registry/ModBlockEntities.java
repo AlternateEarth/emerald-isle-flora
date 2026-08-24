@@ -89,7 +89,6 @@ public final class ModBlockEntities {
             (pos, state) -> new ModHangingSignBlockEntity(pos, state), Set.of(ModBlocks.YEW_HANGING_SIGN, ModBlocks.YEW_WALL_HANGING_SIGN));*/
     /*?}*/
 
-    // Real-world 26.2 feature (see ModShelfBlock's doc-comment) - doesn't exist on earlier versions.
     /*? if >=26.2 {*/
     /*public static final BlockEntityType<ShelfBlockEntity> YEW_SHELF = new BlockEntityType<>(
             ModShelfBlockEntity::new, Set.of(ModBlocks.YEW_SHELF));*/
