@@ -3,6 +3,7 @@ package net.alternateearth.emeraldisleflora;
 import net.alternateearth.emeraldisleflora.config.ModConfig;
 import net.alternateearth.emeraldisleflora.registry.ModBlockEntities;
 import net.alternateearth.emeraldisleflora.registry.ModBlocks;
+import net.alternateearth.emeraldisleflora.registry.ModEntities;
 import net.alternateearth.emeraldisleflora.registry.ModItemGroups;
 import net.alternateearth.emeraldisleflora.registry.ModItems;
 import net.alternateearth.emeraldisleflora.registry.ModWorldGen;
@@ -55,8 +56,10 @@ public class EmeraldIsleFlora implements ModInitializer {
 		var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(ModBlocks::onRegister);
 		modEventBus.addListener(ModBlockEntities::onRegister);
+		modEventBus.addListener(ModEntities::onRegister);
 		modEventBus.addListener(ModItems::onRegister);
 		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterRenderers);
+		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterLayers);
 		modEventBus.addListener(ModItemGroups::onRegisterCreativeTab);
 		modEventBus.addListener(ModItemGroups::onBuildCreativeTabContents);
 		MinecraftForge.EVENT_BUS.addListener(ModBoneMealInteraction::onRightClickBlock);
@@ -77,8 +80,10 @@ public class EmeraldIsleFlora implements ModInitializer {
 
 		modEventBus.addListener(ModBlocks::onRegister);
 		modEventBus.addListener(ModBlockEntities::onRegister);
+		modEventBus.addListener(ModEntities::onRegister);
 		modEventBus.addListener(ModItems::onRegister);
 		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterRenderers);
+		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterLayers);
 		modEventBus.addListener(ModItemGroups::onRegisterCreativeTab);
 		modEventBus.addListener(ModItemGroups::onBuildCreativeTabContents);
 		NeoForge.EVENT_BUS.addListener(ModBoneMealInteraction::onRightClickBlock);
@@ -101,6 +106,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 		ModItemGroups.register();
 		ModBlocks.register();
 		ModBlockEntities.register();
+		ModEntities.register();
 		ModItems.register();
 		ModBrewing.register();
 		ModBoneMealInteraction.register();

@@ -40,8 +40,11 @@
 	"block.emeraldisleflora.yew_button": "Yew Button",
 	"block.emeraldisleflora.yew_sign": "Yew Sign",
 	"block.emeraldisleflora.yew_hanging_sign": "Yew Hanging Sign",
+	"block.emeraldisleflora.yew_shelf": "Yew Shelf",
 
 	"item.emeraldisleflora.yew_berry": "Yew Berries",
+	"item.emeraldisleflora.yew_boat": "Yew Boat",
+	"item.emeraldisleflora.yew_chest_boat": "Yew Boat with Chest",
 
 	"config.emeraldisleflora.title": "Emerald Isle Flora Configuration",
 	"config.emeraldisleflora.category.general": "General",

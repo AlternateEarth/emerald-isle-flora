@@ -71,6 +71,7 @@ public final class ModItemGroups {
 		registerToNaturalBlocks();
 		registerToFunctionalBlocks();
 		registerToFoodAndDrinkBlocks();
+		registerToToolsBlocks();
 
 		EmeraldIsleFlora.LOGGER.info("Finished registering Item Groups for " + EmeraldIsleFlora.MOD_ID);
 		/*?}*/
@@ -114,6 +115,8 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.YEW_SIGN);
 					entries.add(ModBlocks.YEW_HANGING_SIGN);
 					entries.add(ModItems.YEW_BERRY);
+					entries.add(ModItems.YEW_BOAT);
+					entries.add(ModItems.YEW_CHEST_BOAT);
 				})
 				.build());
 		/*?} else {*/
@@ -149,7 +152,10 @@ public final class ModItemGroups {
 					entries.accept(ModBlocks.YEW_BUTTON);
 					entries.accept(ModBlocks.YEW_SIGN);
 					entries.accept(ModBlocks.YEW_HANGING_SIGN);
+					entries.accept(ModBlocks.YEW_SHELF);
 					entries.accept(ModItems.YEW_BERRY);
+					entries.accept(ModItems.YEW_BOAT);
+					entries.accept(ModItems.YEW_CHEST_BOAT);
 				})
 				.build());*/
 		/*?}*/
@@ -192,6 +198,7 @@ public final class ModItemGroups {
 			content.insertAfter(ModBlocks.YEW_DOOR, ModBlocks.YEW_TRAPDOOR);
 			content.insertAfter(ModBlocks.YEW_TRAPDOOR, ModBlocks.YEW_PRESSURE_PLATE);
 			content.insertAfter(ModBlocks.YEW_PRESSURE_PLATE, ModBlocks.YEW_BUTTON);
+			content.insertAfter(ModBlocks.YEW_BUTTON, ModBlocks.YEW_SHELF);
 		});*/
 		/*?}*/
 
@@ -267,6 +274,24 @@ public final class ModItemGroups {
 
 		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Food and Drink Item Group for " + EmeraldIsleFlora.MOD_ID);
 	}
+
+	private static void registerToToolsBlocks() {
+		EmeraldIsleFlora.LOGGER.info("Registering Items in Tools and Utilities Item Group for " + EmeraldIsleFlora.MOD_ID);
+
+		/*? if <26.2 {*/
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(content -> {
+			content.addAfter(Items.BAMBOO_CHEST_RAFT, ModItems.YEW_BOAT);
+			content.addAfter(ModItems.YEW_BOAT, ModItems.YEW_CHEST_BOAT);
+		});
+		/*?} else {*/
+		/*CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(content -> {
+			content.insertAfter(Items.BAMBOO_CHEST_RAFT, ModItems.YEW_BOAT);
+			content.insertAfter(ModItems.YEW_BOAT, ModItems.YEW_CHEST_BOAT);
+		});*/
+		/*?}*/
+
+		EmeraldIsleFlora.LOGGER.info("Finished registering Items in Tools and Utilities Item Group for " + EmeraldIsleFlora.MOD_ID);
+	}
 	/*?}*/
 
 	/*? if forgeLike && <26.2 {*/
@@ -303,6 +328,8 @@ public final class ModItemGroups {
 						entries.add(ModBlocks.YEW_SIGN);
 						entries.add(ModBlocks.YEW_HANGING_SIGN);
 						entries.add(ModItems.YEW_BERRY);
+						entries.add(ModItems.YEW_BOAT);
+						entries.add(ModItems.YEW_CHEST_BOAT);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.getValue(), group);
@@ -343,7 +370,10 @@ public final class ModItemGroups {
 						entries.accept(ModBlocks.YEW_BUTTON);
 						entries.accept(ModBlocks.YEW_SIGN);
 						entries.accept(ModBlocks.YEW_HANGING_SIGN);
+						entries.accept(ModBlocks.YEW_SHELF);
 						entries.accept(ModItems.YEW_BERRY);
+						entries.accept(ModItems.YEW_BOAT);
+						entries.accept(ModItems.YEW_CHEST_BOAT);
 					})
 					.build();
 			helper.register(EMERALD_ISLE_FLORA_GROUP.identifier(), group);
@@ -399,6 +429,12 @@ public final class ModItemGroups {
 
 		if (event.getTabKey() == ItemGroups.FOOD_AND_DRINK) {
 			event.getEntries().putAfter(new ItemStack(Items.BEETROOT), new ItemStack(ModItems.YEW_BERRY), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.TOOLS) {
+			event.getEntries().putAfter(new ItemStack(Items.BAMBOO_CHEST_RAFT), new ItemStack(ModItems.YEW_BOAT), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.getEntries().putAfter(new ItemStack(ModItems.YEW_BOAT), new ItemStack(ModItems.YEW_CHEST_BOAT), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
 		}
 	}
 	*/
@@ -450,6 +486,12 @@ public final class ModItemGroups {
 
 		if (event.getTabKey() == ItemGroups.FOOD_AND_DRINK) {
 			event.insertAfter(new ItemStack(Items.BEETROOT), new ItemStack(ModItems.YEW_BERRY), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.TOOLS) {
+			event.insertAfter(new ItemStack(Items.BAMBOO_CHEST_RAFT), new ItemStack(ModItems.YEW_BOAT), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModItems.YEW_BOAT), new ItemStack(ModItems.YEW_CHEST_BOAT), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
 		}
 	}
 	*/
@@ -489,6 +531,7 @@ public final class ModItemGroups {
 			event.insertAfter(new ItemStack(ModBlocks.YEW_DOOR), new ItemStack(ModBlocks.YEW_TRAPDOOR), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.insertAfter(new ItemStack(ModBlocks.YEW_TRAPDOOR), new ItemStack(ModBlocks.YEW_PRESSURE_PLATE), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 			event.insertAfter(new ItemStack(ModBlocks.YEW_PRESSURE_PLATE), new ItemStack(ModBlocks.YEW_BUTTON), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_BUTTON), new ItemStack(ModBlocks.YEW_SHELF), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 			return;
 		}
 
@@ -500,6 +543,12 @@ public final class ModItemGroups {
 
 		if (event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
 			event.insertAfter(new ItemStack(Items.BEETROOT), new ItemStack(ModItems.YEW_BERRY), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+			return;
+		}
+
+		if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+			event.insertAfter(new ItemStack(Items.BAMBOO_CHEST_RAFT), new ItemStack(ModItems.YEW_BOAT), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModItems.YEW_BOAT), new ItemStack(ModItems.YEW_CHEST_BOAT), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 		}
 	}
 	*/

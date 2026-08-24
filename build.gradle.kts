@@ -17,7 +17,16 @@ val hasConfigScreenSupport = hasYarnMappings
 // Cloth Config's Yarn build only works on Fabric
 dependencies {
     if (hasConfigScreenSupport && mod.isFabric) {
-        "modImplementation"("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}")
+        // cloth-config-fabric's own POM hard-pins a very old fabric-api (0.83.0+1.20) as a compile
+        // dependency. Fabric API dropped the fabric-mining-level-api-v1 submodule as of the 1.21
+        // tool-component rework, so on >=1.21 there's no newer version for Gradle to conflict-resolve
+        // that stale, now-incompatible submodule against - it leaks onto the runtime classpath as-is
+        // and its Mixin (targeting the pre-rework SwordItem.isSuitableFor) crashes when the
+        // server/datagen bootstrap first loads SwordItem. Nothing on >=1.21 needs this submodule
+        // (mining levels were replaced by tool components), so exclude it outright.
+        "modImplementation"("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}") {
+            exclude(group = "net.fabricmc.fabric-api", module = "fabric-mining-level-api-v1")
+        }
 
         // Mod Menu is an optional/soft dependency
         "modCompileOnly"("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
@@ -70,9 +79,22 @@ val signBlockAssetResources: String? = if (mod.minecraftVersion == "26.2") {
 
 // Deal with incompatibility between 26.2+ Mojmap-only targets (no yarn_mappings) and cloth-config-fabric's 26.2 build
 val clothConfigDependsLine = if (hasYarnMappings) ",\n\t\t\"cloth-config\": \"*\"" else ""
+
+// SignBlockEntityRendererMixin/HangingSignBlockEntityRendererMixin only exist for >=1.21 && <26.2
+// (see their Stonecutter guards); listing them unconditionally makes Mixin log "was not found"
+// errors on 1.20.1 and 26.2, where the classes compile to nothing.
+val signRendererMixinsLine = if (mod.minecraftVersion == "1.21.1" || mod.minecraftVersion == "1.21.11") {
+    ",\n  \"client\": [\n    \"client.SignBlockEntityRendererMixin\",\n    \"client.HangingSignBlockEntityRendererMixin\"\n  ]"
+} else {
+    ""
+}
+
 tasks.named<ProcessResources>("processResources") {
     filesMatching("fabric.mod.json") {
         filter { line -> line.replace("@CLOTH_CONFIG_DEPENDS_LINE@", clothConfigDependsLine) }
+    }
+    filesMatching("emeraldisleflora.mixins.json") {
+        filter { line -> line.replace("@SIGN_RENDERER_MIXINS_LINE@", signRendererMixinsLine) }
     }
 }
 
