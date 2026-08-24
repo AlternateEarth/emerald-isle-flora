@@ -38,6 +38,7 @@ public class ModBoatEntityRenderer extends BoatEntityRenderer {
 
     public ModBoatEntityRenderer(EntityRendererFactory.Context context, boolean chest) {
         super(context, chest);
+        this.shadowRadius = 0.8F;
         this.texture = Identifier.of(EmeraldIsleFlora.MOD_ID, chest ? "textures/entity/chest_boat/yew.png" : "textures/entity/boat/yew.png");
         EntityModelLayer layer = new EntityModelLayer(Identifier.of(EmeraldIsleFlora.MOD_ID, (chest ? "chest_boat/" : "boat/") + "yew"), "main");
         ModelPart part = context.getPart(layer);
@@ -82,6 +83,18 @@ public class ModBoatEntityRenderer extends BoatEntityRenderer {
         }
 
         matrices.pop();
+
+        // Not super.render(...): BoatEntityRenderer's own render() would re-render a second,
+        // vanilla-oak-textured boat on top of ours, since our entity's inherited getVariant()
+        // still reports vanilla's own (untouched) BOAT_TYPE tracked data. This replicates just
+        // the name-label bit from EntityRenderer.render(), the actual grandparent method.
+        if (this.hasLabel(entity)) {
+            /*? if <1.21 {*/
+            this.renderLabelIfPresent(entity, entity.getDisplayName(), matrices, vertexConsumers, light);
+            /*?} else {*/
+            /*this.renderLabelIfPresent(entity, entity.getDisplayName(), matrices, vertexConsumers, light, tickDelta);*/
+            /*?}*/
+        }
     }
 
     @Override

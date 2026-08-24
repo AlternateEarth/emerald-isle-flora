@@ -23,7 +23,9 @@ public class ModChestBoatEntity extends ChestBoatEntity {
 
     public ModChestBoatEntity(World world, double x, double y, double z) {
         this(ModEntities.YEW_CHEST_BOAT, world);
-        this.setPos(x, y, z);
+        // setPosition (not setPos) also recalculates the bounding box - without it the boat spawns
+        // with a stale (default-origin) collision box and visually sinks into whatever it's placed on.
+        this.setPosition(x, y, z);
         this.prevX = x;
         this.prevY = y;
         this.prevZ = z;
