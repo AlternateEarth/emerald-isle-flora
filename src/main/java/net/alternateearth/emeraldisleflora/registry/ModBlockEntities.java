@@ -14,6 +14,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ShelfBlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;*/
 /*?}*/
 /*? if forge {*/
@@ -88,6 +89,12 @@ public final class ModBlockEntities {
             (pos, state) -> new ModHangingSignBlockEntity(pos, state), Set.of(ModBlocks.YEW_HANGING_SIGN, ModBlocks.YEW_WALL_HANGING_SIGN));*/
     /*?}*/
 
+    // Real-world 26.2 feature (see ModShelfBlock's doc-comment) - doesn't exist on earlier versions.
+    /*? if >=26.2 {*/
+    /*public static final BlockEntityType<ShelfBlockEntity> YEW_SHELF = new BlockEntityType<>(
+            ModShelfBlockEntity::new, Set.of(ModBlocks.YEW_SHELF));*/
+    /*?}*/
+
     /** Fabric-only: registers directly. Forge/NeoForge instead use {@link #onRegister}. */
     /*? if fabric {*/
     public static void register() {
@@ -96,7 +103,8 @@ public final class ModBlockEntities {
         Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
         /*?} else {*/
         /*Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
-        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);*/
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+        Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_shelf"), YEW_SHELF);*/
         /*?}*/
     }
     /*?}*/
@@ -128,6 +136,7 @@ public final class ModBlockEntities {
         event.register(Registries.BLOCK_ENTITY_TYPE, helper -> {
                 helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
                 helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+                helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_shelf"), YEW_SHELF);
         });
     }
     */
