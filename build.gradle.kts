@@ -70,9 +70,22 @@ val signBlockAssetResources: String? = if (mod.minecraftVersion == "26.2") {
 
 // Deal with incompatibility between 26.2+ Mojmap-only targets (no yarn_mappings) and cloth-config-fabric's 26.2 build
 val clothConfigDependsLine = if (hasYarnMappings) ",\n\t\t\"cloth-config\": \"*\"" else ""
+
+// SignBlockEntityRendererMixin/HangingSignBlockEntityRendererMixin only exist for >=1.21 && <26.2
+// (see their Stonecutter guards); listing them unconditionally makes Mixin log "was not found"
+// errors on 1.20.1 and 26.2, where the classes compile to nothing.
+val signRendererMixinsLine = if (mod.minecraftVersion == "1.21.1" || mod.minecraftVersion == "1.21.11") {
+    ",\n  \"client\": [\n    \"client.SignBlockEntityRendererMixin\",\n    \"client.HangingSignBlockEntityRendererMixin\"\n  ]"
+} else {
+    ""
+}
+
 tasks.named<ProcessResources>("processResources") {
     filesMatching("fabric.mod.json") {
         filter { line -> line.replace("@CLOTH_CONFIG_DEPENDS_LINE@", clothConfigDependsLine) }
+    }
+    filesMatching("emeraldisleflora.mixins.json") {
+        filter { line -> line.replace("@SIGN_RENDERER_MIXINS_LINE@", signRendererMixinsLine) }
     }
 }
 
