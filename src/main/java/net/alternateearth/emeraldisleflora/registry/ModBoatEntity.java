@@ -1,11 +1,5 @@
 package net.alternateearth.emeraldisleflora.registry;
 
-/*
- * Only needed on targets whose vanilla BoatEntity still uses the closed 9-value Type enum
- * (<1.21.11) - see ModEntities' doc-comment. At >=1.21.11 vanilla's own BoatEntity/Boat takes
- * an arbitrary Supplier<Item>, so no subclass is needed there and this whole file compiles to
- * nothing.
- */
 /*? if <1.21.11 {*/
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -35,8 +29,8 @@ public class ModBoatEntity extends BoatEntity {
 
     public ModBoatEntity(World world, double x, double y, double z) {
         this(ModEntities.YEW_BOAT, world);
-        // setPosition (not setPos) also recalculates the bounding box - without it the boat spawns
-        // with a stale (default-origin) collision box and visually sinks into whatever it's placed on.
+        // setPosition recalculates the bounding box - without it the boat spawns with a stale collision box 
+        // and visually sinks into whatever it's placed on.
         this.setPosition(x, y, z);
         this.prevX = x;
         this.prevY = y;
@@ -84,7 +78,6 @@ public class ModBoatEntity extends BoatEntity {
         return Variant.byId(this.dataTracker.get(VARIANT));
     }
 
-    /** Only one constant for now - mirrors vanilla's own {@code BoatEntity.Type} shape so a future second wood type is a one-line addition. */
     public enum Variant implements StringIdentifiable {
         YEW("yew");
 

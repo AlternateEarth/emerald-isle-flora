@@ -21,16 +21,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Quaternionf;
 
-/**
- * Client-only (referenced only from {@code EmeraldIsleFloraClient}/its Forge-Neo equivalent -
- * see AGENTS.md on why this codebase doesn't mark client classes with an annotation). Renders
- * {@link ModBoatEntity}/{@link ModChestBoatEntity} with the mod's own single yew
- * texture/model instead of vanilla's per-{@code BoatEntity.Type} lookup, which only knows
- * about vanilla's own nine wood types. Extending vanilla's own {@link BoatEntityRenderer}
- * (rather than {@code EntityRenderer<BoatEntity>} directly) and overriding its render/texture
- * hooks keeps the paddle, damage-wobble, and bubble-column animation logic in sync with
- * vanilla instead of re-deriving it from scratch.
- */
 public class ModBoatEntityRenderer extends BoatEntityRenderer {
 
     private final Identifier texture;
@@ -70,7 +60,6 @@ public class ModBoatEntityRenderer extends BoatEntityRenderer {
         this.model.setAngles(entity, tickDelta, 0.0F, -0.1F, 0.0F, 0.0F);
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(this.model.getLayer(this.texture));
-        // Model.render's tint arguments were collapsed from four floats (r,g,b,a) into one packed ARGB int at 1.21.
         /*? if <1.21 {*/
         this.model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
         /*?} else {*/
@@ -84,10 +73,6 @@ public class ModBoatEntityRenderer extends BoatEntityRenderer {
 
         matrices.pop();
 
-        // Not super.render(...): BoatEntityRenderer's own render() would re-render a second,
-        // vanilla-oak-textured boat on top of ours, since our entity's inherited getVariant()
-        // still reports vanilla's own (untouched) BOAT_TYPE tracked data. This replicates just
-        // the name-label bit from EntityRenderer.render(), the actual grandparent method.
         if (this.hasLabel(entity)) {
             /*? if <1.21 {*/
             this.renderLabelIfPresent(entity, entity.getDisplayName(), matrices, vertexConsumers, light);

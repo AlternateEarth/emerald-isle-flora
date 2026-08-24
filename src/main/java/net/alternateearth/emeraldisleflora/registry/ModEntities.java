@@ -35,16 +35,6 @@ import net.minecraftforge.registries.RegisterEvent;
 */
 /*?}*/
 
-/**
- * Owns this mod's boat/chest-boat {@link EntityType}s. Vanilla's boat entity was rebuilt
- * between 1.21.1 and 1.21.11: pre-1.21.11 it's a closed, 9-value {@code BoatEntity.Type}
- * enum modders can't extend, so a modded boat needs its own {@code BoatEntity}/
- * {@code ChestBoatEntity} subclass tracking its own variant (see {@link ModBoatEntity}); from
- * 1.21.11 on (this also covers 26.2's Mojmap {@code Boat}/{@code ChestBoat} - the numeric
- * {@code >=1.21.11} check happens to catch both, see AGENTS.md's version-comparison gotcha)
- * vanilla's boat entity takes an arbitrary drop-item {@code Supplier<Item>} directly, so this
- * class just instantiates vanilla's own classes with a lambda pointing at {@link ModItems}.
- */
 public final class ModEntities {
 
     private ModEntities() {

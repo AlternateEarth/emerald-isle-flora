@@ -12,7 +12,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.world.World;
 
-/** Chest-boat counterpart to {@link ModBoatEntity} - see its doc-comment for why this subclass exists at all. */
+/** Chest-boat counterpart to {@link ModBoatEntity}*/
 public class ModChestBoatEntity extends ChestBoatEntity {
 
     private static final TrackedData<Integer> VARIANT = DataTracker.registerData(ModChestBoatEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -23,8 +23,8 @@ public class ModChestBoatEntity extends ChestBoatEntity {
 
     public ModChestBoatEntity(World world, double x, double y, double z) {
         this(ModEntities.YEW_CHEST_BOAT, world);
-        // setPosition (not setPos) also recalculates the bounding box - without it the boat spawns
-        // with a stale (default-origin) collision box and visually sinks into whatever it's placed on.
+        // setPosition recalculates the bounding box - without it the boat spawns with a stale collision box 
+        // and visually sinks into whatever it's placed on.
         this.setPosition(x, y, z);
         this.prevX = x;
         this.prevY = y;

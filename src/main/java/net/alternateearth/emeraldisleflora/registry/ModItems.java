@@ -61,11 +61,6 @@ public final class ModItems {
             .food(Foods.POISONOUS_POTATO, Consumables.POISONOUS_POTATO));*/
     /*?}*/
 
-    /*
-     * <1.21.11: our own BoatItem/BoatEntity stand-ins, since vanilla's are hardcoded to its
-     * own nine-value Type enum. >=1.21.11: vanilla's own BoatItem, which now just holds an
-     * EntityType reference - see ModEntities' doc-comment.
-     */
     /*? if <1.21.11 {*/
     public static final Item YEW_BOAT = new ModBoatItem(false, new Item.Settings().maxCount(1));
     public static final Item YEW_CHEST_BOAT = new ModBoatItem(true, new Item.Settings().maxCount(1));
