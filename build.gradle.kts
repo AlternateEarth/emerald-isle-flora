@@ -17,7 +17,16 @@ val hasConfigScreenSupport = hasYarnMappings
 // Cloth Config's Yarn build only works on Fabric
 dependencies {
     if (hasConfigScreenSupport && mod.isFabric) {
-        "modImplementation"("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}")
+        // cloth-config-fabric's own POM hard-pins a very old fabric-api (0.83.0+1.20) as a compile
+        // dependency. Fabric API dropped the fabric-mining-level-api-v1 submodule as of the 1.21
+        // tool-component rework, so on >=1.21 there's no newer version for Gradle to conflict-resolve
+        // that stale, now-incompatible submodule against - it leaks onto the runtime classpath as-is
+        // and its Mixin (targeting the pre-rework SwordItem.isSuitableFor) crashes when the
+        // server/datagen bootstrap first loads SwordItem. Nothing on >=1.21 needs this submodule
+        // (mining levels were replaced by tool components), so exclude it outright.
+        "modImplementation"("me.shedaniel.cloth:cloth-config-fabric:${project.property("cloth_config_version")}") {
+            exclude(group = "net.fabricmc.fabric-api", module = "fabric-mining-level-api-v1")
+        }
 
         // Mod Menu is an optional/soft dependency
         "modCompileOnly"("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
