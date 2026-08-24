@@ -20,14 +20,17 @@ import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 import net.minecraft.world.gen.placementmodifier.RarityFilterPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
 /*?} else {*/
-/*import net.minecraft.core.Holder;
+/*import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
+import net.minecraft.world.level.levelgen.placement.BlockPredicateFilter;
 import net.minecraft.world.level.levelgen.placement.CountPlacement;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -325,6 +328,17 @@ public class ModPlacedFeatures {
                 BiomeFilter.biome(),
                 CountPlacement.of(64),
                 RandomOffsetPlacement.ofTriangle(6, 4)
+            )
+        );
+
+        register(
+            context,
+            YEW_TREE_TALL_NARROW_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY),
+            List.of(
+                BlockPredicateFilter.forPredicate(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.defaultBlockState(), BlockPos.ZERO)
+                )
             )
         );
     }

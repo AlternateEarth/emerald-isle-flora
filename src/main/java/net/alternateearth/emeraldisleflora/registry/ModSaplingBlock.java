@@ -14,10 +14,12 @@ import net.minecraft.block.sapling.SaplingGenerator;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 /*?} else {*/
-/*import net.minecraft.block.SaplingGenerator;*/
+/*import net.minecraft.block.SaplingGenerator;
+import java.util.Optional;*/
 /*?}*/
 /*?} else {*/
-/*import net.minecraft.core.BlockPos;
+/*import java.util.Optional;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -61,22 +63,22 @@ public class ModSaplingBlock extends SaplingBlock {
 public class ModSaplingBlock extends SaplingBlock {
 
     public ModSaplingBlock(AbstractBlock.Settings settings) {
-        super(SaplingGenerator.OAK, settings);
+        super(new SaplingGenerator("yew", Optional.empty(), Optional.of(ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY), Optional.empty()), settings);
     }
 
     @Override
     protected void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        // Inert for now - see this class's javadoc.
+        super.randomTick(state, world, pos, random);
     }
 
     @Override
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return false;
+        return true;
     }
 }
 */
@@ -86,22 +88,22 @@ public class ModSaplingBlock extends SaplingBlock {
 public class ModSaplingBlock extends SaplingBlock {
 
     public ModSaplingBlock(BlockBehaviour.Properties settings) {
-        super(TreeGrower.OAK, settings);
+        super(new TreeGrower("yew", Optional.empty(), Optional.of(ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY), Optional.empty()), settings);
     }
 
     @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        // Inert for now - see this class's javadoc.
+        super.randomTick(state, level, pos, random);
     }
 
     @Override
     public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isBonemealSuccess(Level level, RandomSource random, BlockPos pos, BlockState state) {
-        return false;
+        return true;
     }
 }
 */

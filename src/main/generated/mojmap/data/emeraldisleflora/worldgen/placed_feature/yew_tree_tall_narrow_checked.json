@@ -1,0 +1,17 @@
+{
+  "feature": "emeraldisleflora:yew_tree_tall_narrow",
+  "placement": [
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": {
+          "Name": "emeraldisleflora:yew_sapling",
+          "Properties": {
+            "stage": "0"
+          }
+        }
+      }
+    }
+  ]
+}

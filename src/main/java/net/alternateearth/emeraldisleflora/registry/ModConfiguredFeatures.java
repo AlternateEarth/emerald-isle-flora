@@ -26,18 +26,25 @@ import net.minecraft.world.gen.foliage.BlobFoliagePlacer;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.WeightedBlockStateProvider;
 /*?} else {*/
-/*import net.minecraft.core.registries.Registries;
+/*import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.random.WeightedList;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
 */
 /*?}*/
 
@@ -174,6 +181,9 @@ public class ModConfiguredFeatures {
     // 26.2: Feature.FLOWER/RandomPatchFeatureConfig are gone. Tries/spread moved to
     // placement modifiers, leaving just Feature.SIMPLE_BLOCK + SimpleBlockConfiguration here.
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
+        HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
+        BlockStateProvider belowTrunkProvider = TreeConfiguration.defaultPlaceBelowTreeTrunkProvider(biomes);
+
         register(
             context,
             PATCH_BELLS_OF_IRELAND_KEY,
@@ -225,6 +235,25 @@ public class ModConfiguredFeatures {
             new SimpleBlockConfiguration(
                 BlockStateProvider.simple(ModBlocks.BLUEBELL)
             )
+        );
+
+        register(
+            context,
+            YEW_TREE_TALL_NARROW_KEY,
+            Feature.TREE,
+            new TreeConfiguration.TreeConfigurationBuilder(
+                // Base height = 7, random height 1 = 0-3, random height 2 = 0-2, total height = 7-12
+                BlockStateProvider.simple(ModBlocks.YEW_LOG),
+                new StraightTrunkPlacer(8, 3, 2),
+                BlockStateProvider.simple(ModBlocks.YEW_LEAVES),
+                new BlobFoliagePlacer(
+                    ConstantInt.of(2),
+                    ConstantInt.of(0),
+                    5
+                ),
+                new TwoLayersFeatureSize(1, 0, 1),
+                belowTrunkProvider
+            ).build()
         );
     }
     */
