@@ -3,17 +3,15 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "emeraldisleflora:yew_boat"
+        "recipe": "emeraldisleflora:yew_shelf"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
-    "has_yew_planks": {
+    "has_stripped_yew_log": {
       "conditions": {
         "items": [
           {
-            "items": [
-              "emeraldisleflora:yew_planks"
-            ]
+            "items": "emeraldisleflora:stripped_yew_log"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_yew_planks",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_stripped_yew_log"
     ]
   ],
   "rewards": {
     "recipes": [
-      "emeraldisleflora:yew_boat"
+      "emeraldisleflora:yew_shelf"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

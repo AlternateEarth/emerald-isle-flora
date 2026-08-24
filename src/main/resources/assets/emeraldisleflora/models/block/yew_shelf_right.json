@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_shelf_right",
+  "textures": {
+    "all": "emeraldisleflora:block/yew_shelf",
+    "particle": "emeraldisleflora:block/stripped_yew_log"
+  }
+}

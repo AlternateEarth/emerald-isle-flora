@@ -21,6 +21,7 @@ import net.minecraft.client.render.BlockRenderLayer;
 /*?}*/
 /*?} else {*/
 /*import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
+import net.minecraft.client.renderer.blockentity.ShelfRenderer;
 import net.minecraft.client.renderer.blockentity.StandingSignRenderer;*/
 /*?}*/
 /*?}*/
@@ -59,6 +60,7 @@ import net.minecraft.client.render.block.entity.SignBlockEntityRenderer;*/
 /*? if forgeLike && >=26.2 {*/
 /*import net.alternateearth.emeraldisleflora.registry.ModBlockEntities;
 import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
+import net.minecraft.client.renderer.blockentity.ShelfRenderer;
 import net.minecraft.client.renderer.blockentity.StandingSignRenderer;*/
 /*?}*/
 /*? if forgeLike && <1.21.11 {*/
@@ -136,9 +138,9 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_HANGING_SIGN, HangingSignBlockEntityRenderer::new);
 		/*?} else {*/
 		/*
-		// 26.2: SignBlockEntityRenderer was replaced by StandingSignRenderer.
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SIGN, StandingSignRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_HANGING_SIGN, HangingSignRenderer::new);
+		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SHELF, ShelfRenderer::new);
 		*/
 		/*?}*/
 
@@ -218,6 +220,7 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 	public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(ModBlockEntities.YEW_SIGN, StandingSignRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntities.YEW_HANGING_SIGN, HangingSignRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntities.YEW_SHELF, ShelfRenderer::new);
 		event.registerEntityRenderer(ModEntities.YEW_BOAT, context -> new BoatRenderer(context, new ModelLayerLocation(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "boat/yew"), "main")));
 		event.registerEntityRenderer(ModEntities.YEW_CHEST_BOAT, context -> new BoatRenderer(context, new ModelLayerLocation(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "chest_boat/yew"), "main")));
 	}

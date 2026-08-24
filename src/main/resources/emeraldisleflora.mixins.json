@@ -5,11 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "BlockEntityTypeMixin"
-  ],
-  "client": [
-    "client.SignBlockEntityRendererMixin",
-    "client.HangingSignBlockEntityRendererMixin"
-  ],
+  ]@SIGN_RENDERER_MIXINS_LINE@,
   "injectors": {
     "defaultRequire": 0
   }

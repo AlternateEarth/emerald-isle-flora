@@ -368,6 +368,8 @@ public final class ModBlocks {
             .setId(blockId("yew_hanging_sign")), 5, 20);
     public static final Block YEW_WALL_HANGING_SIGN = new ModWallHangingSignBlock(YEW_WOOD_TYPE, BlockBehaviour.Properties.ofFullCopy(YEW_HANGING_SIGN)
             .setId(blockId("yew_wall_hanging_sign")), 5, 20);
+    public static final Block YEW_SHELF = new ModShelfBlock(BlockBehaviour.Properties.ofFullCopy(OAK_SHELF)
+            .setId(blockId("yew_shelf")), 5, 20);
 
     // Same >=1.21.11 registry-id-before-construction requirement as above.
     private static ResourceKey<Block> blockId(String name) {
@@ -487,6 +489,12 @@ public final class ModBlocks {
         /*Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(
                 YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Properties().setId(itemId("yew_hanging_sign")).useBlockDescriptionPrefix()
         ));*/
+        /*?}*/
+
+        // Real-world 26.2 feature (see ModShelfBlock's doc-comment) - doesn't exist on earlier versions.
+        /*? if >=26.2 {*/
+        /*register("yew_shelf", YEW_SHELF, true);
+        FlammableBlockRegistry.getDefaultInstance().add(YEW_SHELF, 5, 20);*/
         /*?}*/
 
         registerComposting();
@@ -815,6 +823,7 @@ public final class ModBlocks {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_wall_sign"), YEW_WALL_SIGN);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_wall_hanging_sign"), YEW_WALL_HANGING_SIGN);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_shelf"), YEW_SHELF);
         });
 
         event.register(Registries.ITEM, helper -> {
@@ -843,6 +852,7 @@ public final class ModBlocks {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_button"), new BlockItem(YEW_BUTTON, new Item.Properties().setId(itemId("yew_button")).useBlockDescriptionPrefix()));
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(YEW_SIGN, YEW_WALL_SIGN, new Item.Properties().setId(itemId("yew_sign")).useBlockDescriptionPrefix()));
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Properties().setId(itemId("yew_hanging_sign")).useBlockDescriptionPrefix()));
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_shelf"), new BlockItem(YEW_SHELF, new Item.Properties().setId(itemId("yew_shelf")).useBlockDescriptionPrefix()));
 
             // Must run in here, not after both event.register(...) calls at the outer
             // method level - see the comment on registerComposting() itself.

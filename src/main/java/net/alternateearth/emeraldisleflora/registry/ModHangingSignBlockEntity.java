@@ -28,4 +28,11 @@ public class ModHangingSignBlockEntity extends HangingSignBlockEntity {
     public BlockEntityType<?> getType() {
         return ModBlockEntities.YEW_HANGING_SIGN;
     }
+
+    /*? if >=26.2 {*/
+    /*@Override
+    public boolean isValidBlockState(BlockState state) {
+        return this.getType().isValid(state);
+    }*/
+    /*?}*/
 }

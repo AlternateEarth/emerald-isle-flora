@@ -6,6 +6,7 @@ package net.alternateearth.emeraldisleflora.data;
 /*? if fabric && <1.21 {*/
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.alternateearth.emeraldisleflora.registry.ModBlocks;
+import net.alternateearth.emeraldisleflora.registry.ModItems;
 import java.util.function.Consumer;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -142,12 +143,28 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModBlocks.STRIPPED_YEW_LOG.asItem()), conditionsFromItem(ModBlocks.STRIPPED_YEW_LOG.asItem()))
                 .criterion(hasItem(ModBlocks.STRIPPED_YEW_WOOD.asItem()), conditionsFromItem(ModBlocks.STRIPPED_YEW_WOOD.asItem()))
                 .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"));
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.YEW_BOAT)
+                .pattern("# #")
+                .pattern("###")
+                .input('#', ModBlocks.YEW_PLANKS.asItem())
+                .group("boat")
+                .criterion(hasItem(ModBlocks.YEW_PLANKS.asItem()), conditionsFromItem(ModBlocks.YEW_PLANKS.asItem()))
+                .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_boat"));
+
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.YEW_CHEST_BOAT)
+                .input(Items.CHEST)
+                .input(ModItems.YEW_BOAT)
+                .group("chest_boat")
+                .criterion(hasItem(ModItems.YEW_BOAT), conditionsFromItem(ModItems.YEW_BOAT))
+                .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_chest_boat"));
     }
 }
 /*?}*/
 /*? if fabric && >=1.21 && <1.21.11 {*/
 /*import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.alternateearth.emeraldisleflora.registry.ModBlocks;
+import net.alternateearth.emeraldisleflora.registry.ModItems;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -283,6 +300,21 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModBlocks.STRIPPED_YEW_LOG.asItem()), conditionsFromItem(ModBlocks.STRIPPED_YEW_LOG.asItem()))
                 .criterion(hasItem(ModBlocks.STRIPPED_YEW_WOOD.asItem()), conditionsFromItem(ModBlocks.STRIPPED_YEW_WOOD.asItem()))
                 .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"));
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.YEW_BOAT)
+                .pattern("# #")
+                .pattern("###")
+                .input('#', ModBlocks.YEW_PLANKS.asItem())
+                .group("boat")
+                .criterion(hasItem(ModBlocks.YEW_PLANKS.asItem()), conditionsFromItem(ModBlocks.YEW_PLANKS.asItem()))
+                .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_boat"));
+
+        ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.YEW_CHEST_BOAT)
+                .input(Items.CHEST)
+                .input(ModItems.YEW_BOAT)
+                .group("chest_boat")
+                .criterion(hasItem(ModItems.YEW_BOAT), conditionsFromItem(ModItems.YEW_BOAT))
+                .offerTo(exporter, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_chest_boat"));
     }
 }
 */
@@ -290,6 +322,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 /*? if fabric && >=1.21.11 && <26.2 {*/
 /*import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.alternateearth.emeraldisleflora.registry.ModBlocks;
+import net.alternateearth.emeraldisleflora.registry.ModItems;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -455,6 +488,21 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .criterion(hasItem(ModBlocks.STRIPPED_YEW_LOG.asItem()), conditionsFromItem(ModBlocks.STRIPPED_YEW_LOG.asItem()))
                     .criterion(hasItem(ModBlocks.STRIPPED_YEW_WOOD.asItem()), conditionsFromItem(ModBlocks.STRIPPED_YEW_WOOD.asItem()))
                     .offerTo(this.exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign")));
+
+            createShaped(RecipeCategory.MISC, ModItems.YEW_BOAT, 1)
+                    .pattern("# #")
+                    .pattern("###")
+                    .input('#', ModBlocks.YEW_PLANKS.asItem())
+                    .group("boat")
+                    .criterion(hasItem(ModBlocks.YEW_PLANKS.asItem()), conditionsFromItem(ModBlocks.YEW_PLANKS.asItem()))
+                    .offerTo(this.exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_boat")));
+
+            createShapeless(RecipeCategory.MISC, ModItems.YEW_CHEST_BOAT, 1)
+                    .input(Items.CHEST)
+                    .input(ModItems.YEW_BOAT)
+                    .group("chest_boat")
+                    .criterion(hasItem(ModItems.YEW_BOAT), conditionsFromItem(ModItems.YEW_BOAT))
+                    .offerTo(this.exporter, RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_chest_boat")));
         }
     }
 }
@@ -463,6 +511,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 /*? if fabric && >=26.2 {*/
 /*import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
 import net.alternateearth.emeraldisleflora.registry.ModBlocks;
+import net.alternateearth.emeraldisleflora.registry.ModItems;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -628,6 +677,21 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                     .unlockedBy(getHasName(ModBlocks.STRIPPED_YEW_LOG.asItem()), has(ModBlocks.STRIPPED_YEW_LOG.asItem()))
                     .unlockedBy(getHasName(ModBlocks.STRIPPED_YEW_WOOD.asItem()), has(ModBlocks.STRIPPED_YEW_WOOD.asItem()))
                     .save(this.output, ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign")));
+
+            shaped(RecipeCategory.MISC, ModItems.YEW_BOAT, 1)
+                    .pattern("# #")
+                    .pattern("###")
+                    .define('#', ModBlocks.YEW_PLANKS.asItem())
+                    .group("boat")
+                    .unlockedBy(getHasName(ModBlocks.YEW_PLANKS.asItem()), has(ModBlocks.YEW_PLANKS.asItem()))
+                    .save(this.output, ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_boat")));
+
+            shapeless(RecipeCategory.MISC, ModItems.YEW_CHEST_BOAT, 1)
+                    .requires(Items.CHEST)
+                    .requires(ModItems.YEW_BOAT)
+                    .group("chest_boat")
+                    .unlockedBy(getHasName(ModItems.YEW_BOAT), has(ModItems.YEW_BOAT))
+                    .save(this.output, ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_chest_boat")));
         }
     }
 }
