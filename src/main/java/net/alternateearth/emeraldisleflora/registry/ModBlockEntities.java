@@ -8,6 +8,9 @@ import net.minecraft.block.entity.SignBlockEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+/*? if >=1.21.11 {*/
+/*import net.minecraft.block.entity.ShelfBlockEntity;*/
+/*?}*/
 /*?} else {*/
 /*import java.util.Set;
 import net.minecraft.core.Registry;
@@ -50,7 +53,6 @@ import net.minecraftforge.registries.RegisterEvent;
 public final class ModBlockEntities {
     private ModBlockEntities() { }
 
-    // Construction differs by mapping scheme and loader.
     /*? if <1.21.11 {*/
     public static final BlockEntityType<SignBlockEntity> YEW_SIGN = BlockEntityType.Builder
             .create((pos, state) -> new SignBlockEntity(ModBlockEntities.YEW_SIGN, pos, state), ModBlocks.YEW_SIGN, ModBlocks.YEW_WALL_SIGN)
@@ -89,6 +91,15 @@ public final class ModBlockEntities {
             (pos, state) -> new ModHangingSignBlockEntity(pos, state), Set.of(ModBlocks.YEW_HANGING_SIGN, ModBlocks.YEW_WALL_HANGING_SIGN));*/
     /*?}*/
 
+    /*? if fabric && >=1.21.11 && <26.2 {*/
+    /*public static final BlockEntityType<ShelfBlockEntity> YEW_SHELF = FabricBlockEntityTypeBuilder
+            .<ShelfBlockEntity>create(ModShelfBlockEntity::new, ModBlocks.YEW_SHELF)
+            .build();*/
+    /*?}*/
+    /*? if neoforge && >=1.21.11 && <26.2 {*/
+    /*public static final BlockEntityType<ShelfBlockEntity> YEW_SHELF = new BlockEntityType<>(
+            ModShelfBlockEntity::new, Set.of(ModBlocks.YEW_SHELF));*/
+    /*?}*/
     /*? if >=26.2 {*/
     /*public static final BlockEntityType<ShelfBlockEntity> YEW_SHELF = new BlockEntityType<>(
             ModShelfBlockEntity::new, Set.of(ModBlocks.YEW_SHELF));*/
@@ -100,6 +111,9 @@ public final class ModBlockEntities {
         /*? if <26.2 {*/
         Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
         Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+        /*? if >=1.21.11 {*/
+        /*Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_shelf"), YEW_SHELF);*/
+        /*?}*/
         /*?} else {*/
         /*Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
         Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
@@ -119,12 +133,23 @@ public final class ModBlockEntities {
     */
     /*?}*/
 
-    /*? if neoforge && <26.2 {*/
+    /*? if neoforge && <1.21.11 {*/
     /*
     public static void onRegister(RegisterEvent event) {
         event.register(RegistryKeys.BLOCK_ENTITY_TYPE, helper -> {
                 helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
                 helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+        });
+    }
+    */
+    /*?}*/
+    /*? if neoforge && >=1.21.11 && <26.2 {*/
+    /*
+    public static void onRegister(RegisterEvent event) {
+        event.register(RegistryKeys.BLOCK_ENTITY_TYPE, helper -> {
+                helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), YEW_SIGN);
+                helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
+                helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_shelf"), YEW_SHELF);
         });
     }
     */

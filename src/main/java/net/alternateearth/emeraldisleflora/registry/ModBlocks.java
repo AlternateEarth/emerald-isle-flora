@@ -271,6 +271,13 @@ public final class ModBlocks {
             , 5, 20
     );
 
+    /*? if >=1.21.11 {*/
+    /*public static final Block YEW_SHELF = new ModShelfBlock(AbstractBlock.Settings.copy(OAK_SHELF)
+            .registryKey(blockId("yew_shelf"))
+            , 5, 20
+    );*/
+    /*?}*/
+
     // 1.21.11+ requires AbstractBlock.Settings/Item.Settings to carry a registryKey()
     // before construction (NPE otherwise) - these helpers supply it.
     /*? if >=1.21.11 {*/
@@ -491,8 +498,7 @@ public final class ModBlocks {
         ));*/
         /*?}*/
 
-        // Real-world 26.2 feature (see ModShelfBlock's doc-comment) - doesn't exist on earlier versions.
-        /*? if >=26.2 {*/
+        /*? if >=1.21.11 {*/
         /*register("yew_shelf", YEW_SHELF, true);
         FlammableBlockRegistry.getDefaultInstance().add(YEW_SHELF, 5, 20);*/
         /*?}*/
@@ -742,6 +748,7 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wall_sign"), YEW_WALL_SIGN);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), YEW_HANGING_SIGN);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_wall_hanging_sign"), YEW_WALL_HANGING_SIGN);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_shelf"), YEW_SHELF);
         });
 
         event.register(RegistryKeys.ITEM, helper -> {
@@ -770,6 +777,7 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_button"), new BlockItem(YEW_BUTTON, new Item.Settings().registryKey(itemId("yew_button")).useBlockPrefixedTranslationKey()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sign"), new SignItem(YEW_SIGN, YEW_WALL_SIGN, new Item.Settings().registryKey(itemId("yew_sign")).useBlockPrefixedTranslationKey()));
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_hanging_sign"), new HangingSignItem(YEW_HANGING_SIGN, YEW_WALL_HANGING_SIGN, new Item.Settings().registryKey(itemId("yew_hanging_sign")).useBlockPrefixedTranslationKey()));
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_shelf"), new BlockItem(YEW_SHELF, new Item.Settings().registryKey(itemId("yew_shelf")).useBlockPrefixedTranslationKey()));
 
             // Must run in here, not after both event.register(...) calls at the outer
             // method level - see the comment on registerComposting() itself.
