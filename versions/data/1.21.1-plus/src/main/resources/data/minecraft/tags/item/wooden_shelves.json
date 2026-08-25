@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "emeraldisleflora:yew_shelf",
+      "required": false
+    }
+  ]
+}
