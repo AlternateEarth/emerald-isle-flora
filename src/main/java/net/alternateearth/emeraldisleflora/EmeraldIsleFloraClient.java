@@ -136,6 +136,9 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 		/*? if <26.2 {*/
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SIGN, SignBlockEntityRenderer::new);
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_HANGING_SIGN, HangingSignBlockEntityRenderer::new);
+		/*? if >=1.21.11 {*/
+		/*BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SHELF, ShelfBlockEntityRenderer::new);*/
+		/*?}*/
 		/*?} else {*/
 		/*
 		BlockEntityRendererRegistry.register(ModBlockEntities.YEW_SIGN, StandingSignRenderer::new);
@@ -203,6 +206,7 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 	public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerBlockEntityRenderer(ModBlockEntities.YEW_SIGN, SignBlockEntityRenderer::new);
 		event.registerBlockEntityRenderer(ModBlockEntities.YEW_HANGING_SIGN, HangingSignBlockEntityRenderer::new);
+		event.registerBlockEntityRenderer(ModBlockEntities.YEW_SHELF, ShelfBlockEntityRenderer::new);
 		event.registerEntityRenderer(ModEntities.YEW_BOAT, context -> new BoatEntityRenderer(context, new EntityModelLayer(Identifier.of(EmeraldIsleFlora.MOD_ID, "boat/yew"), "main")));
 		event.registerEntityRenderer(ModEntities.YEW_CHEST_BOAT, context -> new BoatEntityRenderer(context, new EntityModelLayer(Identifier.of(EmeraldIsleFlora.MOD_ID, "chest_boat/yew"), "main")));
 	}

@@ -114,6 +114,9 @@ public final class ModItemGroups {
 					entries.add(ModBlocks.YEW_BUTTON);
 					entries.add(ModBlocks.YEW_SIGN);
 					entries.add(ModBlocks.YEW_HANGING_SIGN);
+					/*? if >=1.21.11 {*/
+					/*entries.add(ModBlocks.YEW_SHELF);*/
+					/*?}*/
 					entries.add(ModItems.YEW_BERRY);
 					entries.add(ModItems.YEW_BOAT);
 					entries.add(ModItems.YEW_CHEST_BOAT);
@@ -181,6 +184,9 @@ public final class ModItemGroups {
 			content.addAfter(ModBlocks.YEW_DOOR, ModBlocks.YEW_TRAPDOOR);
 			content.addAfter(ModBlocks.YEW_TRAPDOOR, ModBlocks.YEW_PRESSURE_PLATE);
 			content.addAfter(ModBlocks.YEW_PRESSURE_PLATE, ModBlocks.YEW_BUTTON);
+			/*? if >=1.21.11 {*/
+			/*content.addAfter(ModBlocks.YEW_BUTTON, ModBlocks.YEW_SHELF);*/
+			/*?}*/
 
 		});
 		/*?} else {*/
@@ -294,7 +300,7 @@ public final class ModItemGroups {
 	}
 	/*?}*/
 
-	/*? if forgeLike && <26.2 {*/
+	/*? if forgeLike && <1.21.11 {*/
 	/*
 	public static void onRegisterCreativeTab(RegisterEvent event) {
 		event.register(RegistryKeys.ITEM_GROUP, helper -> {
@@ -327,6 +333,50 @@ public final class ModItemGroups {
 						entries.add(ModBlocks.YEW_BUTTON);
 						entries.add(ModBlocks.YEW_SIGN);
 						entries.add(ModBlocks.YEW_HANGING_SIGN);
+						entries.add(ModItems.YEW_BERRY);
+						entries.add(ModItems.YEW_BOAT);
+						entries.add(ModItems.YEW_CHEST_BOAT);
+					})
+					.build();
+			helper.register(EMERALD_ISLE_FLORA_GROUP.getValue(), group);
+		});
+	}
+	*/
+	/*?}*/
+	/*? if neoforge && >=1.21.11 && <26.2 {*/
+	/*
+	public static void onRegisterCreativeTab(RegisterEvent event) {
+		event.register(RegistryKeys.ITEM_GROUP, helper -> {
+			ItemGroup group = ItemGroup.create(ItemGroup.Row.TOP, 0)
+					.icon(() -> new ItemStack(ModBlocks.BELLS_OF_IRELAND))
+					.displayName(Text.translatable("itemGroup." + EmeraldIsleFlora.MOD_ID + ".main"))
+					.entries((displayContext, entries) -> {
+						entries.add(ModBlocks.BELLS_OF_IRELAND);
+						entries.add(ModBlocks.BOG_ROSEMARY);
+						entries.add(ModBlocks.BULBOUS_BUTTERCUP);
+						entries.add(ModBlocks.BLUEBELL);
+						entries.add(ModBlocks.GROWN_BELLS_OF_IRELAND);
+						entries.add(ModBlocks.GROWN_BOG_ROSEMARY);
+						entries.add(ModBlocks.GROWN_BULBOUS_BUTTERCUP);
+						entries.add(ModBlocks.GROWN_BLUEBELL);
+						entries.add(ModBlocks.YEW_LOG);
+						entries.add(ModBlocks.YEW_WOOD);
+						entries.add(ModBlocks.STRIPPED_YEW_LOG);
+						entries.add(ModBlocks.STRIPPED_YEW_WOOD);
+						entries.add(ModBlocks.YEW_PLANKS);
+						entries.add(ModBlocks.YEW_LEAVES);
+						entries.add(ModBlocks.YEW_SAPLING);
+						entries.add(ModBlocks.YEW_STAIRS);
+						entries.add(ModBlocks.YEW_SLAB);
+						entries.add(ModBlocks.YEW_FENCE);
+						entries.add(ModBlocks.YEW_FENCE_GATE);
+						entries.add(ModBlocks.YEW_DOOR);
+						entries.add(ModBlocks.YEW_TRAPDOOR);
+						entries.add(ModBlocks.YEW_PRESSURE_PLATE);
+						entries.add(ModBlocks.YEW_BUTTON);
+						entries.add(ModBlocks.YEW_SIGN);
+						entries.add(ModBlocks.YEW_HANGING_SIGN);
+						entries.add(ModBlocks.YEW_SHELF);
 						entries.add(ModItems.YEW_BERRY);
 						entries.add(ModItems.YEW_BOAT);
 						entries.add(ModItems.YEW_CHEST_BOAT);
@@ -440,7 +490,7 @@ public final class ModItemGroups {
 	*/
 	/*?}*/
 
-	/*? if neoforge && <26.2 {*/
+	/*? if neoforge && <1.21.11 {*/
 	/*
 	// NeoForge's insertAfter(...) is the direct equivalent of Fabric's insertAfter(...) for
 	// ordered placement, so entries land in the same spot as the Fabric build. Unlike Fabric's
@@ -475,6 +525,63 @@ public final class ModItemGroups {
 			event.insertAfter(new ItemStack(ModBlocks.YEW_DOOR), new ItemStack(ModBlocks.YEW_TRAPDOOR), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
 			event.insertAfter(new ItemStack(ModBlocks.YEW_TRAPDOOR), new ItemStack(ModBlocks.YEW_PRESSURE_PLATE), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
 			event.insertAfter(new ItemStack(ModBlocks.YEW_PRESSURE_PLATE), new ItemStack(ModBlocks.YEW_BUTTON), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.FUNCTIONAL) {
+			event.insertAfter(new ItemStack(Blocks.WARPED_HANGING_SIGN), new ItemStack(ModBlocks.YEW_SIGN), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_SIGN), new ItemStack(ModBlocks.YEW_HANGING_SIGN), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.FOOD_AND_DRINK) {
+			event.insertAfter(new ItemStack(Items.BEETROOT), new ItemStack(ModItems.YEW_BERRY), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.TOOLS) {
+			event.insertAfter(new ItemStack(Items.BAMBOO_CHEST_RAFT), new ItemStack(ModItems.YEW_BOAT), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModItems.YEW_BOAT), new ItemStack(ModItems.YEW_CHEST_BOAT), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+		}
+	}
+	*/
+	/*?}*/
+	/*? if neoforge && >=1.21.11 && <26.2 {*/
+	/*
+	// NeoForge's insertAfter(...) is the direct equivalent of Fabric's insertAfter(...) for
+	// ordered placement, so entries land in the same spot as the Fabric build. Unlike Fabric's
+	// insertAfter(ItemConvertible, ItemConvertible), it takes ItemStacks and an explicit visibility.
+	public static void onBuildCreativeTabContents(BuildCreativeModeTabContentsEvent event) {
+		if (event.getTabKey() == ItemGroups.NATURAL) {
+			event.insertAfter(new ItemStack(Blocks.WITHER_ROSE), new ItemStack(ModBlocks.BELLS_OF_IRELAND), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.BELLS_OF_IRELAND), new ItemStack(ModBlocks.BOG_ROSEMARY), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.BOG_ROSEMARY), new ItemStack(ModBlocks.BULBOUS_BUTTERCUP), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.BULBOUS_BUTTERCUP), new ItemStack(ModBlocks.BLUEBELL), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.BLUEBELL), new ItemStack(ModBlocks.GROWN_BELLS_OF_IRELAND), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.GROWN_BELLS_OF_IRELAND), new ItemStack(ModBlocks.GROWN_BOG_ROSEMARY), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.GROWN_BOG_ROSEMARY), new ItemStack(ModBlocks.GROWN_BULBOUS_BUTTERCUP), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.GROWN_BULBOUS_BUTTERCUP), new ItemStack(ModBlocks.GROWN_BLUEBELL), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(Blocks.WARPED_STEM), new ItemStack(ModBlocks.YEW_LOG), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(Blocks.FLOWERING_AZALEA_LEAVES), new ItemStack(ModBlocks.YEW_LEAVES), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(Blocks.FLOWERING_AZALEA), new ItemStack(ModBlocks.YEW_SAPLING), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			return;
+		}
+
+		if (event.getTabKey() == ItemGroups.BUILDING_BLOCKS) {
+			event.insertAfter(new ItemStack(Blocks.WARPED_BUTTON), new ItemStack(ModBlocks.YEW_LOG), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_LOG), new ItemStack(ModBlocks.YEW_WOOD), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_WOOD), new ItemStack(ModBlocks.STRIPPED_YEW_LOG), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.STRIPPED_YEW_LOG), new ItemStack(ModBlocks.STRIPPED_YEW_WOOD), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.STRIPPED_YEW_WOOD), new ItemStack(ModBlocks.YEW_PLANKS), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_PLANKS), new ItemStack(ModBlocks.YEW_STAIRS), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_STAIRS), new ItemStack(ModBlocks.YEW_SLAB), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_SLAB), new ItemStack(ModBlocks.YEW_FENCE), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_FENCE), new ItemStack(ModBlocks.YEW_FENCE_GATE), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_FENCE_GATE), new ItemStack(ModBlocks.YEW_DOOR), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_DOOR), new ItemStack(ModBlocks.YEW_TRAPDOOR), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_TRAPDOOR), new ItemStack(ModBlocks.YEW_PRESSURE_PLATE), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_PRESSURE_PLATE), new ItemStack(ModBlocks.YEW_BUTTON), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
+			event.insertAfter(new ItemStack(ModBlocks.YEW_BUTTON), new ItemStack(ModBlocks.YEW_SHELF), ItemGroup.StackVisibility.PARENT_AND_SEARCH_TABS);
 			return;
 		}
 
