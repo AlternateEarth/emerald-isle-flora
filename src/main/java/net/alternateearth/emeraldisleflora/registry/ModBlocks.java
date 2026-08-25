@@ -183,7 +183,7 @@ public final class ModBlocks {
             /*?}*/
             , 5, 20
     );
-    public static final Block YEW_LEAVES = new ModLeavesBlock(0.1f, AbstractBlock.Settings.copy(OAK_LEAVES)
+    public static final Block YEW_LEAVES = new ModLeavesBlock(0.01f, AbstractBlock.Settings.copy(OAK_LEAVES)
             /*? if >=1.21.11 {*/
             /*.registryKey(blockId("yew_leaves"))*/
             /*?}*/
@@ -344,7 +344,7 @@ public final class ModBlocks {
             .setId(blockId("yew_wood")), 5, 5, () -> STRIPPED_YEW_WOOD);
     public static final Block YEW_PLANKS = new ModFlammableBlock(BlockBehaviour.Properties.ofFullCopy(OAK_PLANKS)
             .setId(blockId("yew_planks")), 5, 20);
-    public static final Block YEW_LEAVES = new ModLeavesBlock(0.1f, BlockBehaviour.Properties.ofFullCopy(OAK_LEAVES)
+    public static final Block YEW_LEAVES = new ModLeavesBlock(0.01f, BlockBehaviour.Properties.ofFullCopy(OAK_LEAVES)
             .setId(blockId("yew_leaves")), 30, 60);
     public static final Block YEW_SAPLING = new ModSaplingBlock(BlockBehaviour.Properties.ofFullCopy(OAK_SAPLING)
             .setId(blockId("yew_sapling")));

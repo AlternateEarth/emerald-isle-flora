@@ -17,6 +17,7 @@ import net.minecraft.client.render.RenderLayer;
 /*?} else {*/
 /*import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.render.block.entity.ShelfBlockEntityRenderer;
 */
 /*?}*/
 /*?} else {*/
@@ -73,6 +74,7 @@ import net.minecraft.util.Identifier;*/
 /*?}*/
 /*? if forgeLike && >=1.21.11 && <26.2 {*/
 /*import net.alternateearth.emeraldisleflora.registry.ModEntities;
+import net.minecraft.client.render.block.entity.ShelfBlockEntityRenderer;
 import net.minecraft.client.render.entity.BoatEntityRenderer;
 import net.minecraft.client.render.entity.model.BoatEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
