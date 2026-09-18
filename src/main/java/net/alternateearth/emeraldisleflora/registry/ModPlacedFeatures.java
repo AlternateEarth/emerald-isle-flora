@@ -56,6 +56,7 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");
 
     public static final RegistryKey<PlacedFeature> YEW_TREE_TALL_NARROW_CHECKED_KEY = registerKey("yew_tree_tall_narrow_checked");
+    public static final RegistryKey<PlacedFeature> YEW_TREE_WIDE_LOW_CHECKED_KEY = registerKey("yew_tree_wide_low_checked");
     /*?} else {*/
     /*public static final ResourceKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_MEADOW_KEY = registerKey("patch_bells_of_ireland_meadow");
     public static final ResourceKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_PLAINS_KEY = registerKey("patch_bells_of_ireland_plains");
@@ -70,7 +71,8 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FOREST_KEY = registerKey("patch_bluebell_forest");
     public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");
     
-    public static final ResourceKey<PlacedFeature> YEW_TREE_TALL_NARROW_CHECKED_KEY = registerKey("yew_tree_tall_narrow_checked");*/
+    public static final ResourceKey<PlacedFeature> YEW_TREE_TALL_NARROW_CHECKED_KEY = registerKey("yew_tree_tall_narrow_checked");
+    public static final ResourceKey<PlacedFeature> YEW_TREE_WIDE_LOW_CHECKED_KEY = registerKey("yew_tree_wide_low_checked");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -191,6 +193,17 @@ public class ModPlacedFeatures {
             context,
             YEW_TREE_TALL_NARROW_CHECKED_KEY,
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY),
+            List.of(
+                BlockFilterPlacementModifier.of(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.getDefaultState(), BlockPos.ORIGIN)
+                )
+            )
+        );
+
+        register(
+            context,
+            YEW_TREE_WIDE_LOW_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_WIDE_LOW_KEY),
             List.of(
                 BlockFilterPlacementModifier.of(
                     BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.getDefaultState(), BlockPos.ORIGIN)
@@ -335,6 +348,17 @@ public class ModPlacedFeatures {
             context,
             YEW_TREE_TALL_NARROW_CHECKED_KEY,
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY),
+            List.of(
+                BlockPredicateFilter.forPredicate(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.defaultBlockState(), BlockPos.ZERO)
+                )
+            )
+        );
+
+        register(
+            context,
+            YEW_TREE_WIDE_LOW_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_WIDE_LOW_KEY),
             List.of(
                 BlockPredicateFilter.forPredicate(
                     BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.defaultBlockState(), BlockPos.ZERO)

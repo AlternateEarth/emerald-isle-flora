@@ -56,13 +56,15 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
     public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_WIDE_LOW_KEY = registerKey("yew_tree_wide_low");
     /*?} else {*/
     /*public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BELLS_OF_IRELAND_KEY = registerKey("patch_bells_of_ireland");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BOG_ROSEMARY_KEY = registerKey("patch_bog_rosemary");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BOG_ROSEMARY_KEY = registerKey("patch_blended_bog_rosemary");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");*/
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_WIDE_LOW_KEY = registerKey("yew_tree_wide_low");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -175,6 +177,24 @@ public class ModConfiguredFeatures {
                 new TwoLayersFeatureSize(1, 0, 1)
             ).build()
         );
+
+        register(
+            context,
+            YEW_TREE_WIDE_LOW_KEY,
+            Feature.TREE,
+            new TreeFeatureConfig.Builder(
+                // Base height = 4, random height 1 = 0-2, random height 2 = 0-1, total height = 4-7
+                BlockStateProvider.of(ModBlocks.YEW_LOG),
+                new StraightTrunkPlacer(4, 2, 1),
+                BlockStateProvider.of(ModBlocks.YEW_LEAVES),
+                new BlobFoliagePlacer(
+                    ConstantIntProvider.create(4),
+                    ConstantIntProvider.create(0),
+                    3
+                ),
+                new TwoLayersFeatureSize(1, 0, 1)
+            ).build()
+        );
     }
     /*?} else {*/
     /*
@@ -250,6 +270,25 @@ public class ModConfiguredFeatures {
                     ConstantInt.of(2),
                     ConstantInt.of(0),
                     5
+                ),
+                new TwoLayersFeatureSize(1, 0, 1),
+                belowTrunkProvider
+            ).build()
+        );
+
+        register(
+            context,
+            YEW_TREE_WIDE_LOW_KEY,
+            Feature.TREE,
+            new TreeConfiguration.TreeConfigurationBuilder(
+                // Base height = 4, random height 1 = 0-2, random height 2 = 0-1, total height = 4-7
+                BlockStateProvider.simple(ModBlocks.YEW_LOG),
+                new StraightTrunkPlacer(4, 2, 1),
+                BlockStateProvider.simple(ModBlocks.YEW_LEAVES),
+                new BlobFoliagePlacer(
+                    ConstantInt.of(4),
+                    ConstantInt.of(0),
+                    3
                 ),
                 new TwoLayersFeatureSize(1, 0, 1),
                 belowTrunkProvider
