@@ -9,6 +9,11 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.trunk.StraightTrunkPlacer;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
+import java.util.List;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.world.gen.feature.PlacedFeature;
+import net.minecraft.world.gen.feature.RandomFeatureConfig;
+import net.minecraft.world.gen.feature.RandomFeatureEntry;
 /*? if <1.21.11 {*/
 import net.minecraft.util.collection.DataPool;
 /*?} else {*/
@@ -57,6 +62,7 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
     public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");
     public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_WIDE_LOW_KEY = registerKey("yew_tree_wide_low");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_KEY = registerKey("yew_tree");
     /*?} else {*/
     /*public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BELLS_OF_IRELAND_KEY = registerKey("patch_bells_of_ireland");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BOG_ROSEMARY_KEY = registerKey("patch_bog_rosemary");
@@ -64,7 +70,8 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
     public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_WIDE_LOW_KEY = registerKey("yew_tree_wide_low");*/
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_WIDE_LOW_KEY = registerKey("yew_tree_wide_low");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_KEY = registerKey("yew_tree");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -195,6 +202,23 @@ public class ModConfiguredFeatures {
                 new TwoLayersFeatureSize(1, 0, 1)
             ).build()
         );
+
+        var placedFeatureRegistryEntryLookup = context.getRegistryLookup(RegistryKeys.PLACED_FEATURE);
+
+        register(
+            context,
+            YEW_TREE_KEY,
+            Feature.RANDOM_SELECTOR,
+            new RandomFeatureConfig(
+                List.of(
+                    new RandomFeatureEntry(
+                        placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_TALL_NARROW_CHECKED_KEY),
+                        0.24f
+                    )
+                ),
+                placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_WIDE_LOW_CHECKED_KEY)
+            )
+        );
     }
     /*?} else {*/
     /*
@@ -293,6 +317,23 @@ public class ModConfiguredFeatures {
                 new TwoLayersFeatureSize(1, 0, 1),
                 belowTrunkProvider
             ).build()
+        );
+
+        var placedFeatureRegistryEntryLookup = context.getRegistryLookup(RegistryKeys.PLACED_FEATURE);
+
+        register(
+            context,
+            YEW_TREE_KEY,
+            Feature.RANDOM_SELECTOR,
+            new RandomFeatureConfiguration(
+                List.of(
+                    new WeightedPlacedFeature(
+                        placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_TALL_NARROW_CHECKED_KEY),
+                        0.24f
+                    )
+                ),
+                placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_WIDE_LOW_CHECKED_KEY)
+            )
         );
     }
     */

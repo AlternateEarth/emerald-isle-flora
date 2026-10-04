@@ -38,7 +38,7 @@ public class ModSaplingBlock extends SaplingBlock {
         super(new SaplingGenerator() {
             @Override
             protected RegistryKey<ConfiguredFeature<?, ?>> getTreeFeature(Random random, boolean bees) {
-                return ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY;
+                return ModConfiguredFeatures.YEW_TREE_KEY;
             }
         }, settings);
     }
@@ -63,7 +63,7 @@ public class ModSaplingBlock extends SaplingBlock {
 public class ModSaplingBlock extends SaplingBlock {
 
     public ModSaplingBlock(AbstractBlock.Settings settings) {
-        super(new SaplingGenerator("yew", Optional.empty(), Optional.of(ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY), Optional.empty()), settings);
+        super(new SaplingGenerator("yew", Optional.empty(), Optional.of(ModConfiguredFeatures.YEW_TREE_KEY), Optional.empty()), settings);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ModSaplingBlock extends SaplingBlock {
 public class ModSaplingBlock extends SaplingBlock {
 
     public ModSaplingBlock(BlockBehaviour.Properties settings) {
-        super(new TreeGrower("yew", Optional.empty(), Optional.of(ModConfiguredFeatures.YEW_TREE_TALL_NARROW_KEY), Optional.empty()), settings);
+        super(new TreeGrower("yew", Optional.empty(), Optional.of(ModConfiguredFeatures.YEW_TREE_KEY), Optional.empty()), settings);
     }
 
     @Override
