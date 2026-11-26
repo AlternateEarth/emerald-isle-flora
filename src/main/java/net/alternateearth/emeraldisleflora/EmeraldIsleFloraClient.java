@@ -129,6 +129,7 @@ public class EmeraldIsleFloraClient implements ClientModInitializer {
 		//---------------------------Wood---------------------------
 		putCutout(ModBlocks.YEW_LEAVES);
 		putCutout(ModBlocks.YEW_SAPLING);
+		putCutout(ModBlocks.POTTED_YEW_SAPLING);
 		putCutout(ModBlocks.YEW_DOOR);
 		putCutout(ModBlocks.YEW_TRAPDOOR);
 		/*?}*/

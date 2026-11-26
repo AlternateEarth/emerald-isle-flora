@@ -1,10 +1,14 @@
 {
   "type": "minecraft:random_selector",
   "config": {
-    "default": "emeraldisleflora:yew_tree_wide_low_checked",
+    "default": "emeraldisleflora:yew_tree_slim_wide_low_checked",
     "features": [
       {
-        "chance": 0.24,
+        "chance": 0.15,
+        "feature": "emeraldisleflora:yew_tree_twisted_checked"
+      },
+      {
+        "chance": 0.5714286,
         "feature": "emeraldisleflora:yew_tree_tall_narrow_checked"
       }
     ]

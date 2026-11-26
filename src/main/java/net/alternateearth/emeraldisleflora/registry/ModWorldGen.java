@@ -45,6 +45,15 @@ public final class ModWorldGen {
         addFeature(BiomeKeys.MEADOW, "patch_bulbous_buttercup_meadow");
         addFeature(BiomeKeys.FOREST, "patch_bluebell_forest");
         addFeature(BiomeKeys.FLOWER_FOREST, "patch_bluebell_flower_forest");
+
+        // Natural yew trees (see YewNaturalMixes for the shape mixes and rarities).
+        addFeature(BiomeKeys.FOREST, "yew_tree_forest");
+        addFeature(BiomeKeys.DARK_FOREST, "yew_tree_dark_forest");
+        addFeature(BiomeKeys.DARK_FOREST, "yew_grove_dark_forest");
+        addFeature(BiomeKeys.WINDSWEPT_FOREST, "yew_tree_windswept");
+        addFeature(BiomeKeys.WINDSWEPT_HILLS, "yew_tree_windswept");
+        addFeature(BiomeKeys.WINDSWEPT_GRAVELLY_HILLS, "yew_tree_windswept");
+        addFeature(BiomeKeys.PLAINS, "yew_tree_plains");
         /*?} else {*/
         /*
         addFeature(Biomes.PLAINS, "patch_bells_of_ireland_plains");
@@ -56,6 +65,15 @@ public final class ModWorldGen {
         addFeature(Biomes.MEADOW, "patch_bulbous_buttercup_meadow");
         addFeature(Biomes.FOREST, "patch_bluebell_forest");
         addFeature(Biomes.FLOWER_FOREST, "patch_bluebell_flower_forest");
+
+        // Natural yew trees (see YewNaturalMixes for the shape mixes and rarities).
+        addFeature(Biomes.FOREST, "yew_tree_forest");
+        addFeature(Biomes.DARK_FOREST, "yew_tree_dark_forest");
+        addFeature(Biomes.DARK_FOREST, "yew_grove_dark_forest");
+        addFeature(Biomes.WINDSWEPT_FOREST, "yew_tree_windswept");
+        addFeature(Biomes.WINDSWEPT_HILLS, "yew_tree_windswept");
+        addFeature(Biomes.WINDSWEPT_GRAVELLY_HILLS, "yew_tree_windswept");
+        addFeature(Biomes.PLAINS, "yew_tree_plains");
         */
         /*?}*/
 

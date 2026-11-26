@@ -200,6 +200,27 @@ Current package contents:
   `ModDispenserBehavior` (the dispenser entry point, which also reimplements vanilla's
   bone-meal-dispenser fallback — see the convention note below on why that's not
   optional). All four are common code (server-authoritative), not client-only.
+- `net.alternateearth.emeraldisleflora.worldgen` — yew tree generation. The five shapes (and the shares
+  saplings pick them at) are numbers in `YewTreeShapes`; the tree configs in
+  `ModConfiguredFeatures` and the unit tests both read them, so change a shape there, not in the config.
+  `YewTrunkPlacer`, `YewFoliagePlacer` and `YewClearanceDecorator` plug into vanilla's `TreeFeature`
+  (so leaf decay and size checks stay vanilla). Their geometry lives in `YewTrunkLayout`,
+  `YewFoliageLayout`, `YewClearance` and `YewLeafDistance`, which have **no Minecraft imports** and no
+  Stonecutter conditionals — keep it that way, it is what lets them be unit tested. The placers are thin
+  mappers from that geometry onto the world. `YewTreeTypes` registers the three types (Fabric directly,
+  Forge/NeoForge via `RegisterEvent`); vanilla's type constructors are private, so they are built through
+  the `*TypeInvoker` mixins. `ModSaplingBlock` grows a single sapling from the `yew_tree` selector and a
+  2x2 group from `yew_tree_large`, and falls back to a single tree when a 2x2 group has no room (vanilla
+  does not, on any version).
+  Natural generation: `YewNaturalMixes` (pure, no Minecraft imports) holds the four habitat shape mixes
+  (woodland, dark woodland, rocky, open) and the rarities; `ModConfiguredFeatures` turns each mix into a
+  random selector and `ModPlacedFeatures` adds the five placed features (forest, dark forest, windswept,
+  plains, and the Dark Forest grove). They use the `MOTION_BLOCKING_NO_LEAVES` heightmap so a yew can stand
+  under another tree's canopy. **The grove is hand-written JSON, not datagen**
+  (`versions/data/1.20.1` and `versions/data/1.21.1-plus`, `worldgen/placed_feature/yew_grove_dark_forest.json`),
+  because the uniform int providers it uses serialise differently on 1.20.1 (`{"type", "value": {...}}`) than
+  on 1.21.1+ (flat), and the generated yarn data is shared by both. `YewGroveDataTest` keeps those two files in
+  step with the constants in `YewNaturalMixes`; edit all three together.
 - `ModWorldGen` (in `registry`, Fabric-only) — injects the placed features above into
   vanilla biomes via `BiomeModifications`. Forge/NeoForge do the equivalent
   declaratively instead, via `data/emeraldisleflora/<forge|neoforge>/biome_modifier/`
@@ -270,13 +291,20 @@ Data-driven content lives under two roots, following vanilla's own layout:
   then regenerate the checked-in datagen JSON (see CONTRIBUTING.md) — all data-consuming
   targets read the checked-in JSON at runtime, not the bootstrap methods directly, so a
   stale/missing regen is a silent, no-compile-error content bug.
-- **Mixins**: none exist yet. If you need one, create
-  `src/main/resources/emeraldisleflora.mixins.json` (and/or a `.client.mixins.json` for
-  client-only mixins), reference it from `fabric.mod.json` under a `"mixins"` array, and
-  put mixin classes in a `mixin` (or `mixin.client`) subpackage. Prefer Fabric API
-  events over mixins whenever an event exists for what you need — the bone-meal
-  mechanic uses `UseBlockCallback` and `DispenserBlock.registerBehavior` specifically to
-  avoid needing one.
+  Exception: JSON that serialises differently *within* one mapping side (int providers: 1.20.1 writes
+  `{"type", "value": {...}}`, 1.21.1+ writes it flat) can't be one shared generated file. Hand-write it per
+  version under `versions/data/` instead and do not register it in the bootstrap (the yew grove does this).
+- **Mixins**: `emeraldisleflora.mixins.json` lists them. Besides `BlockEntityTypeMixin` and the client sign
+  renderers, the `*TypeInvoker` mixins expose private worldgen type constructors for the yew trees. Prefer
+  Fabric API events over mixins whenever an event exists for what you need — the bone-meal mechanic uses
+  `UseBlockCallback` and `DispenserBlock.registerBehavior` specifically to avoid needing one. **Forge 1.20.1
+  does not read `[[mixins]]` from `mods.toml`** (NeoForge does): its mixin config is declared through
+  Architectury Loom's `forge { mixinConfig(...) }` in `build.gradle.kts`. Before that, none of this mod's
+  mixins applied on 1.20.1-forge. A mixin that silently does not apply shows up as the
+  `AssertionError` thrown by an invoker stub, so check a Forge run after adding one.
+- **Class comments inside Stonecutter blocks**: a `/** ... */` Javadoc inside a `/*? ... */` conditional
+  block ends the surrounding disabled-branch comment early and breaks every other target. Use `//` line
+  comments there (this is gotcha 2 above, in its most common form).
 
 ## Build & verification commands
 
@@ -290,8 +318,21 @@ Data-driven content lives under two roots, following vanilla's own layout:
 ./gradlew deployToPrism                 # Same, for every target with a matching instance
 ```
 
-There is no automated test suite. `./gradlew build` (the whole matrix) is the minimum
-bar before considering a change done.
+There are JUnit tests for the Minecraft-free yew tree geometry and natural-generation mixes (`src/test/java`, run by `./gradlew
+:<target>:test`, and as part of `check`/`build`). They run on the Fabric targets only: Forge 1.20.1
+fails Gradle's implicit-dependency check on the test source set, and NeoForge 1.21.1's test JVM fails on a
+missing `mainargs.txt`, so those targets skip them. Everything else has no automated tests.
+`./gradlew build` (the whole matrix) is the minimum bar before considering a change done.
+
+To check tree growth in a real world without a Prism install, a throwaway Fabric GameTest on
+`:1.20.1-fabric:runGameTestServer` (add a `"fabric-gametest"` entrypoint, grow trees with
+`SaplingBlock.generate`, scan the results) works and needs no EULA. A test structure's barrier box blocks
+trees, so clear it first. Datagen runs (`runDatagen`) boot the mod too: Forge/NeoForge datagen can delete
+checked-in files under `src/main/generated`, so `git checkout -- src/main/generated` afterwards, and every
+datagen run leaves untracked `advancement(s)`/`recipe(s)` directories there that you should delete.
+The same GameTest approach checks natural generation: copy a natural placed feature without its biome filter,
+run it from a chunk origin on a flat grass area, count and clear the trees, and read each biome's feature list
+(`getGenerationSettings().getFeatures()`) to confirm which biomes got yew.
 
 **For anything touching registration, rendering, or interaction logic, a real-install
 test via `deployToPrism` is the actual verification bar this project uses, not

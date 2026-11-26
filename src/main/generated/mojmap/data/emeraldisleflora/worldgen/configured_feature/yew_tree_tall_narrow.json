@@ -21,12 +21,27 @@
         }
       ]
     },
-    "decorators": [],
+    "decorators": [
+      {
+        "type": "emeraldisleflora:yew_clearance_decorator",
+        "clearance": 4
+      }
+    ],
     "foliage_placer": {
-      "type": "minecraft:blob_foliage_placer",
-      "height": 5,
+      "type": "emeraldisleflora:yew_foliage_placer",
+      "min_clearance": 4,
       "offset": 0,
-      "radius": 2
+      "radius": 0,
+      "shape": {
+        "canopy_height": 4,
+        "canopy_radius": 3,
+        "center_y": -3,
+        "droop": 0,
+        "flat_top": false,
+        "lobe_radius": 1,
+        "lobe_spread": 0,
+        "lobes": 0
+      }
     },
     "foliage_provider": {
       "type": "minecraft:simple_state_provider",
@@ -44,10 +59,19 @@
       "type": "minecraft:two_layers_feature_size"
     },
     "trunk_placer": {
-      "type": "minecraft:straight_trunk_placer",
-      "base_height": 8,
-      "height_rand_a": 3,
-      "height_rand_b": 2
+      "type": "emeraldisleflora:yew_trunk_placer",
+      "base_height": 10,
+      "height_rand_a": 2,
+      "height_rand_b": 2,
+      "shape": {
+        "branch_max": 1,
+        "branch_min": 1,
+        "branches": 0,
+        "stripped_percent": 0,
+        "thickness": 1,
+        "twist": 0,
+        "wood_percent": 0
+      }
     },
     "trunk_provider": {
       "type": "minecraft:simple_state_provider",

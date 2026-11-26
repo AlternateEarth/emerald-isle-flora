@@ -3,6 +3,8 @@ package net.alternateearth.emeraldisleflora.registry;
 import java.util.List;
 
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearth.emeraldisleflora.worldgen.YewNaturalMixes;
+import net.alternateearth.emeraldisleflora.worldgen.YewTreeShapes;
 /*? if <26.2 {*/
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
@@ -16,6 +18,8 @@ import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.gen.feature.PlacedFeatures;
 import net.minecraft.world.gen.placementmodifier.BiomePlacementModifier;
 import net.minecraft.world.gen.placementmodifier.BlockFilterPlacementModifier;
+import net.minecraft.world.gen.placementmodifier.CountPlacementModifier;
+import net.minecraft.world.gen.placementmodifier.SurfaceWaterDepthFilterPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.PlacementModifier;
 import net.minecraft.world.gen.placementmodifier.RarityFilterPlacementModifier;
 import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier;
@@ -56,7 +60,22 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");
 
     public static final RegistryKey<PlacedFeature> YEW_TREE_TALL_NARROW_CHECKED_KEY = registerKey("yew_tree_tall_narrow_checked");
+    public static final RegistryKey<PlacedFeature> YEW_TREE_TWISTED_CHECKED_KEY = registerKey("yew_tree_twisted_checked");
+    public static final RegistryKey<PlacedFeature> YEW_TREE_SLIM_WIDE_LOW_CHECKED_KEY = registerKey("yew_tree_slim_wide_low_checked");
     public static final RegistryKey<PlacedFeature> YEW_TREE_WIDE_LOW_CHECKED_KEY = registerKey("yew_tree_wide_low_checked");
+    public static final RegistryKey<PlacedFeature> YEW_TREE_DENSE_CHECKED_KEY = registerKey("yew_tree_dense_checked");
+
+    // The ground, ignoring leaves, so a yew can stand under another tree's canopy (a grove packs trees together).
+    private static final PlacementModifier YEW_GROUND_HEIGHTMAP =
+        net.minecraft.world.gen.placementmodifier.HeightmapPlacementModifier.of(net.minecraft.world.Heightmap.Type.MOTION_BLOCKING_NO_LEAVES);
+
+    // Natural generation. Each picks its shape from a habitat selector (see YewNaturalMixes).
+    public static final RegistryKey<PlacedFeature> YEW_TREE_FOREST_KEY = registerKey("yew_tree_forest");
+    public static final RegistryKey<PlacedFeature> YEW_TREE_DARK_FOREST_KEY = registerKey("yew_tree_dark_forest");
+    public static final RegistryKey<PlacedFeature> YEW_TREE_WINDSWEPT_KEY = registerKey("yew_tree_windswept");
+    public static final RegistryKey<PlacedFeature> YEW_TREE_PLAINS_KEY = registerKey("yew_tree_plains");
+    // The Dark Forest grove (yew_grove_dark_forest) is a hand-written placed feature in versions/data, because the
+    // JSON of the int providers it uses differs between 1.20.1 and 1.21.1+. See AGENTS.md.
     /*?} else {*/
     /*public static final ResourceKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_MEADOW_KEY = registerKey("patch_bells_of_ireland_meadow");
     public static final ResourceKey<PlacedFeature> PATCH_BELLS_OF_IRELAND_PLAINS_KEY = registerKey("patch_bells_of_ireland_plains");
@@ -70,9 +89,20 @@ public class ModPlacedFeatures {
 
     public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FOREST_KEY = registerKey("patch_bluebell_forest");
     public static final ResourceKey<PlacedFeature> PATCH_BLUEBELL_FLOWER_FOREST_KEY = registerKey("patch_bluebell_flower_forest");
-    
+
     public static final ResourceKey<PlacedFeature> YEW_TREE_TALL_NARROW_CHECKED_KEY = registerKey("yew_tree_tall_narrow_checked");
-    public static final ResourceKey<PlacedFeature> YEW_TREE_WIDE_LOW_CHECKED_KEY = registerKey("yew_tree_wide_low_checked");*/
+    public static final ResourceKey<PlacedFeature> YEW_TREE_TWISTED_CHECKED_KEY = registerKey("yew_tree_twisted_checked");
+    public static final ResourceKey<PlacedFeature> YEW_TREE_SLIM_WIDE_LOW_CHECKED_KEY = registerKey("yew_tree_slim_wide_low_checked");
+    public static final ResourceKey<PlacedFeature> YEW_TREE_WIDE_LOW_CHECKED_KEY = registerKey("yew_tree_wide_low_checked");
+    public static final ResourceKey<PlacedFeature> YEW_TREE_DENSE_CHECKED_KEY = registerKey("yew_tree_dense_checked");
+
+    private static final PlacementModifier YEW_GROUND_HEIGHTMAP =
+        net.minecraft.world.level.levelgen.placement.HeightmapPlacement.onHeightmap(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES);
+
+    public static final ResourceKey<PlacedFeature> YEW_TREE_FOREST_KEY = registerKey("yew_tree_forest");
+    public static final ResourceKey<PlacedFeature> YEW_TREE_DARK_FOREST_KEY = registerKey("yew_tree_dark_forest");
+    public static final ResourceKey<PlacedFeature> YEW_TREE_WINDSWEPT_KEY = registerKey("yew_tree_windswept");
+    public static final ResourceKey<PlacedFeature> YEW_TREE_PLAINS_KEY = registerKey("yew_tree_plains");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -202,6 +232,28 @@ public class ModPlacedFeatures {
 
         register(
             context,
+            YEW_TREE_TWISTED_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_TWISTED_KEY),
+            List.of(
+                BlockFilterPlacementModifier.of(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.getDefaultState(), BlockPos.ORIGIN)
+                )
+            )
+        );
+
+        register(
+            context,
+            YEW_TREE_SLIM_WIDE_LOW_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_SLIM_WIDE_LOW_KEY),
+            List.of(
+                BlockFilterPlacementModifier.of(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.getDefaultState(), BlockPos.ORIGIN)
+                )
+            )
+        );
+
+        register(
+            context,
             YEW_TREE_WIDE_LOW_CHECKED_KEY,
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_WIDE_LOW_KEY),
             List.of(
@@ -210,6 +262,47 @@ public class ModPlacedFeatures {
                 )
             )
         );
+
+        register(
+            context,
+            YEW_TREE_DENSE_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_DENSE_KEY),
+            List.of(
+                BlockFilterPlacementModifier.of(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.getDefaultState(), BlockPos.ORIGIN)
+                )
+            )
+        );
+
+        // Natural yew trees. Like vanilla trees: skip water, snap to the ground, stay in the biome.
+        register(
+            context,
+            YEW_TREE_FOREST_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_WOODLAND_KEY),
+            naturalTree(RarityFilterPlacementModifier.of(YewNaturalMixes.FOREST_RARITY))
+        );
+
+        register(
+            context,
+            YEW_TREE_DARK_FOREST_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_DARK_WOODLAND_KEY),
+            naturalTree(CountPlacementModifier.of(YewNaturalMixes.DARK_FOREST_COUNT), RarityFilterPlacementModifier.of(YewNaturalMixes.DARK_FOREST_RARITY))
+        );
+
+        register(
+            context,
+            YEW_TREE_WINDSWEPT_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_ROCKY_KEY),
+            naturalTree(RarityFilterPlacementModifier.of(YewNaturalMixes.WINDSWEPT_RARITY))
+        );
+
+        register(
+            context,
+            YEW_TREE_PLAINS_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_OPEN_KEY),
+            naturalTree(RarityFilterPlacementModifier.of(YewNaturalMixes.PLAINS_RARITY))
+        );
+
     }
     /*?} else {*/
     /*
@@ -357,6 +450,28 @@ public class ModPlacedFeatures {
 
         register(
             context,
+            YEW_TREE_TWISTED_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_TWISTED_KEY),
+            List.of(
+                BlockPredicateFilter.forPredicate(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.defaultBlockState(), BlockPos.ZERO)
+                )
+            )
+        );
+
+        register(
+            context,
+            YEW_TREE_SLIM_WIDE_LOW_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_SLIM_WIDE_LOW_KEY),
+            List.of(
+                BlockPredicateFilter.forPredicate(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.defaultBlockState(), BlockPos.ZERO)
+                )
+            )
+        );
+
+        register(
+            context,
             YEW_TREE_WIDE_LOW_CHECKED_KEY,
             configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_WIDE_LOW_KEY),
             List.of(
@@ -365,6 +480,47 @@ public class ModPlacedFeatures {
                 )
             )
         );
+
+        register(
+            context,
+            YEW_TREE_DENSE_CHECKED_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_DENSE_KEY),
+            List.of(
+                BlockPredicateFilter.forPredicate(
+                    BlockPredicate.wouldSurvive(ModBlocks.YEW_SAPLING.defaultBlockState(), BlockPos.ZERO)
+                )
+            )
+        );
+
+        // Natural yew trees. Like vanilla trees: skip water, snap to the ground, stay in the biome.
+        register(
+            context,
+            YEW_TREE_FOREST_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_WOODLAND_KEY),
+            naturalTree(RarityFilter.onAverageOnceEvery(YewNaturalMixes.FOREST_RARITY))
+        );
+
+        register(
+            context,
+            YEW_TREE_DARK_FOREST_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_DARK_WOODLAND_KEY),
+            naturalTree(CountPlacement.of(YewNaturalMixes.DARK_FOREST_COUNT), RarityFilter.onAverageOnceEvery(YewNaturalMixes.DARK_FOREST_RARITY))
+        );
+
+        register(
+            context,
+            YEW_TREE_WINDSWEPT_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_ROCKY_KEY),
+            naturalTree(RarityFilter.onAverageOnceEvery(YewNaturalMixes.WINDSWEPT_RARITY))
+        );
+
+        register(
+            context,
+            YEW_TREE_PLAINS_KEY,
+            configuredFeatureRegistryEntryLookup.getOrThrow(ModConfiguredFeatures.YEW_TREE_OPEN_KEY),
+            naturalTree(RarityFilter.onAverageOnceEvery(YewNaturalMixes.PLAINS_RARITY))
+        );
+
     }
     */
     /*?}*/
@@ -372,6 +528,30 @@ public class ModPlacedFeatures {
     //--------------------------------------------------------------------------------------------------------------------------------------------------
 
     /*? if <26.2 {*/
+    // The modifiers shared by every ordinary natural yew tree: the count or rarity first, then the usual tree ones.
+    private static List<PlacementModifier> naturalTree(PlacementModifier... leading) {
+        List<PlacementModifier> modifiers = new java.util.ArrayList<>(List.of(leading));
+        modifiers.addAll(List.of(
+            SquarePlacementModifier.of(),
+            SurfaceWaterDepthFilterPlacementModifier.of(0),
+            YEW_GROUND_HEIGHTMAP,
+            BiomePlacementModifier.of()
+        ));
+        return modifiers;
+    }
+
+    // The checked placed feature for a shape, which a habitat selector refers to.
+    public static RegistryKey<PlacedFeature> checkedKey(YewTreeShapes.Shape shape) {
+        return switch (shape.name()) {
+            case "tall_narrow" -> YEW_TREE_TALL_NARROW_CHECKED_KEY;
+            case "twisted" -> YEW_TREE_TWISTED_CHECKED_KEY;
+            case "slim_wide_low" -> YEW_TREE_SLIM_WIDE_LOW_CHECKED_KEY;
+            case "wide_low" -> YEW_TREE_WIDE_LOW_CHECKED_KEY;
+            case "dense" -> YEW_TREE_DENSE_CHECKED_KEY;
+            default -> throw new IllegalArgumentException("Unknown yew shape " + shape.name());
+        };
+    }
+
     public static RegistryKey<PlacedFeature> registerKey(String name) {
         return RegistryKey.of(RegistryKeys.PLACED_FEATURE, Identifier.of(EmeraldIsleFlora.MOD_ID, name));
     }
@@ -380,7 +560,31 @@ public class ModPlacedFeatures {
         context.register(key, new PlacedFeature(configuration, List.copyOf(modifiers)));
     }
     /*?} else {*/
-    /*public static ResourceKey<PlacedFeature> registerKey(String name) {
+    /*    // The modifiers shared by every ordinary natural yew tree: the count or rarity first, then the usual tree ones.
+        private static List<PlacementModifier> naturalTree(PlacementModifier... leading) {
+            List<PlacementModifier> modifiers = new java.util.ArrayList<>(List.of(leading));
+            modifiers.addAll(List.of(
+                InSquarePlacement.spread(),
+                net.minecraft.world.level.levelgen.placement.SurfaceWaterDepthFilter.forMaxDepth(0),
+                YEW_GROUND_HEIGHTMAP,
+                BiomeFilter.biome()
+            ));
+            return modifiers;
+        }
+
+        // The checked placed feature for a shape, which a habitat selector refers to.
+        public static ResourceKey<PlacedFeature> checkedKey(YewTreeShapes.Shape shape) {
+            return switch (shape.name()) {
+                case "tall_narrow" -> YEW_TREE_TALL_NARROW_CHECKED_KEY;
+                case "twisted" -> YEW_TREE_TWISTED_CHECKED_KEY;
+                case "slim_wide_low" -> YEW_TREE_SLIM_WIDE_LOW_CHECKED_KEY;
+                case "wide_low" -> YEW_TREE_WIDE_LOW_CHECKED_KEY;
+                case "dense" -> YEW_TREE_DENSE_CHECKED_KEY;
+                default -> throw new IllegalArgumentException("Unknown yew shape " + shape.name());
+            };
+        }
+
+    public static ResourceKey<PlacedFeature> registerKey(String name) {
         return ResourceKey.create(Registries.PLACED_FEATURE, Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, name));
     }
 

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:forest",
+  "features": "emeraldisleflora:yew_tree_forest",
+  "step": "vegetal_decoration"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:dark_forest",
+  "features": "emeraldisleflora:yew_grove_dark_forest",
+  "step": "vegetal_decoration"
+}

@@ -124,8 +124,15 @@ same pattern:
    targets' `runDatagen` together for this — they write to the same shared output
    directory and race on Fabric's own stale-file-cleanup cache, which has actually
    deleted correct, already-committed files when this was tried. One command per side,
-   run sequentially, is both sufficient (the JSON only depends on which side of the
+   run sequentially, is both sufficient (the JSON usually depends only on which side of the
    Yarn/Mojmap split ran, not the exact game version within a side) and safe.
+
+   The exception is a feature whose JSON differs between versions *within* a side — int providers
+   (`uniform` and similar) serialise as `{"type", "value": {...}}` on 1.20.1 and flat on 1.21.1+, and the
+   Yarn tree is shared by both. Such a feature can't be one generated file: hand-write it per version under
+   `versions/data/1.20.1/` and `versions/data/1.21.1-plus/`, leave it out of the placed-feature bootstrap, and
+   add a test that keeps the files in step with the Java constants (see `YewGroveDataTest`). Each datagen run
+   also leaves untracked `advancement(s)`/`recipe(s)` directories under `src/main/generated`; delete them.
 4. `git diff -- src/main/generated` after regenerating — if it's non-empty, commit the
    diff alongside your Java changes. CI checks this (see
    `.github/actions/build-mod/action.yml`'s `verify-datagen` step) and will fail the

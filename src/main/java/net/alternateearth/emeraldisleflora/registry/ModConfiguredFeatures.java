@@ -1,6 +1,11 @@
 package net.alternateearth.emeraldisleflora.registry;
 
 import net.alternateearth.emeraldisleflora.EmeraldIsleFlora;
+import net.alternateearth.emeraldisleflora.worldgen.YewClearanceDecorator;
+import net.alternateearth.emeraldisleflora.worldgen.YewFoliagePlacer;
+import net.alternateearth.emeraldisleflora.worldgen.YewNaturalMixes;
+import net.alternateearth.emeraldisleflora.worldgen.YewTreeShapes;
+import net.alternateearth.emeraldisleflora.worldgen.YewTrunkPlacer;
 /*? if <26.2 {*/
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registerable;
@@ -31,7 +36,8 @@ import net.minecraft.world.gen.foliage.BlobFoliagePlacer;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 import net.minecraft.world.gen.stateprovider.WeightedBlockStateProvider;
 /*?} else {*/
-/*import net.minecraft.core.HolderGetter;
+/*import java.util.List;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
@@ -42,7 +48,9 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
@@ -61,8 +69,19 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
     public static final RegistryKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
     public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_TWISTED_KEY = registerKey("yew_tree_twisted");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_SLIM_WIDE_LOW_KEY = registerKey("yew_tree_slim_wide_low");
     public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_WIDE_LOW_KEY = registerKey("yew_tree_wide_low");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_DENSE_KEY = registerKey("yew_tree_dense");
+    /** Picks a 1x1-trunk tree, for a single sapling. */
     public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_KEY = registerKey("yew_tree");
+    /** Picks a 2x2-trunk tree, for four saplings in a square. */
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_LARGE_KEY = registerKey("yew_tree_large");
+    /** Natural generation: one shape selector per habitat, see YewNaturalMixes. */
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_WOODLAND_KEY = registerKey("yew_tree_woodland");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_DARK_WOODLAND_KEY = registerKey("yew_tree_dark_woodland");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_ROCKY_KEY = registerKey("yew_tree_rocky");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> YEW_TREE_OPEN_KEY = registerKey("yew_tree_open");
     /*?} else {*/
     /*public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BELLS_OF_IRELAND_KEY = registerKey("patch_bells_of_ireland");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BOG_ROSEMARY_KEY = registerKey("patch_bog_rosemary");
@@ -70,8 +89,16 @@ public class ModConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLENDED_BULBOUS_BUTTERCUP_KEY = registerKey("patch_blended_bulbous_buttercup");
     public static final ResourceKey<ConfiguredFeature<?, ?>> PATCH_BLUEBELL_KEY = registerKey("patch_bluebell");
     public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_TALL_NARROW_KEY = registerKey("yew_tree_tall_narrow");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_TWISTED_KEY = registerKey("yew_tree_twisted");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_SLIM_WIDE_LOW_KEY = registerKey("yew_tree_slim_wide_low");
     public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_WIDE_LOW_KEY = registerKey("yew_tree_wide_low");
-    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_KEY = registerKey("yew_tree");*/
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_DENSE_KEY = registerKey("yew_tree_dense");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_KEY = registerKey("yew_tree");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_LARGE_KEY = registerKey("yew_tree_large");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_WOODLAND_KEY = registerKey("yew_tree_woodland");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_DARK_WOODLAND_KEY = registerKey("yew_tree_dark_woodland");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_ROCKY_KEY = registerKey("yew_tree_rocky");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> YEW_TREE_OPEN_KEY = registerKey("yew_tree_open");*/
     /*?}*/
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -167,44 +194,17 @@ public class ModConfiguredFeatures {
                 ))
         );
 
-        register(
-            context,
-            YEW_TREE_TALL_NARROW_KEY,
-            Feature.TREE,
-            new TreeFeatureConfig.Builder(
-                // Base height = 7, random height 1 = 0-3, random height 2 = 0-2, total height = 7-12
-                BlockStateProvider.of(ModBlocks.YEW_LOG),
-                new StraightTrunkPlacer(8, 3, 2),
-                BlockStateProvider.of(ModBlocks.YEW_LEAVES),
-                new BlobFoliagePlacer(
-                    ConstantIntProvider.create(2),
-                    ConstantIntProvider.create(0),
-                    5
-                ),
-                new TwoLayersFeatureSize(1, 0, 1)
-            ).build()
-        );
-
-        register(
-            context,
-            YEW_TREE_WIDE_LOW_KEY,
-            Feature.TREE,
-            new TreeFeatureConfig.Builder(
-                // Base height = 4, random height 1 = 0-2, random height 2 = 0-1, total height = 4-7
-                BlockStateProvider.of(ModBlocks.YEW_LOG),
-                new StraightTrunkPlacer(4, 2, 1),
-                BlockStateProvider.of(ModBlocks.YEW_LEAVES),
-                new BlobFoliagePlacer(
-                    ConstantIntProvider.create(4),
-                    ConstantIntProvider.create(0),
-                    3
-                ),
-                new TwoLayersFeatureSize(1, 0, 1)
-            ).build()
-        );
+        register(context, YEW_TREE_TALL_NARROW_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.TALL_NARROW));
+        register(context, YEW_TREE_TWISTED_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.TWISTED));
+        register(context, YEW_TREE_SLIM_WIDE_LOW_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.SLIM_WIDE_LOW));
+        register(context, YEW_TREE_WIDE_LOW_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.WIDE_LOW));
+        register(context, YEW_TREE_DENSE_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.DENSE));
 
         var placedFeatureRegistryEntryLookup = context.getRegistryLookup(RegistryKeys.PLACED_FEATURE);
 
+        // A single sapling: twisted first, then tall & narrow of what is left, slim wide & low otherwise.
+        // The selector applies each chance to what the earlier entries left, so these are not the final shares;
+        // see YewTreeShapes for the shares they produce.
         register(
             context,
             YEW_TREE_KEY,
@@ -212,13 +212,74 @@ public class ModConfiguredFeatures {
             new RandomFeatureConfig(
                 List.of(
                     new RandomFeatureEntry(
+                        placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_TWISTED_CHECKED_KEY),
+                        YewTreeShapes.TWISTED_SHARE
+                    ),
+                    new RandomFeatureEntry(
                         placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_TALL_NARROW_CHECKED_KEY),
-                        0.24f
+                        YewTreeShapes.TALL_NARROW_OF_REMAINDER
                     )
                 ),
-                placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_WIDE_LOW_CHECKED_KEY)
+                placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_SLIM_WIDE_LOW_CHECKED_KEY)
             )
         );
+
+        // Four saplings in a square: wide & low or dense.
+        register(
+            context,
+            YEW_TREE_LARGE_KEY,
+            Feature.RANDOM_SELECTOR,
+            new RandomFeatureConfig(
+                List.of(
+                    new RandomFeatureEntry(
+                        placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_WIDE_LOW_CHECKED_KEY),
+                        YewTreeShapes.WIDE_LOW_SHARE
+                    )
+                ),
+                placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_DENSE_CHECKED_KEY)
+            )
+        );
+
+        // Natural trees: one selector per habitat. Chances are derived from the final shares in YewNaturalMixes.
+        for (YewNaturalMixes.Mix mix : YewNaturalMixes.ALL) {
+            float[] chances = mix.chances();
+            List<RandomFeatureEntry> entries = new java.util.ArrayList<>();
+            for (int i = 0; i < chances.length; i++) {
+                entries.add(new RandomFeatureEntry(
+                    placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.checkedKey(mix.entries().get(i).shape())),
+                    chances[i]
+                ));
+            }
+            register(
+                context,
+                naturalKey(mix),
+                Feature.RANDOM_SELECTOR,
+                new RandomFeatureConfig(
+                    entries,
+                    placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.checkedKey(mix.defaultShape()))
+                )
+            );
+        }
+    }
+
+    private static RegistryKey<ConfiguredFeature<?, ?>> naturalKey(YewNaturalMixes.Mix mix) {
+        return switch (mix.name()) {
+            case "woodland" -> YEW_TREE_WOODLAND_KEY;
+            case "dark_woodland" -> YEW_TREE_DARK_WOODLAND_KEY;
+            case "rocky" -> YEW_TREE_ROCKY_KEY;
+            case "open" -> YEW_TREE_OPEN_KEY;
+            default -> throw new IllegalArgumentException("Unknown yew mix " + mix.name());
+        };
+    }
+
+    private static TreeFeatureConfig yewTreeConfig(YewTreeShapes.Shape shape) {
+        return new TreeFeatureConfig.Builder(
+            BlockStateProvider.of(ModBlocks.YEW_LOG),
+            new YewTrunkPlacer(shape.baseHeight(), shape.heightRandA(), shape.heightRandB(), shape.trunk()),
+            BlockStateProvider.of(ModBlocks.YEW_LEAVES),
+            new YewFoliagePlacer(shape.canopy(), YewTreeShapes.CLEARANCE),
+            new TwoLayersFeatureSize(1, shape.sizeLowerRadius(), shape.sizeUpperRadius())
+        ).decorators(List.of(new YewClearanceDecorator(YewTreeShapes.CLEARANCE))).build();
     }
     /*?} else {*/
     /*
@@ -281,46 +342,17 @@ public class ModConfiguredFeatures {
             )
         );
 
-        register(
-            context,
-            YEW_TREE_TALL_NARROW_KEY,
-            Feature.TREE,
-            new TreeConfiguration.TreeConfigurationBuilder(
-                // Base height = 7, random height 1 = 0-3, random height 2 = 0-2, total height = 7-12
-                BlockStateProvider.simple(ModBlocks.YEW_LOG),
-                new StraightTrunkPlacer(8, 3, 2),
-                BlockStateProvider.simple(ModBlocks.YEW_LEAVES),
-                new BlobFoliagePlacer(
-                    ConstantInt.of(2),
-                    ConstantInt.of(0),
-                    5
-                ),
-                new TwoLayersFeatureSize(1, 0, 1),
-                belowTrunkProvider
-            ).build()
-        );
+        register(context, YEW_TREE_TALL_NARROW_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.TALL_NARROW, belowTrunkProvider));
+        register(context, YEW_TREE_TWISTED_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.TWISTED, belowTrunkProvider));
+        register(context, YEW_TREE_SLIM_WIDE_LOW_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.SLIM_WIDE_LOW, belowTrunkProvider));
+        register(context, YEW_TREE_WIDE_LOW_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.WIDE_LOW, belowTrunkProvider));
+        register(context, YEW_TREE_DENSE_KEY, Feature.TREE, yewTreeConfig(YewTreeShapes.DENSE, belowTrunkProvider));
 
-        register(
-            context,
-            YEW_TREE_WIDE_LOW_KEY,
-            Feature.TREE,
-            new TreeConfiguration.TreeConfigurationBuilder(
-                // Base height = 4, random height 1 = 0-2, random height 2 = 0-1, total height = 4-7
-                BlockStateProvider.simple(ModBlocks.YEW_LOG),
-                new StraightTrunkPlacer(4, 2, 1),
-                BlockStateProvider.simple(ModBlocks.YEW_LEAVES),
-                new BlobFoliagePlacer(
-                    ConstantInt.of(4),
-                    ConstantInt.of(0),
-                    3
-                ),
-                new TwoLayersFeatureSize(1, 0, 1),
-                belowTrunkProvider
-            ).build()
-        );
+        var placedFeatureRegistryEntryLookup = context.lookup(Registries.PLACED_FEATURE);
 
-        var placedFeatureRegistryEntryLookup = context.getRegistryLookup(RegistryKeys.PLACED_FEATURE);
-
+        // A single sapling: twisted first, then tall & narrow of what is left, slim wide & low otherwise.
+        // The selector applies each chance to what the earlier entries left, so these are not the final shares;
+        // see YewTreeShapes for the shares they produce.
         register(
             context,
             YEW_TREE_KEY,
@@ -328,13 +360,75 @@ public class ModConfiguredFeatures {
             new RandomFeatureConfiguration(
                 List.of(
                     new WeightedPlacedFeature(
+                        placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_TWISTED_CHECKED_KEY),
+                        YewTreeShapes.TWISTED_SHARE
+                    ),
+                    new WeightedPlacedFeature(
                         placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_TALL_NARROW_CHECKED_KEY),
-                        0.24f
+                        YewTreeShapes.TALL_NARROW_OF_REMAINDER
                     )
                 ),
-                placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_WIDE_LOW_CHECKED_KEY)
+                placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_SLIM_WIDE_LOW_CHECKED_KEY)
             )
         );
+
+        // Four saplings in a square: wide & low or dense.
+        register(
+            context,
+            YEW_TREE_LARGE_KEY,
+            Feature.RANDOM_SELECTOR,
+            new RandomFeatureConfiguration(
+                List.of(
+                    new WeightedPlacedFeature(
+                        placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_WIDE_LOW_CHECKED_KEY),
+                        YewTreeShapes.WIDE_LOW_SHARE
+                    )
+                ),
+                placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.YEW_TREE_DENSE_CHECKED_KEY)
+            )
+        );
+
+        // Natural trees: one selector per habitat. Chances are derived from the final shares in YewNaturalMixes.
+        for (YewNaturalMixes.Mix mix : YewNaturalMixes.ALL) {
+            float[] chances = mix.chances();
+            List<WeightedPlacedFeature> entries = new java.util.ArrayList<>();
+            for (int i = 0; i < chances.length; i++) {
+                entries.add(new WeightedPlacedFeature(
+                    placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.checkedKey(mix.entries().get(i).shape())),
+                    chances[i]
+                ));
+            }
+            register(
+                context,
+                naturalKey(mix),
+                Feature.RANDOM_SELECTOR,
+                new RandomFeatureConfiguration(
+                    entries,
+                    placedFeatureRegistryEntryLookup.getOrThrow(ModPlacedFeatures.checkedKey(mix.defaultShape()))
+                )
+            );
+        }
+    }
+
+    private static ResourceKey<ConfiguredFeature<?, ?>> naturalKey(YewNaturalMixes.Mix mix) {
+        return switch (mix.name()) {
+            case "woodland" -> YEW_TREE_WOODLAND_KEY;
+            case "dark_woodland" -> YEW_TREE_DARK_WOODLAND_KEY;
+            case "rocky" -> YEW_TREE_ROCKY_KEY;
+            case "open" -> YEW_TREE_OPEN_KEY;
+            default -> throw new IllegalArgumentException("Unknown yew mix " + mix.name());
+        };
+    }
+
+    private static TreeConfiguration yewTreeConfig(YewTreeShapes.Shape shape, BlockStateProvider belowTrunkProvider) {
+        return new TreeConfiguration.TreeConfigurationBuilder(
+            BlockStateProvider.simple(ModBlocks.YEW_LOG),
+            new YewTrunkPlacer(shape.baseHeight(), shape.heightRandA(), shape.heightRandB(), shape.trunk()),
+            BlockStateProvider.simple(ModBlocks.YEW_LEAVES),
+            new YewFoliagePlacer(shape.canopy(), YewTreeShapes.CLEARANCE),
+            new TwoLayersFeatureSize(1, shape.sizeLowerRadius(), shape.sizeUpperRadius()),
+            belowTrunkProvider
+        ).decorators(List.of(new YewClearanceDecorator(YewTreeShapes.CLEARANCE))).build();
     }
     */
     /*?}*/

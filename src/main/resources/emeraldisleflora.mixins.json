@@ -4,7 +4,10 @@
   "package": "net.alternateearth.emeraldisleflora.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "BlockEntityTypeMixin"
+    "BlockEntityTypeMixin",
+    "FoliagePlacerTypeInvoker",
+    "TrunkPlacerTypeInvoker",
+    "TreeDecoratorTypeInvoker"
   ]@SIGN_RENDERER_MIXINS_LINE@,
   "injectors": {
     "defaultRequire": 0

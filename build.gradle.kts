@@ -40,6 +40,35 @@ java {
     withSourcesJar()
 }
 
+// Unit tests live in the shared root src/test/java (Stonecutter chisels them per target, like main) and cover Minecraft-free logic only (for example
+// worldgen/YewTrunkLayout), so every target runs the same tests against its own build.
+dependencies {
+    "testImplementation"("org.junit.jupiter:junit-jupiter:5.10.2")
+    "testRuntimeOnly"("org.junit.platform:junit-platform-launcher:1.10.2")
+}
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
+
+// Forge 1.20.1 does not read [[mixins]] from mods.toml (NeoForge does). It takes the mixin config from the jar
+// manifest and a dev-launch argument, which Architectury Loom writes from this declaration. Without it none of
+// this mod's mixins apply on 1.20.1-forge.
+if (mod.loader == "forge") {
+    extensions.configure<net.fabricmc.loom.api.LoomGradleExtensionAPI>("loom") {
+        forge {
+            mixinConfig("emeraldisleflora.mixins.json")
+        }
+    }
+}
+// The tests are Minecraft-free, so running them on the Fabric targets covers every loader. Forge/NeoForge
+// currently can't compile or launch the test source set (Gradle rejects an implicit task dependency on
+// 1.20.1-forge, and 1.21.1-neoforge's test JVM fails on a missing mainargs.txt), so skip them there rather
+// than break `build`/`check` for those targets.
+if (!mod.isFabric) {
+    tasks.withType<JavaCompile>().matching { it.name == "compileTestJava" }.configureEach { enabled = false }
+    tasks.withType<Test>().configureEach { enabled = false }
+}
+
 modSettings {
     generatedResources = rootProject.layout.projectDirectory.dir(
         if (hasYarnMappings) "src/main/generated/yarn" else "src/main/generated/mojmap"

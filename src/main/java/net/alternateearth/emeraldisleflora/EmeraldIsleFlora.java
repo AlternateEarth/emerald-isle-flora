@@ -10,6 +10,7 @@ import net.alternateearth.emeraldisleflora.registry.ModWorldGen;
 import net.alternateearth.emeraldisleflora.util.ModBoneMealInteraction;
 import net.alternateearth.emeraldisleflora.util.ModBrewing;
 import net.alternateearth.emeraldisleflora.util.ModDispenserBehavior;
+import net.alternateearth.emeraldisleflora.worldgen.YewTreeTypes;
 /*? if fabric {*/
 import net.fabricmc.api.ModInitializer;
 /*?}*/
@@ -58,6 +59,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 		modEventBus.addListener(ModBlockEntities::onRegister);
 		modEventBus.addListener(ModEntities::onRegister);
 		modEventBus.addListener(ModItems::onRegister);
+		modEventBus.addListener(YewTreeTypes::onRegister);
 		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterRenderers);
 		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterLayers);
 		modEventBus.addListener(ModItemGroups::onRegisterCreativeTab);
@@ -82,6 +84,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 		modEventBus.addListener(ModBlockEntities::onRegister);
 		modEventBus.addListener(ModEntities::onRegister);
 		modEventBus.addListener(ModItems::onRegister);
+		modEventBus.addListener(YewTreeTypes::onRegister);
 		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterRenderers);
 		modEventBus.addListener(EmeraldIsleFloraClient::onRegisterLayers);
 		modEventBus.addListener(ModItemGroups::onRegisterCreativeTab);
@@ -108,6 +111,7 @@ public class EmeraldIsleFlora implements ModInitializer {
 		ModBlockEntities.register();
 		ModEntities.register();
 		ModItems.register();
+		YewTreeTypes.register();
 		ModBrewing.register();
 		ModBoneMealInteraction.register();
 		ModDispenserBehavior.register();

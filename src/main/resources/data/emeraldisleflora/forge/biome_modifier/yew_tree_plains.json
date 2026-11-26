@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:plains",
+  "features": "emeraldisleflora:yew_tree_plains",
+  "step": "vegetal_decoration"
+}

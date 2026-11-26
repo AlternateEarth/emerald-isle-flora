@@ -194,6 +194,11 @@ public final class ModBlocks {
             /*.registryKey(blockId("yew_sapling"))*/
             /*?}*/
     );
+    public static final Block POTTED_YEW_SAPLING = new FlowerPotBlock(YEW_SAPLING, AbstractBlock.Settings.copy(POTTED_OAK_SAPLING)
+            /*? if >=1.21.11 {*/
+            /*.registryKey(blockId("potted_yew_sapling"))*/
+            /*?}*/
+    );
     public static final Block YEW_STAIRS = new ModStairsBlock(YEW_PLANKS.getDefaultState(), AbstractBlock.Settings.copy(YEW_PLANKS)
             /*? if >=1.21.11 {*/
             /*.registryKey(blockId("yew_stairs"))*/
@@ -348,6 +353,8 @@ public final class ModBlocks {
             .setId(blockId("yew_leaves")), 30, 60);
     public static final Block YEW_SAPLING = new ModSaplingBlock(BlockBehaviour.Properties.ofFullCopy(OAK_SAPLING)
             .setId(blockId("yew_sapling")));
+    public static final Block POTTED_YEW_SAPLING = new FlowerPotBlock(YEW_SAPLING, BlockBehaviour.Properties.ofFullCopy(POTTED_OAK_SAPLING)
+            .setId(blockId("potted_yew_sapling")));
     public static final Block YEW_STAIRS = new ModStairsBlock(YEW_PLANKS.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(YEW_PLANKS)
             .setId(blockId("yew_stairs")), 5, 20);
     public static final Block YEW_SLAB = new ModSlabBlock(BlockBehaviour.Properties.ofFullCopy(YEW_PLANKS)
@@ -434,6 +441,7 @@ public final class ModBlocks {
         FlammableBlockRegistry.getDefaultInstance().add(YEW_LEAVES, 30, 60);
 
         register("yew_sapling", YEW_SAPLING, true);
+        register("potted_yew_sapling", POTTED_YEW_SAPLING, false);
 
         register("yew_stairs", YEW_STAIRS, true);
         FlammableBlockRegistry.getDefaultInstance().add(YEW_STAIRS, 5, 20);
@@ -572,6 +580,7 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), YEW_PLANKS);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), YEW_LEAVES);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), YEW_SAPLING);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_yew_sapling"), POTTED_YEW_SAPLING);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), YEW_STAIRS);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), YEW_SLAB);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), YEW_FENCE);
@@ -655,6 +664,7 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), YEW_PLANKS);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), YEW_LEAVES);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), YEW_SAPLING);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_yew_sapling"), POTTED_YEW_SAPLING);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), YEW_STAIRS);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), YEW_SLAB);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), YEW_FENCE);
@@ -736,6 +746,7 @@ public final class ModBlocks {
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_planks"), YEW_PLANKS);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_leaves"), YEW_LEAVES);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), YEW_SAPLING);
+            helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "potted_yew_sapling"), POTTED_YEW_SAPLING);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_stairs"), YEW_STAIRS);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_slab"), YEW_SLAB);
             helper.register(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_fence"), YEW_FENCE);
@@ -819,6 +830,7 @@ public final class ModBlocks {
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_planks"), YEW_PLANKS);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_leaves"), YEW_LEAVES);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sapling"), YEW_SAPLING);
+            helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "potted_yew_sapling"), POTTED_YEW_SAPLING);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_stairs"), YEW_STAIRS);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_slab"), YEW_SLAB);
             helper.register(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_fence"), YEW_FENCE);
@@ -913,6 +925,7 @@ public final class ModBlocks {
             emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), () -> POTTED_GROWN_BULBOUS_BUTTERCUP);
             emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "bluebell"), () -> POTTED_BLUEBELL);
             emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), () -> POTTED_GROWN_BLUEBELL);
+            emptyPot.addPlant(Identifier.of(EmeraldIsleFlora.MOD_ID, "yew_sapling"), () -> POTTED_YEW_SAPLING);
         }
     }*/
     /*?}*/
@@ -927,6 +940,7 @@ public final class ModBlocks {
             emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bulbous_buttercup"), () -> POTTED_GROWN_BULBOUS_BUTTERCUP);
             emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "bluebell"), () -> POTTED_BLUEBELL);
             emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "grown_bluebell"), () -> POTTED_GROWN_BLUEBELL);
+            emptyPot.addPlant(Identifier.fromNamespaceAndPath(EmeraldIsleFlora.MOD_ID, "yew_sapling"), () -> POTTED_YEW_SAPLING);
         }
     }*/
     /*?}*/

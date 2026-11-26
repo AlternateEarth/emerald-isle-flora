@@ -7,6 +7,34 @@ Each version's section below is published verbatim as that version's changelog o
 Modrinth (see `publishMods` in `build.gradle.kts`) — write entries with players in
 mind, not as a commit log.
 
+## [1.7.0] - 2026-11-25
+
+### Added
+
+- **Yew wood** — a full wood set: log, wood, stripped variants, planks, stairs, slabs,
+  fences, fence gates, doors, trapdoors, buttons, pressure plates, signs, hanging signs,
+  boats and chest boats, and a shelf on 26.2.
+- **Yew berries** and **yew leaves**.
+- **Yew saplings that grow into trees.** Five tree shapes, all with at least 4 blocks of
+  clearance underneath so you can walk beneath them:
+  - A single sapling grows a tall & narrow tree (about half the time), a slim wide & low
+    tree (a little over a third), or a twisted tree (about one in seven).
+  - Four saplings planted in a 2x2 square grow a wide & low or a dense tree with a thick
+    2x2 trunk, equally often. If there isn't room for the big tree, one of the four
+    saplings grows a single tree instead.
+  - Bone meal works, as with other saplings.
+- **Yew trees generate naturally**, and rarely, in Forest, Dark Forest, Windswept Forest, Windswept
+  Hills, Windswept Gravelly Hills, and Plains. Each biome has its own mix of tree shapes: mostly
+  upright trees in forests, dense trees in Dark Forest (which also gets the occasional grove of 5 to
+  9 yews), twisted and low trees on windswept rock, and a lone wide tree on plains. Only chunks
+  generated after you update get yew.
+- Yew saplings can be placed in flower pots.
+
+### Fixed
+
+- Sign and hanging sign textures render correctly, and the sign edit screen no longer
+  crashes.
+
 ## [1.6.5] - 2026-08-08
 
 ### Added
